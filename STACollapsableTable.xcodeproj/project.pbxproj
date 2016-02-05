@@ -1,0 +1,415 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 46;
+	objects = {
+
+/* Begin PBXBuildFile section */
+		9376D2231C64683F00FC2782 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 9376D2221C64683F00FC2782 /* main.m */; };
+		9376D2261C64683F00FC2782 /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 9376D2251C64683F00FC2782 /* AppDelegate.m */; };
+		9376D2291C64683F00FC2782 /* ViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 9376D2281C64683F00FC2782 /* ViewController.m */; };
+		9376D22C1C64683F00FC2782 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 9376D22A1C64683F00FC2782 /* Main.storyboard */; };
+		9376D22E1C64683F00FC2782 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 9376D22D1C64683F00FC2782 /* Assets.xcassets */; };
+		9376D2311C64683F00FC2782 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 9376D22F1C64683F00FC2782 /* LaunchScreen.storyboard */; };
+		9376D23C1C64684000FC2782 /* STACollapsableTableTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 9376D23B1C64684000FC2782 /* STACollapsableTableTests.m */; };
+/* End PBXBuildFile section */
+
+/* Begin PBXContainerItemProxy section */
+		9376D2381C64684000FC2782 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 9376D2161C64683F00FC2782 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 9376D21D1C64683F00FC2782;
+			remoteInfo = STACollapsableTable;
+		};
+/* End PBXContainerItemProxy section */
+
+/* Begin PBXFileReference section */
+		9376D21E1C64683F00FC2782 /* STACollapsableTable.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = STACollapsableTable.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		9376D2221C64683F00FC2782 /* main.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
+		9376D2241C64683F00FC2782 /* AppDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AppDelegate.h; sourceTree = "<group>"; };
+		9376D2251C64683F00FC2782 /* AppDelegate.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = AppDelegate.m; sourceTree = "<group>"; };
+		9376D2271C64683F00FC2782 /* ViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ViewController.h; sourceTree = "<group>"; };
+		9376D2281C64683F00FC2782 /* ViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = ViewController.m; sourceTree = "<group>"; };
+		9376D22B1C64683F00FC2782 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
+		9376D22D1C64683F00FC2782 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
+		9376D2301C64683F00FC2782 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
+		9376D2321C64683F00FC2782 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		9376D2371C64684000FC2782 /* STACollapsableTableTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = STACollapsableTableTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
+		9376D23B1C64684000FC2782 /* STACollapsableTableTests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = STACollapsableTableTests.m; sourceTree = "<group>"; };
+		9376D23D1C64684000FC2782 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+/* End PBXFileReference section */
+
+/* Begin PBXFrameworksBuildPhase section */
+		9376D21B1C64683F00FC2782 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		9376D2341C64684000FC2782 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXFrameworksBuildPhase section */
+
+/* Begin PBXGroup section */
+		9376D2151C64683F00FC2782 = {
+			isa = PBXGroup;
+			children = (
+				9376D2201C64683F00FC2782 /* STACollapsableTable */,
+				9376D23A1C64684000FC2782 /* STACollapsableTableTests */,
+				9376D21F1C64683F00FC2782 /* Products */,
+			);
+			sourceTree = "<group>";
+		};
+		9376D21F1C64683F00FC2782 /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				9376D21E1C64683F00FC2782 /* STACollapsableTable.app */,
+				9376D2371C64684000FC2782 /* STACollapsableTableTests.xctest */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		9376D2201C64683F00FC2782 /* STACollapsableTable */ = {
+			isa = PBXGroup;
+			children = (
+				9376D2241C64683F00FC2782 /* AppDelegate.h */,
+				9376D2251C64683F00FC2782 /* AppDelegate.m */,
+				9376D2271C64683F00FC2782 /* ViewController.h */,
+				9376D2281C64683F00FC2782 /* ViewController.m */,
+				9376D22A1C64683F00FC2782 /* Main.storyboard */,
+				9376D22D1C64683F00FC2782 /* Assets.xcassets */,
+				9376D22F1C64683F00FC2782 /* LaunchScreen.storyboard */,
+				9376D2321C64683F00FC2782 /* Info.plist */,
+				9376D2211C64683F00FC2782 /* Supporting Files */,
+			);
+			path = STACollapsableTable;
+			sourceTree = "<group>";
+		};
+		9376D2211C64683F00FC2782 /* Supporting Files */ = {
+			isa = PBXGroup;
+			children = (
+				9376D2221C64683F00FC2782 /* main.m */,
+			);
+			name = "Supporting Files";
+			sourceTree = "<group>";
+		};
+		9376D23A1C64684000FC2782 /* STACollapsableTableTests */ = {
+			isa = PBXGroup;
+			children = (
+				9376D23B1C64684000FC2782 /* STACollapsableTableTests.m */,
+				9376D23D1C64684000FC2782 /* Info.plist */,
+			);
+			path = STACollapsableTableTests;
+			sourceTree = "<group>";
+		};
+/* End PBXGroup section */
+
+/* Begin PBXNativeTarget section */
+		9376D21D1C64683F00FC2782 /* STACollapsableTable */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 9376D2401C64684000FC2782 /* Build configuration list for PBXNativeTarget "STACollapsableTable" */;
+			buildPhases = (
+				9376D21A1C64683F00FC2782 /* Sources */,
+				9376D21B1C64683F00FC2782 /* Frameworks */,
+				9376D21C1C64683F00FC2782 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = STACollapsableTable;
+			productName = STACollapsableTable;
+			productReference = 9376D21E1C64683F00FC2782 /* STACollapsableTable.app */;
+			productType = "com.apple.product-type.application";
+		};
+		9376D2361C64684000FC2782 /* STACollapsableTableTests */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 9376D2431C64684000FC2782 /* Build configuration list for PBXNativeTarget "STACollapsableTableTests" */;
+			buildPhases = (
+				9376D2331C64684000FC2782 /* Sources */,
+				9376D2341C64684000FC2782 /* Frameworks */,
+				9376D2351C64684000FC2782 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				9376D2391C64684000FC2782 /* PBXTargetDependency */,
+			);
+			name = STACollapsableTableTests;
+			productName = STACollapsableTableTests;
+			productReference = 9376D2371C64684000FC2782 /* STACollapsableTableTests.xctest */;
+			productType = "com.apple.product-type.bundle.unit-test";
+		};
+/* End PBXNativeTarget section */
+
+/* Begin PBXProject section */
+		9376D2161C64683F00FC2782 /* Project object */ = {
+			isa = PBXProject;
+			attributes = {
+				LastUpgradeCheck = 0720;
+				ORGANIZATIONNAME = "Aaron Jubbal";
+				TargetAttributes = {
+					9376D21D1C64683F00FC2782 = {
+						CreatedOnToolsVersion = 7.2;
+					};
+					9376D2361C64684000FC2782 = {
+						CreatedOnToolsVersion = 7.2;
+						TestTargetID = 9376D21D1C64683F00FC2782;
+					};
+				};
+			};
+			buildConfigurationList = 9376D2191C64683F00FC2782 /* Build configuration list for PBXProject "STACollapsableTable" */;
+			compatibilityVersion = "Xcode 3.2";
+			developmentRegion = English;
+			hasScannedForEncodings = 0;
+			knownRegions = (
+				en,
+				Base,
+			);
+			mainGroup = 9376D2151C64683F00FC2782;
+			productRefGroup = 9376D21F1C64683F00FC2782 /* Products */;
+			projectDirPath = "";
+			projectRoot = "";
+			targets = (
+				9376D21D1C64683F00FC2782 /* STACollapsableTable */,
+				9376D2361C64684000FC2782 /* STACollapsableTableTests */,
+			);
+		};
+/* End PBXProject section */
+
+/* Begin PBXResourcesBuildPhase section */
+		9376D21C1C64683F00FC2782 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				9376D2311C64683F00FC2782 /* LaunchScreen.storyboard in Resources */,
+				9376D22E1C64683F00FC2782 /* Assets.xcassets in Resources */,
+				9376D22C1C64683F00FC2782 /* Main.storyboard in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		9376D2351C64684000FC2782 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXResourcesBuildPhase section */
+
+/* Begin PBXSourcesBuildPhase section */
+		9376D21A1C64683F00FC2782 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				9376D2291C64683F00FC2782 /* ViewController.m in Sources */,
+				9376D2261C64683F00FC2782 /* AppDelegate.m in Sources */,
+				9376D2231C64683F00FC2782 /* main.m in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		9376D2331C64684000FC2782 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				9376D23C1C64684000FC2782 /* STACollapsableTableTests.m in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXSourcesBuildPhase section */
+
+/* Begin PBXTargetDependency section */
+		9376D2391C64684000FC2782 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 9376D21D1C64683F00FC2782 /* STACollapsableTable */;
+			targetProxy = 9376D2381C64684000FC2782 /* PBXContainerItemProxy */;
+		};
+/* End PBXTargetDependency section */
+
+/* Begin PBXVariantGroup section */
+		9376D22A1C64683F00FC2782 /* Main.storyboard */ = {
+			isa = PBXVariantGroup;
+			children = (
+				9376D22B1C64683F00FC2782 /* Base */,
+			);
+			name = Main.storyboard;
+			sourceTree = "<group>";
+		};
+		9376D22F1C64683F00FC2782 /* LaunchScreen.storyboard */ = {
+			isa = PBXVariantGroup;
+			children = (
+				9376D2301C64683F00FC2782 /* Base */,
+			);
+			name = LaunchScreen.storyboard;
+			sourceTree = "<group>";
+		};
+/* End PBXVariantGroup section */
+
+/* Begin XCBuildConfiguration section */
+		9376D23E1C64684000FC2782 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++0x";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = dwarf;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				ENABLE_TESTABILITY = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu99;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"DEBUG=1",
+					"$(inherited)",
+				);
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 9.2;
+				MTL_ENABLE_DEBUG_INFO = YES;
+				ONLY_ACTIVE_ARCH = YES;
+				SDKROOT = iphoneos;
+			};
+			name = Debug;
+		};
+		9376D23F1C64684000FC2782 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++0x";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				ENABLE_NS_ASSERTIONS = NO;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu99;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 9.2;
+				MTL_ENABLE_DEBUG_INFO = NO;
+				SDKROOT = iphoneos;
+				VALIDATE_PRODUCT = YES;
+			};
+			name = Release;
+		};
+		9376D2411C64684000FC2782 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				INFOPLIST_FILE = STACollapsableTable/Info.plist;
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
+				PRODUCT_BUNDLE_IDENTIFIER = com.aaronjubbal.STACollapsableTable;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+			};
+			name = Debug;
+		};
+		9376D2421C64684000FC2782 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				INFOPLIST_FILE = STACollapsableTable/Info.plist;
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
+				PRODUCT_BUNDLE_IDENTIFIER = com.aaronjubbal.STACollapsableTable;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+			};
+			name = Release;
+		};
+		9376D2441C64684000FC2782 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				INFOPLIST_FILE = STACollapsableTableTests/Info.plist;
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
+				PRODUCT_BUNDLE_IDENTIFIER = com.aaronjubbal.STACollapsableTableTests;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/STACollapsableTable.app/STACollapsableTable";
+			};
+			name = Debug;
+		};
+		9376D2451C64684000FC2782 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				INFOPLIST_FILE = STACollapsableTableTests/Info.plist;
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
+				PRODUCT_BUNDLE_IDENTIFIER = com.aaronjubbal.STACollapsableTableTests;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/STACollapsableTable.app/STACollapsableTable";
+			};
+			name = Release;
+		};
+/* End XCBuildConfiguration section */
+
+/* Begin XCConfigurationList section */
+		9376D2191C64683F00FC2782 /* Build configuration list for PBXProject "STACollapsableTable" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				9376D23E1C64684000FC2782 /* Debug */,
+				9376D23F1C64684000FC2782 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		9376D2401C64684000FC2782 /* Build configuration list for PBXNativeTarget "STACollapsableTable" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				9376D2411C64684000FC2782 /* Debug */,
+				9376D2421C64684000FC2782 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+		};
+		9376D2431C64684000FC2782 /* Build configuration list for PBXNativeTarget "STACollapsableTableTests" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				9376D2441C64684000FC2782 /* Debug */,
+				9376D2451C64684000FC2782 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+		};
+/* End XCConfigurationList section */
+	};
+	rootObject = 9376D2161C64683F00FC2782 /* Project object */;
+}
