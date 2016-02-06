@@ -10,6 +10,7 @@
 #import <Nimbus/NIMutableTableViewModel.h>
 #import <Nimbus/NICellCatalog.h>
 #import "STACollapsableTableModel.h"
+#import "STATableModelSpecifier.h"
 
 @interface SampleTableViewController () <STACollapsableTableModelDelegate>
 
@@ -22,12 +23,12 @@
 - (void)viewDidLoad {
     [super viewDidLoad];
     
-    NSArray *sectionedArray = @[[NITitleCellObject objectWithTitle:@"Row 1"],
-                                [NITitleCellObject objectWithTitle:@"Row 2"],
-                                [NITitleCellObject objectWithTitle:@"Row 3"],
-                                [NITitleCellObject objectWithTitle:@"Row 4"],
-                                [NITitleCellObject objectWithTitle:@"Row 5"],
-                                [NITitleCellObject objectWithTitle:@"Row 6"]];
+    NSArray *children1 = @[[NITitleCellObject objectWithTitle:@"sr 3"],
+                           [NITitleCellObject objectWithTitle:@"sr 4"]];
+    NSArray *children2 = @[[NITitleCellObject objectWithTitle:@"sr 1"],
+                          [NITitleCellObject objectWithTitle:@"sr 2"],
+                          [STATableModelSpecifier createWithTitle:@"Category" children:children1 userInfo:nil]];
+    NSArray *sectionedArray = @[[STATableModelSpecifier createWithTitle:@"Category" children:children2 userInfo:nil]];
     
     self.tableModel = [[STACollapsableTableModel alloc] initWithContentsArray:sectionedArray
                                                                      delegate:self];
@@ -55,6 +56,14 @@
                                            reuseIdentifier: @"row"];
         }
         cell.textLabel.text = [(NITitleCellObject *)object title];
+        return cell;
+    } else {
+        UITableViewCell* cell = [tableView dequeueReusableCellWithIdentifier:@"row"];
+        if (nil == cell) {
+            cell = [[UITableViewCell alloc] initWithStyle: UITableViewCellStyleDefault
+                                          reuseIdentifier: @"row"];
+        }
+        cell.textLabel.text = @"unhandled cell";
         return cell;
     }
     return nil;

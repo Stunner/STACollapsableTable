@@ -14,6 +14,7 @@
 @property (nonatomic, strong) NSArray *children;
 @property (nonatomic, strong) NSDictionary *userInfo;
 
++ (instancetype)createWithTitle:(NSString *)title children:(NSArray *)children userInfo:(NSDictionary *)userInfo;
 - (instancetype)initWithTitle:(NSString *)title children:(NSArray *)children userInfo:(NSDictionary *)userInfo;
 
 @end
