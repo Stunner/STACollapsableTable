@@ -48,7 +48,10 @@
                         atIndexPath: (NSIndexPath *)indexPath
                          withObject: (id)object
 {
-    return [self.delegate tableViewModel:self cellForTableView:tableView atIndexPath:indexPath withObject:object];
+    if ([self.delegate respondsToSelector:@selector(tableViewModel:cellForTableView:atIndexPath:withObject:)]) {
+        return [self.delegate tableViewModel:self cellForTableView:tableView atIndexPath:indexPath withObject:object];
+    }
+    return nil;
 }
 
 @end

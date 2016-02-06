@@ -22,11 +22,12 @@
 - (void)viewDidLoad {
     [super viewDidLoad];
     
-    NSArray *sectionedArray = @[@"Section 1",
-                                [NITitleCellObject objectWithTitle:@"Row 1"],
+    NSArray *sectionedArray = @[[NITitleCellObject objectWithTitle:@"Row 1"],
                                 [NITitleCellObject objectWithTitle:@"Row 2"],
-                                @"Section 2",
-                                [NITitleCellObject objectWithTitle:@"Row 3"]];
+                                [NITitleCellObject objectWithTitle:@"Row 3"],
+                                [NITitleCellObject objectWithTitle:@"Row 4"],
+                                [NITitleCellObject objectWithTitle:@"Row 5"],
+                                [NITitleCellObject objectWithTitle:@"Row 6"]];
     
     self.tableModel = [[STACollapsableTableModel alloc] initWithContentsArray:sectionedArray
                                                                      delegate:self];
