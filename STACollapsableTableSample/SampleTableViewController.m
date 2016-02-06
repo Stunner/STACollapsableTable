@@ -9,10 +9,11 @@
 #import "SampleTableViewController.h"
 #import <Nimbus/NIMutableTableViewModel.h>
 #import <Nimbus/NICellCatalog.h>
+#import "STACollapsableTableModel.h"
 
-@interface SampleTableViewController () <NITableViewModelDelegate>
+@interface SampleTableViewController () <STACollapsableTableModelDelegate>
 
-@property (nonatomic, strong) NIMutableTableViewModel *tableModel;
+@property (nonatomic, strong) STACollapsableTableModel *tableModel;
 
 @end
 
@@ -27,9 +28,9 @@
                                 @"Section 2",
                                 [NITitleCellObject objectWithTitle:@"Row 3"]];
     
-    self.tableModel = [[NIMutableTableViewModel alloc] initWithSectionedArray:sectionedArray
+    self.tableModel = [[STACollapsableTableModel alloc] initWithContentsArray:sectionedArray
                                                                      delegate:self];
-    self.tableView.dataSource = self.tableModel;
+    self.tableView.dataSource = [self.tableModel dataSource];
 }
 
 - (void)didReceiveMemoryWarning {
@@ -39,10 +40,10 @@
 
 #pragma mark - Table view data source
 
-- (UITableViewCell *)tableViewModel: (NITableViewModel *)tableViewModel
-                   cellForTableView: (UITableView *)tableView
-                        atIndexPath: (NSIndexPath *)indexPath
-                         withObject: (id)object
+- (UITableViewCell *)tableViewModel:(STACollapsableTableModel *)tableViewModel
+                   cellForTableView:(UITableView *)tableView
+                        atIndexPath:(NSIndexPath *)indexPath
+                         withObject:(id)object
 {
     NSLog(@"%s", __PRETTY_FUNCTION__);
     
