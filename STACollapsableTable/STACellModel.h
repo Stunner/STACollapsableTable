@@ -14,7 +14,7 @@
 //Public to subclasses
 @property (nonatomic, strong) NSString *title;
 @property (nonatomic, strong) NSArray *children;
-@property (nonatomic, strong) NSDictionary *userInfo;
+@property (nonatomic, strong) STATableModelSpecifier *specifier;
 
 @property (nonatomic, assign) BOOL isExpanded;
 @property (nonatomic, assign) BOOL isSearchResult;

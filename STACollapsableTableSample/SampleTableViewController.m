@@ -47,7 +47,7 @@
 - (UITableViewCell *)tableViewModel:(NITableViewModel *)tableViewModel
                    cellForTableView:(UITableView *)tableView
                         atIndexPath:(NSIndexPath *)indexPath
-                         withObject:(STACellModel *)object
+                          withModel:(STACellModel *)model
 {
     NSLog(@"%s", __PRETTY_FUNCTION__);
     
@@ -57,10 +57,10 @@
                                       reuseIdentifier: @"row"];
     }
     NSMutableString *indentationString = [NSMutableString stringWithString:@""];
-    for (int i = 0; i < object.depth; i++) {
+    for (int i = 0; i < model.depth; i++) {
         [indentationString appendString:@"    "];
     }
-    [indentationString appendString:object.title];
+    [indentationString appendString:model.title];
     cell.textLabel.text = indentationString;
     return cell;
 }

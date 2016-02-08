@@ -84,10 +84,10 @@ typedef void (^ObjectEnumeratorBlock)(id object);
 - (UITableViewCell *)tableViewModel:(NITableViewModel *)tableViewModel
                    cellForTableView:(UITableView *)tableView
                         atIndexPath:(NSIndexPath *)indexPath
-                         withObject:(STACellModel *)object
+                         withObject:(id)object
 {
-    if ([self.delegate respondsToSelector:@selector(tableViewModel:cellForTableView:atIndexPath:withObject:)]) {
-        return [self.delegate tableViewModel:self cellForTableView:tableView atIndexPath:indexPath withObject:object];
+    if ([self.delegate respondsToSelector:@selector(tableViewModel:cellForTableView:atIndexPath:withModel:)]) {
+        return [self.delegate tableViewModel:self cellForTableView:tableView atIndexPath:indexPath withModel:object];
     }
     return nil;
 }

@@ -13,7 +13,7 @@
 - (instancetype)initWithModelSpecifier:(STATableModelSpecifier *)modelSpecifier parent:(STACellModel *)parent {
     if (self = [super init]) {
         _title = modelSpecifier.title;
-        _userInfo = modelSpecifier.userInfo;
+        _specifier = modelSpecifier;
         
         if (parent) {
             _parent = parent;

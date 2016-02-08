@@ -25,7 +25,7 @@
 - (UITableViewCell *)tableViewModel:(STACollapsableTableModel *)tableViewModel
                    cellForTableView:(UITableView *)tableView
                         atIndexPath:(NSIndexPath *)indexPath
-                         withObject:(STACellModel *)object;
+                          withModel:(STACellModel *)model;
 
 @end
 
