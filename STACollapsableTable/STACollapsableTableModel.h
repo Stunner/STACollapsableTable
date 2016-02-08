@@ -9,6 +9,7 @@
 #import <Foundation/Foundation.h>
 #import <UIKit/UIKit.h>
 
+@class STACellModel;
 @class STACollapsableTableModel;
 
 @protocol STACollapsableTableModelDelegate <NSObject>
@@ -24,7 +25,7 @@
 - (UITableViewCell *)tableViewModel:(STACollapsableTableModel *)tableViewModel
                    cellForTableView:(UITableView *)tableView
                         atIndexPath:(NSIndexPath *)indexPath
-                         withObject:(id)object;
+                         withObject:(STACellModel *)object;
 
 @end
 

@@ -10,11 +10,13 @@
 #import <Nimbus/NIMutableTableViewModel.h>
 #import <Nimbus/NICellCatalog.h>
 #import "STATableModelSpecifier.h"
+#import "STACellModel.h"
 
 typedef void (^ObjectEnumeratorBlock)(id object);
 
 @interface STACollapsableTableModel () <NITableViewModelDelegate>
 
+@property (nonatomic, strong) NSArray *dataArray;
 @property (nonatomic, strong) NIMutableTableViewModel *tableModel;
 
 @end
@@ -34,7 +36,7 @@ typedef void (^ObjectEnumeratorBlock)(id object);
 {
     if (self = [super init]) {
         [self parseContents:contentsArray];
-        self.delegate = delegate;
+        _delegate = delegate;
     }
     return self;
 }
@@ -48,11 +50,17 @@ typedef void (^ObjectEnumeratorBlock)(id object);
 #pragma mark - Private Methods
 
 - (void)parseContents:(NSArray *)contentsArray {
+    NSMutableArray *mutableDataArray = [NSMutableArray arrayWithCapacity:contentsArray.count];
+    for (STATableModelSpecifier *specifier in contentsArray) {
+        STACellModel *cellModel = [[STACellModel alloc] initWithModelSpecifier:specifier parent:nil];
+        [mutableDataArray addObject:cellModel];
+    }
+    self.dataArray = mutableDataArray;
+    
     NSMutableArray *nimbusContents = [NSMutableArray array];
-    [self enumerateObjects:contentsArray block:^(id object) {
+    [self enumerateObjects:self.dataArray block:^(id object) {
         [nimbusContents addObject:object];
     }];
-    NSLog(@"nimbusContents: %@", nimbusContents);
     self.tableModel = [[NIMutableTableViewModel alloc] initWithSectionedArray:nimbusContents
                                                                      delegate:self];
 }
@@ -62,9 +70,9 @@ typedef void (^ObjectEnumeratorBlock)(id object);
         return;
     }
     for (id object in contentsArray) {
-        if ([object isKindOfClass:[STATableModelSpecifier class]]) {
+        if ([object isKindOfClass:[STACellModel class]]) {
             block(object);
-            [self enumerateObjects:((STATableModelSpecifier *)object).children block:block];
+            [self enumerateObjects:((STACellModel *)object).children block:block];
         } else {
             block(object);
         }
@@ -73,10 +81,10 @@ typedef void (^ObjectEnumeratorBlock)(id object);
 
 #pragma mark - NITableViewModelDelegate
 
-- (UITableViewCell *)tableViewModel: (NITableViewModel *)tableViewModel
-                   cellForTableView: (UITableView *)tableView
-                        atIndexPath: (NSIndexPath *)indexPath
-                         withObject: (id)object
+- (UITableViewCell *)tableViewModel:(NITableViewModel *)tableViewModel
+                   cellForTableView:(UITableView *)tableView
+                        atIndexPath:(NSIndexPath *)indexPath
+                         withObject:(STACellModel *)object
 {
     if ([self.delegate respondsToSelector:@selector(tableViewModel:cellForTableView:atIndexPath:withObject:)]) {
         return [self.delegate tableViewModel:self cellForTableView:tableView atIndexPath:indexPath withObject:object];
