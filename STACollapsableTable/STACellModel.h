@@ -37,6 +37,10 @@
 
 - (instancetype)initWithModelSpecifier:(STATableModelSpecifier *)contentsArray parent:(STACellModel *)parent;
 
+- (NSArray *)indexPathsToAddForExpansionFromIndexPath:(NSIndexPath *)indexPath
+                                         inTableModel:(STACollapsableTableModel *)tableModel
+                                          isSearching:(BOOL)isSearching;
+
 - (NSArray *)indexPathsToRemoveForCollapseFromIndexPath:(NSIndexPath *)indexPath
                                            inTableModel:(STACollapsableTableModel *)tableModel
                                             isSearching:(BOOL)isSearching;

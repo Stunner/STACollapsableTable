@@ -84,6 +84,40 @@ typedef void (^ObjectEnumeratorBlock)(id object);
     }
 }
 
+- (void)expandRowFromIndexPath:(NSIndexPath *)indexPath inTableView:(UITableView *)tableView animated:(BOOL)animated {
+    NSLog(@"%s", __PRETTY_FUNCTION__);
+    
+    STACellModel *cellModel = [self cellModelAtIndexPath:indexPath];
+    if (cellModel.isExpanded) return;
+    
+    NSArray<NSDictionary *> *indexPathsToAdd = [cellModel indexPathsToAddForExpansionFromIndexPath:indexPath
+                                                                                      inTableModel:self
+                                                                                       isSearching:NO/*self.isSearching*/];
+    NSMutableArray *addedIndexPaths = [NSMutableArray arrayWithCapacity:indexPathsToAdd.count];
+    for (NSDictionary *dict in indexPathsToAdd) {
+        NSUInteger index = [dict[@"index"] integerValue];
+        STACellModel *addedCellModel = dict[@"container"];
+        [self.tableModel insertObject:addedCellModel atRow:index inSection:indexPath.section];
+        NSIndexPath *newIndexPath = [NSIndexPath indexPathForRow:index inSection:indexPath.section];
+        [addedIndexPaths addObject:newIndexPath];
+    }
+    [tableView beginUpdates];
+    [tableView insertRowsAtIndexPaths:addedIndexPaths withRowAnimation:UITableViewRowAnimationNone];
+    [tableView endUpdates];
+    [tableView reloadRowsAtIndexPaths:addedIndexPaths withRowAnimation:UITableViewRowAnimationNone];
+//    UITableViewScrollPosition scrollPosition = UITableViewScrollPositionTop;
+//    if (cellModel.children.count < 4) {
+//        scrollPosition = UITableViewScrollPositionMiddle;
+//    }
+//    [tableView scrollToRowAtIndexPath:indexPath atScrollPosition:scrollPosition animated:animated];
+    
+    cellModel.isExpanded = YES;
+//    [self.expandedSectionsSet addObject:legendSectionContainer];
+    
+//    LegendCategoryTableViewCell *cell = (LegendCategoryTableViewCell *)[self.tableView cellForRowAtIndexPath:indexPath];
+//    [cell cellTapped];
+}
+
 #pragma mark - NITableViewModelDelegate Methods
 
 - (UITableViewCell *)tableViewModel:(NITableViewModel *)tableViewModel
@@ -119,7 +153,7 @@ typedef void (^ObjectEnumeratorBlock)(id object);
 //        LegendCategoryTableViewCell *cell = (LegendCategoryTableViewCell *)[tableView cellForRowAtIndexPath:indexPath];
 //        [cell cellTapped];
     } else { // expand
-        
+        [self expandRowFromIndexPath:indexPath inTableView:tableView animated:YES];
     }
 }
 

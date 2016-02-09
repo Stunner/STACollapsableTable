@@ -54,6 +54,36 @@ typedef NSIndexPath * (^ObjectEnumeratorBlock)(STACellModel *cellModel, NSUInteg
 
 #pragma mark - Public Methods
 
+- (NSArray *)indexPathsToAddForExpansionFromIndexPath:(NSIndexPath *)indexPath
+                                         inTableModel:(STACollapsableTableModel *)tableModel
+                                          isSearching:(BOOL)isSearching
+{
+    NSLog(@"%s", __PRETTY_FUNCTION__);
+    
+    NSMutableArray *addedIndexPaths = [NSMutableArray array];
+    NSUInteger offsetCount = 1;
+    NSUInteger rowsCounter = indexPath.row;
+    for (STACellModel *cellModel in self.children) {
+        if (isSearching) {
+            if (!cellModel.isSearchResult && !cellModel.descendantsInSearchResults) {
+                [addedIndexPaths addObject:@{@"container" : cellModel,
+                                             @"index" : @(rowsCounter + offsetCount)}];
+            } else {
+                if (cellModel.isExpanded) {
+                    offsetCount += cellModel.children.count;
+                } else {
+                    offsetCount += cellModel.descendantsInSearchResults;
+                }
+            }
+        } else {
+            [addedIndexPaths addObject:@{@"container" : cellModel,
+                                         @"index" : @(rowsCounter + offsetCount)}];
+        }
+        offsetCount++;
+    }
+    return addedIndexPaths;
+}
+
 - (NSArray *)indexPathsToRemoveForCollapseFromIndexPath:(NSIndexPath *)indexPath
                                            inTableModel:(STACollapsableTableModel *)tableModel
                                             isSearching:(BOOL)isSearching
