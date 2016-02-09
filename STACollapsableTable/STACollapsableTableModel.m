@@ -25,14 +25,6 @@ typedef void (^ObjectEnumeratorBlock)(id object);
 
 @implementation STACollapsableTableModel
 
-//- (instancetype)initWithDelegate:(id<STACollapsableTableModelDelegate>)delegate {
-//    if (self = [super init]) {
-//        
-//        self.delegate = delegate;
-//    }
-//    return self;
-//}
-
 - (instancetype)initWithContentsArray:(NSArray *)contentsArray
                              delegate:(id<STACollapsableTableModelDelegate, UITableViewDelegate>)delegate
 {

@@ -27,9 +27,10 @@
     return self;
 }
 
-#pragma mark - UITableViewDelegate Methods
+#pragma mark - UITableViewDelegate Methods -
 
 // Display customization
+#pragma mark Display Customization
 
 - (void)tableView:(UITableView *)tableView willDisplayCell:(UITableViewCell *)cell forRowAtIndexPath:(NSIndexPath *)indexPath {
     if ([self.externalDelegate respondsToSelector:@selector(tableView:willDisplayCell:forRowAtIndexPath:)]) {
@@ -68,6 +69,7 @@
 }
 
 // Variable height support
+#pragma mark Variable Height Support
 
 - (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath {
     if ([self.externalDelegate respondsToSelector:@selector(tableView:heightForRowAtIndexPath:)]) {
@@ -112,6 +114,7 @@
 }
 
 // Section header & footer information.
+#pragma mark Section Header & Footer Information
 
 - (nullable UIView *)tableView:(UITableView *)tableView viewForHeaderInSection:(NSInteger)section {
     if ([self.externalDelegate respondsToSelector:@selector(tableView:viewForHeaderInSection:)]) {
@@ -128,6 +131,7 @@
 }
 
 // Accessories (disclosures).
+#pragma mark Accessories
 
 //- (UITableViewCellAccessoryType)tableView:(UITableView *)tableView accessoryTypeForRowWithIndexPath:(NSIndexPath *)indexPath {
 //    if ([self.externalDelegate respondsToSelector:@selector(tableView:accessoryTypeForRowWithIndexPath:)]) {
@@ -143,6 +147,7 @@
 }
 
 // Selection
+#pragma mark Selection
 
 - (BOOL)tableView:(UITableView *)tableView shouldHighlightRowAtIndexPath:(NSIndexPath *)indexPath {
     if ([self.externalDelegate respondsToSelector:@selector(tableView:shouldHighlightRowAtIndexPath:)]) {
@@ -190,6 +195,7 @@
 }
 
 // Editing
+#pragma mark Editing
 
 - (UITableViewCellEditingStyle)tableView:(UITableView *)tableView editingStyleForRowAtIndexPath:(NSIndexPath *)indexPath {
     if ([self.externalDelegate respondsToSelector:@selector(tableView:editingStyleForRowAtIndexPath:)]) {
@@ -232,6 +238,7 @@
 }
 
 // Moving/reordering
+#pragma mark Moving/Reordering
 
 - (NSIndexPath *)tableView:(UITableView *)tableView
 targetIndexPathForMoveFromRowAtIndexPath:(NSIndexPath *)sourceIndexPath
@@ -244,6 +251,7 @@ targetIndexPathForMoveFromRowAtIndexPath:(NSIndexPath *)sourceIndexPath
 }
 
 // Indentation
+#pragma mark Indentation
 
 - (NSInteger)tableView:(UITableView *)tableView indentationLevelForRowAtIndexPath:(NSIndexPath *)indexPath {
     if ([self.externalDelegate respondsToSelector:@selector(tableView:indentationLevelForRowAtIndexPath:)]) {
@@ -253,6 +261,7 @@ targetIndexPathForMoveFromRowAtIndexPath:(NSIndexPath *)sourceIndexPath
 }
 
 // Copy/Paste
+#pragma mark Copy/Paste
 
 - (BOOL)tableView:(UITableView *)tableView shouldShowMenuForRowAtIndexPath:(NSIndexPath *)indexPath {
     if ([self.externalDelegate respondsToSelector:@selector(tableView:shouldShowMenuForRowAtIndexPath:)]) {
@@ -275,6 +284,7 @@ targetIndexPathForMoveFromRowAtIndexPath:(NSIndexPath *)sourceIndexPath
 }
 
 // Focus
+#pragma mark Focus
 
 - (BOOL)tableView:(UITableView *)tableView canFocusRowAtIndexPath:(NSIndexPath *)indexPath {
     if ([self.externalDelegate respondsToSelector:@selector(tableView:canFocusRowAtIndexPath:)]) {
