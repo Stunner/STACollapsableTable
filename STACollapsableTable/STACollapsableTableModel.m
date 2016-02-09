@@ -96,10 +96,9 @@ typedef void (^ObjectEnumeratorBlock)(id object);
     }
 }
 
-- (void)expandRowFromIndexPath:(NSIndexPath *)indexPath inTableView:(UITableView *)tableView animated:(BOOL)animated {
+- (void)expand:(STACellModel *)cellModel fromIndexPath:(NSIndexPath *)indexPath inTableView:(UITableView *)tableView animated:(BOOL)animated {
     NSLog(@"%s", __PRETTY_FUNCTION__);
     
-    STACellModel *cellModel = [self cellModelAtIndexPath:indexPath];
     if (cellModel.isExpanded) return;
     
     NSArray<NSDictionary *> *indexPathsToAdd = [cellModel indexPathsToAddForExpansionFromIndexPath:indexPath
@@ -130,6 +129,25 @@ typedef void (^ObjectEnumeratorBlock)(id object);
 //    [cell cellTapped];
 }
 
+- (void)collapse:(STACellModel *)cellModel fromIndexPath:(NSIndexPath *)indexPath inTableView:(UITableView *)tableView animated:(BOOL)animated {
+    NSLog(@"%s", __PRETTY_FUNCTION__);
+    
+    NSMutableArray *removableIndexPaths = [NSMutableArray arrayWithCapacity:10];
+    [removableIndexPaths addObjectsFromArray:[cellModel indexPathsToRemoveForCollapseFromIndexPath:indexPath
+                                                                                      inTableModel:self
+                                                                                       isSearching:NO/*self.isSearching*/]];
+    for (NSInteger i = removableIndexPaths.count - 1; i >= 0; i--) {
+        NSIndexPath *removedIndexPath = removableIndexPaths[i];
+        [self.tableModel removeObjectAtIndexPath:removedIndexPath];
+    }
+    [tableView deleteRowsAtIndexPaths:removableIndexPaths withRowAnimation:UITableViewRowAnimationNone];
+    
+    cellModel.isExpanded = NO;
+    [self.expandedSectionsSet removeObject:cellModel];
+    //        LegendCategoryTableViewCell *cell = (LegendCategoryTableViewCell *)[tableView cellForRowAtIndexPath:indexPath];
+    //        [cell cellTapped];
+}
+
 #pragma mark - NITableViewModelDelegate Methods
 
 - (UITableViewCell *)tableViewModel:(NITableViewModel *)tableViewModel
@@ -150,22 +168,9 @@ typedef void (^ObjectEnumeratorBlock)(id object);
     
     STACellModel *cellModel = [self cellModelAtIndexPath:indexPath];
     if (cellModel.isExpanded) { // collapse
-        NSMutableArray *removableIndexPaths = [NSMutableArray arrayWithCapacity:10];
-        [removableIndexPaths addObjectsFromArray:[cellModel indexPathsToRemoveForCollapseFromIndexPath:indexPath
-                                                                                          inTableModel:self
-                                                                                           isSearching:NO/*self.isSearching*/]];
-        for (NSInteger i = removableIndexPaths.count - 1; i >= 0; i--) {
-            NSIndexPath *removedIndexPath = removableIndexPaths[i];
-            [self.tableModel removeObjectAtIndexPath:removedIndexPath];
-        }
-        [tableView deleteRowsAtIndexPaths:removableIndexPaths withRowAnimation:UITableViewRowAnimationNone];
-        
-        cellModel.isExpanded = NO;
-        [self.expandedSectionsSet removeObject:cellModel];
-//        LegendCategoryTableViewCell *cell = (LegendCategoryTableViewCell *)[tableView cellForRowAtIndexPath:indexPath];
-//        [cell cellTapped];
+        [self collapse:cellModel fromIndexPath:indexPath inTableView:tableView animated:YES];
     } else { // expand
-        [self expandRowFromIndexPath:indexPath inTableView:tableView animated:YES];
+        [self expand:cellModel fromIndexPath:indexPath inTableView:tableView animated:YES];
     }
 }
 
