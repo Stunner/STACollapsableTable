@@ -39,5 +39,6 @@
                              delegate:(id<STACollapsableTableModelDelegate>)delegate;
 
 - (STACellModel *)cellModelAtIndexPath:(NSIndexPath *)indexPath;
+- (void)collapseExpandedCellState;
 
 @end

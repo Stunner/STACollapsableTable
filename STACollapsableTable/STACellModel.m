@@ -52,6 +52,16 @@ typedef NSIndexPath * (^ObjectEnumeratorBlock)(STACellModel *cellModel, NSUInteg
     return self.descendantsInSearchResults;
 }
 
+- (void)setIsExpanded:(BOOL)isExpanded {
+    if (!isExpanded) {
+        // collapsing the parent collapses all of its children
+        for (STACellModel *cellModel in self.children) {
+            cellModel.isExpanded = NO;
+        }
+    }
+    _isExpanded = isExpanded;
+}
+
 #pragma mark - Public Methods
 
 - (NSArray *)indexPathsToAddForExpansionFromIndexPath:(NSIndexPath *)indexPath

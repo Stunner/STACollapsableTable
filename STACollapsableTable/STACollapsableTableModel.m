@@ -21,6 +21,8 @@ typedef void (^ObjectEnumeratorBlock)(id object);
 @property (nonatomic, strong) NIMutableTableViewModel *tableModel;
 @property (nonatomic, strong) STATableViewDelegate *tableViewDelegateArbiter;
 
+@property (nonatomic, strong) NSMutableSet *expandedSectionsSet;
+
 @end
 
 @implementation STACollapsableTableModel
@@ -32,6 +34,7 @@ typedef void (^ObjectEnumeratorBlock)(id object);
         _tableViewDelegateArbiter = [[STATableViewDelegate alloc] initWithInternalDelegate:self externalDelegate:delegate];
         [self parseContents:contentsArray];
         _delegate = delegate;
+        _expandedSectionsSet = [NSMutableSet set];
     }
     return self;
 }
@@ -50,6 +53,15 @@ typedef void (^ObjectEnumeratorBlock)(id object);
 
 - (STACellModel *)cellModelAtIndexPath:(NSIndexPath *)indexPath {
     return [self.tableModel objectAtIndexPath:indexPath];
+}
+
+- (void)collapseExpandedCellState {
+    NSLog(@"%s", __PRETTY_FUNCTION__);
+    
+    for (STACellModel *cellModel in [self.expandedSectionsSet allObjects] ) {
+        cellModel.isExpanded = NO;
+        [self.expandedSectionsSet removeObject:cellModel];
+    }
 }
 
 #pragma mark - Private Methods
@@ -112,7 +124,7 @@ typedef void (^ObjectEnumeratorBlock)(id object);
 //    [tableView scrollToRowAtIndexPath:indexPath atScrollPosition:scrollPosition animated:animated];
     
     cellModel.isExpanded = YES;
-//    [self.expandedSectionsSet addObject:legendSectionContainer];
+    [self.expandedSectionsSet addObject:cellModel];
     
 //    LegendCategoryTableViewCell *cell = (LegendCategoryTableViewCell *)[self.tableView cellForRowAtIndexPath:indexPath];
 //    [cell cellTapped];
@@ -149,7 +161,7 @@ typedef void (^ObjectEnumeratorBlock)(id object);
         [tableView deleteRowsAtIndexPaths:removableIndexPaths withRowAnimation:UITableViewRowAnimationNone];
         
         cellModel.isExpanded = NO;
-//        [self.expandedSectionsSet removeObject:cellModel];
+        [self.expandedSectionsSet removeObject:cellModel];
 //        LegendCategoryTableViewCell *cell = (LegendCategoryTableViewCell *)[tableView cellForRowAtIndexPath:indexPath];
 //        [cell cellTapped];
     } else { // expand
