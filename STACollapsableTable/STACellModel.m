@@ -7,6 +7,10 @@
 //
 
 #import "STACellModel.h"
+#import <UIKit/UIKit.h>
+#import "STACollapsableTableModel.h"
+
+typedef NSIndexPath * (^ObjectEnumeratorBlock)(STACellModel *cellModel, NSUInteger row);
 
 @implementation STACellModel
 
@@ -14,6 +18,7 @@
     if (self = [super init]) {
         _title = modelSpecifier.title;
         _specifier = modelSpecifier;
+        _isExpanded = YES;
         
         if (parent) {
             _parent = parent;
@@ -30,6 +35,82 @@
         _children = childrenArray;
     }
     return self;
+}
+
+- (NSUInteger)descendantsInSearchResults {
+    NSLog(@"%s", __PRETTY_FUNCTION__);
+    
+    return self.descendantSearchResultSet.count;
+}
+
+- (NSUInteger)displayedDescendantsCount {
+    NSLog(@"%s", __PRETTY_FUNCTION__);
+    
+    if (self.isExpanded) {
+        return self.children.count;
+    }
+    return self.descendantsInSearchResults;
+}
+
+#pragma mark - Public Methods
+
+- (NSArray *)indexPathsToRemoveForCollapseFromIndexPath:(NSIndexPath *)indexPath
+                                           inTableModel:(STACollapsableTableModel *)tableModel
+                                            isSearching:(BOOL)isSearching
+{
+    NSLog(@"%s", __PRETTY_FUNCTION__);
+    
+    self.indexPath = indexPath;
+    self.tableModel = tableModel;
+    
+    return [self enumerateObjects:^NSIndexPath * (STACellModel *cellModel, NSUInteger row) {
+        NSIndexPath *removableIndexPath = nil;
+        if (isSearching) {
+            if (!cellModel.isSearchResult) {
+                removableIndexPath = [NSIndexPath indexPathForRow:row inSection:indexPath.section];
+            }
+        } else {
+            removableIndexPath = [NSIndexPath indexPathForRow:row inSection:indexPath.section];
+        }
+        return removableIndexPath;
+    }];
+}
+
+#pragma mark - Helper Methods
+
+- (BOOL)isDescendant:(STACellModel *)cellModel {
+    NSLog(@"%s", __PRETTY_FUNCTION__);
+    
+    if (!cellModel.parent) {
+        return NO;
+    }
+    if (cellModel.parent == self) {
+        return YES;
+    }
+    return [self isDescendant:cellModel.parent];
+}
+
+/**
+ Enumerates through already displaying objects.
+ */
+- (NSArray *)enumerateObjects:(ObjectEnumeratorBlock)block {
+    NSLog(@"%s", __PRETTY_FUNCTION__);
+    
+    NSUInteger displayedDescendantsCount = self.displayedDescendantsCount;
+    NSMutableArray *indexPathsToRemoveArray = [NSMutableArray arrayWithCapacity:displayedDescendantsCount];
+    NSUInteger r = self.indexPath.row;
+    
+    NSInteger i = 1;
+    STACellModel *cellModel = [self.tableModel cellModelAtIndexPath:[NSIndexPath indexPathForRow:r + i inSection:self.indexPath.section]];
+    while (cellModel && [self isDescendant:cellModel]) {
+        NSIndexPath *removableIndexPath = block(cellModel, r + i);
+        if (removableIndexPath) {
+            [indexPathsToRemoveArray addObject:removableIndexPath];
+        }
+        i++;
+        cellModel = [self.tableModel cellModelAtIndexPath:[NSIndexPath indexPathForRow:r + i inSection:self.indexPath.section]];
+    }
+    return indexPathsToRemoveArray;
 }
 
 @end

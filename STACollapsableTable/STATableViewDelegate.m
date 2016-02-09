@@ -186,6 +186,7 @@
     if ([self.externalDelegate respondsToSelector:@selector(tableView:didSelectRowAtIndexPath:)]) {
         [self.externalDelegate tableView:tableView didSelectRowAtIndexPath:indexPath];
     }
+    [self.internalDelegate tableView:tableView didSelectRowAtIndexPath:indexPath];
 }
 
 - (void)tableView:(UITableView *)tableView didDeselectRowAtIndexPath:(NSIndexPath *)indexPath {

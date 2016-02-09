@@ -9,6 +9,8 @@
 #import <Foundation/Foundation.h>
 #import "STATableModelSpecifier.h"
 
+@class STACollapsableTableModel;
+
 @interface STACellModel : NSObject
 
 //Public to subclasses
@@ -26,11 +28,17 @@
  */
 @property (nonatomic, assign, readonly) NSUInteger depth;
 
+@property (nonatomic, weak) NSIndexPath *indexPath;
+@property (nonatomic, weak) STACollapsableTableModel *tableModel;
 
 //Private/Internal to subclasses
 @property (atomic, strong) NSCountedSet *descendantSearchResultSet;
 @property (nonatomic, assign, readonly) NSUInteger displayedDescendantsCount;
 
 - (instancetype)initWithModelSpecifier:(STATableModelSpecifier *)contentsArray parent:(STACellModel *)parent;
+
+- (NSArray *)indexPathsToRemoveForCollapseFromIndexPath:(NSIndexPath *)indexPath
+                                           inTableModel:(STACollapsableTableModel *)tableModel
+                                            isSearching:(BOOL)isSearching;
 
 @end

@@ -84,7 +84,7 @@ typedef void (^ObjectEnumeratorBlock)(id object);
     }
 }
 
-#pragma mark - NITableViewModelDelegate
+#pragma mark - NITableViewModelDelegate Methods
 
 - (UITableViewCell *)tableViewModel:(NITableViewModel *)tableViewModel
                    cellForTableView:(UITableView *)tableView
@@ -95,6 +95,32 @@ typedef void (^ObjectEnumeratorBlock)(id object);
         return [self.delegate tableViewModel:self cellForTableView:tableView atIndexPath:indexPath withModel:object];
     }
     return nil;
+}
+
+#pragma mark - UITableViewDelegate Methods
+
+- (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
+    NSLog(@"%s", __PRETTY_FUNCTION__);
+    
+    STACellModel *cellModel = [self cellModelAtIndexPath:indexPath];
+    if (cellModel.isExpanded) { // collapse
+        NSMutableArray *removableIndexPaths = [NSMutableArray arrayWithCapacity:10];
+        [removableIndexPaths addObjectsFromArray:[cellModel indexPathsToRemoveForCollapseFromIndexPath:indexPath
+                                                                                          inTableModel:self
+                                                                                           isSearching:NO/*self.isSearching*/]];
+        for (NSInteger i = removableIndexPaths.count - 1; i >= 0; i--) {
+            NSIndexPath *removedIndexPath = removableIndexPaths[i];
+            [self.tableModel removeObjectAtIndexPath:removedIndexPath];
+        }
+        [tableView deleteRowsAtIndexPaths:removableIndexPaths withRowAnimation:UITableViewRowAnimationNone];
+        
+        cellModel.isExpanded = NO;
+//        [self.expandedSectionsSet removeObject:cellModel];
+//        LegendCategoryTableViewCell *cell = (LegendCategoryTableViewCell *)[tableView cellForRowAtIndexPath:indexPath];
+//        [cell cellTapped];
+    } else { // expand
+        
+    }
 }
 
 @end
