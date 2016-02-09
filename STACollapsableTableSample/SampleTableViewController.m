@@ -34,7 +34,8 @@
     
     self.tableModel = [[STACollapsableTableModel alloc] initWithContentsArray:sectionedArray
                                                                      delegate:self];
-    self.tableView.dataSource = [self.tableModel dataSource];
+    self.tableView.dataSource = [self.tableModel tableViewDataSource];
+    self.tableView.delegate = [self.tableModel tableViewDelegate];
 }
 
 - (void)didReceiveMemoryWarning {
@@ -56,13 +57,18 @@
         cell = [[UITableViewCell alloc] initWithStyle: UITableViewCellStyleDefault
                                       reuseIdentifier: @"row"];
     }
-    NSMutableString *indentationString = [NSMutableString stringWithString:@""];
-    for (int i = 0; i < model.depth; i++) {
-        [indentationString appendString:@"    "];
-    }
-    [indentationString appendString:model.title];
-    cell.textLabel.text = indentationString;
+    cell.textLabel.text = model.title;
     return cell;
+}
+
+#pragma mark - Table View Delegate
+
+- (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
+    NSLog(@"%s", __PRETTY_FUNCTION__);
+}
+
+- (NSInteger)tableView:(UITableView *)tableView indentationLevelForRowAtIndexPath:(NSIndexPath *)indexPath {
+    return [self.tableModel cellModelAtIndexPath:indexPath].depth * 2;
 }
 
 @end

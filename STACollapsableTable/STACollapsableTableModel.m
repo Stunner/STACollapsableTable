@@ -11,6 +11,7 @@
 #import <Nimbus/NICellCatalog.h>
 #import "STATableModelSpecifier.h"
 #import "STACellModel.h"
+#import "STATableViewDelegate.h"
 
 typedef void (^ObjectEnumeratorBlock)(id object);
 
@@ -18,6 +19,7 @@ typedef void (^ObjectEnumeratorBlock)(id object);
 
 @property (nonatomic, strong) NSArray *dataArray;
 @property (nonatomic, strong) NIMutableTableViewModel *tableModel;
+@property (nonatomic, strong) STATableViewDelegate *tableViewDelegateArbiter;
 
 @end
 
@@ -32,9 +34,10 @@ typedef void (^ObjectEnumeratorBlock)(id object);
 //}
 
 - (instancetype)initWithContentsArray:(NSArray *)contentsArray
-                             delegate:(id<STACollapsableTableModelDelegate>)delegate
+                             delegate:(id<STACollapsableTableModelDelegate, UITableViewDelegate>)delegate
 {
     if (self = [super init]) {
+        _tableViewDelegateArbiter = [[STATableViewDelegate alloc] initWithInternalDelegate:self externalDelegate:delegate];
         [self parseContents:contentsArray];
         _delegate = delegate;
     }
@@ -43,8 +46,18 @@ typedef void (^ObjectEnumeratorBlock)(id object);
 
 #pragma mark - Getters
 
-- (id)dataSource {
+- (id)tableViewDataSource {
     return self.tableModel;
+}
+
+- (id)tableViewDelegate {
+    return self.tableViewDelegateArbiter;
+}
+
+#pragma mark - Public Methods
+
+- (STACellModel *)cellModelAtIndexPath:(NSIndexPath *)indexPath {
+    return [self.tableModel objectAtIndexPath:indexPath];
 }
 
 #pragma mark - Private Methods

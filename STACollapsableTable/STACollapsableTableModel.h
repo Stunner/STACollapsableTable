@@ -32,9 +32,12 @@
 @interface STACollapsableTableModel : NSObject
 
 @property (nonatomic, weak) id<STACollapsableTableModelDelegate> delegate;
-@property (nonatomic, readonly) id dataSource;
+@property (nonatomic, readonly) id tableViewDataSource;
+@property (nonatomic, readonly) id tableViewDelegate;
 
 - (instancetype)initWithContentsArray:(NSArray *)contentsArray
                              delegate:(id<STACollapsableTableModelDelegate>)delegate;
+
+- (STACellModel *)cellModelAtIndexPath:(NSIndexPath *)indexPath;
 
 @end
