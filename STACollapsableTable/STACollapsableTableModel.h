@@ -35,6 +35,11 @@
 @property (nonatomic, readonly) id tableViewDataSource;
 @property (nonatomic, readonly) id tableViewDelegate;
 
+// designated initializer
+- (instancetype)initWithContentsArray:(NSArray *)contentsArray
+                   initiallyCollapsed:(BOOL)initiallyCollapsed
+                             delegate:(id<STACollapsableTableModelDelegate, UITableViewDelegate>)delegate;
+
 - (instancetype)initWithContentsArray:(NSArray *)contentsArray
                              delegate:(id<STACollapsableTableModelDelegate>)delegate;
 

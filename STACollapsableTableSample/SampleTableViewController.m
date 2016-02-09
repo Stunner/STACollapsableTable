@@ -33,6 +33,7 @@
                                 [STATableModelSpecifier createWithTitle:@"Empty Category" children:@[] userInfo:nil]];
     
     self.tableModel = [[STACollapsableTableModel alloc] initWithContentsArray:sectionedArray
+                                                           initiallyCollapsed:YES
                                                                      delegate:self];
     self.tableView.dataSource = [self.tableModel tableViewDataSource];
     self.tableView.delegate = [self.tableModel tableViewDelegate];

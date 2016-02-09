@@ -17,6 +17,7 @@ typedef void (^ObjectEnumeratorBlock)(id object);
 
 @interface STACollapsableTableModel () <NITableViewModelDelegate>
 
+@property (nonatomic, assign) BOOL initiallyCollapsed;
 @property (nonatomic, strong) NSArray *dataArray;
 @property (nonatomic, strong) NIMutableTableViewModel *tableModel;
 @property (nonatomic, strong) STATableViewDelegate *tableViewDelegateArbiter;
@@ -27,16 +28,25 @@ typedef void (^ObjectEnumeratorBlock)(id object);
 
 @implementation STACollapsableTableModel
 
+// designated initializer
 - (instancetype)initWithContentsArray:(NSArray *)contentsArray
+                   initiallyCollapsed:(BOOL)initiallyCollapsed
                              delegate:(id<STACollapsableTableModelDelegate, UITableViewDelegate>)delegate
 {
     if (self = [super init]) {
         _tableViewDelegateArbiter = [[STATableViewDelegate alloc] initWithInternalDelegate:self externalDelegate:delegate];
+        _initiallyCollapsed = initiallyCollapsed;
         [self parseContents:contentsArray];
         _delegate = delegate;
         _expandedSectionsSet = [NSMutableSet set];
     }
     return self;
+}
+
+- (instancetype)initWithContentsArray:(NSArray *)contentsArray
+                             delegate:(id<STACollapsableTableModelDelegate, UITableViewDelegate>)delegate
+{
+    return [self initWithContentsArray:contentsArray initiallyCollapsed:NO delegate:delegate];
 }
 
 #pragma mark - Getters
@@ -68,15 +78,16 @@ typedef void (^ObjectEnumeratorBlock)(id object);
 
 - (void)parseContents:(NSArray *)contentsArray {
     NSMutableArray *mutableDataArray = [NSMutableArray arrayWithCapacity:contentsArray.count];
-    for (STATableModelSpecifier *specifier in contentsArray) {
+    for (STATableModelSpecifier *specifier in contentsArray) { // loop through root level objects
         STACellModel *cellModel = [[STACellModel alloc] initWithModelSpecifier:specifier parent:nil];
         [mutableDataArray addObject:cellModel];
     }
     self.dataArray = mutableDataArray;
     
     NSMutableArray *nimbusContents = [NSMutableArray array];
-    [self enumerateObjects:self.dataArray block:^(id object) {
-        [nimbusContents addObject:object];
+    [self enumerateObjects:self.dataArray block:^(STACellModel *cellModel) {
+        cellModel.isExpanded = !self.initiallyCollapsed;
+        [nimbusContents addObject:cellModel];
     }];
     self.tableModel = [[NIMutableTableViewModel alloc] initWithSectionedArray:nimbusContents
                                                                      delegate:self];
@@ -89,7 +100,9 @@ typedef void (^ObjectEnumeratorBlock)(id object);
     for (id object in contentsArray) {
         if ([object isKindOfClass:[STACellModel class]]) {
             block(object);
-            [self enumerateObjects:((STACellModel *)object).children block:block];
+            if (!self.initiallyCollapsed) {
+                [self enumerateObjects:((STACellModel *)object).children block:block];
+            }
         } else {
             block(object);
         }

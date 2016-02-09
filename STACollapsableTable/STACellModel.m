@@ -18,7 +18,7 @@ typedef NSIndexPath * (^ObjectEnumeratorBlock)(STACellModel *cellModel, NSUInteg
     if (self = [super init]) {
         _title = modelSpecifier.title;
         _specifier = modelSpecifier;
-        _isExpanded = YES;
+        _isExpanded = NO;
         
         if (parent) {
             _parent = parent;
@@ -57,6 +57,10 @@ typedef NSIndexPath * (^ObjectEnumeratorBlock)(STACellModel *cellModel, NSUInteg
         // collapsing the parent collapses all of its children
         for (STACellModel *cellModel in self.children) {
             cellModel.isExpanded = NO;
+        }
+    } else {
+        if (self.children.count == 0) { // a cell with no children can't be expanded!
+            return;
         }
     }
     _isExpanded = isExpanded;
