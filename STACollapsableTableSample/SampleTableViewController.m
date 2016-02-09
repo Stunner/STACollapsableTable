@@ -12,6 +12,8 @@
 #import "STACollapsableTableModel.h"
 #import "STATableModelSpecifier.h"
 #import "STACellModel.h"
+#import "CollapsableTableViewCell.h"
+#import "SubCollapsableTableViewCell.h"
 
 @interface SampleTableViewController () <STACollapsableTableModelDelegate>
 
@@ -53,12 +55,21 @@
 {
     NSLog(@"%s", __PRETTY_FUNCTION__);
     
-    UITableViewCell* cell = [tableView dequeueReusableCellWithIdentifier:@"row"];
-    if (nil == cell) {
-        cell = [[UITableViewCell alloc] initWithStyle: UITableViewCellStyleDefault
-                                      reuseIdentifier: @"row"];
+    UITableViewCell *cell;
+    if (model.children.count) {
+        if (model.depth == 0) {
+            cell = [CollapsableTableViewCell createFromModel:model inTableView:tableView userInfo:nil];
+        } else {
+            cell = [SubCollapsableTableViewCell createFromModel:model inTableView:tableView userInfo:nil];
+        }
+    } else {
+        cell = [tableView dequeueReusableCellWithIdentifier:@"row"];
+        if (nil == cell) {
+            cell = [[UITableViewCell alloc] initWithStyle: UITableViewCellStyleDefault
+                                          reuseIdentifier: @"row"];
+        }
+        cell.textLabel.text = model.title;
     }
-    cell.textLabel.text = model.title;
     return cell;
 }
 
@@ -72,6 +83,13 @@
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
     NSLog(@"%s", __PRETTY_FUNCTION__);
+    
+    UITableViewCell *cell = [tableView cellForRowAtIndexPath:indexPath];
+    if ([cell isKindOfClass:[CollapsableTableViewCell class]]) {
+        [(CollapsableTableViewCell *)cell cellTapped];
+    } else if ([cell isKindOfClass:[SubCollapsableTableViewCell class]]) {
+        [(SubCollapsableTableViewCell *)cell cellTapped];
+    }
 }
 
 - (NSInteger)tableView:(UITableView *)tableView indentationLevelForRowAtIndexPath:(NSIndexPath *)indexPath {

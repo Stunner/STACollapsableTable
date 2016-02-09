@@ -157,8 +157,6 @@ typedef void (^ObjectEnumeratorBlock)(id object);
     
     cellModel.isExpanded = NO;
     [self.expandedSectionsSet removeObject:cellModel];
-    //        LegendCategoryTableViewCell *cell = (LegendCategoryTableViewCell *)[tableView cellForRowAtIndexPath:indexPath];
-    //        [cell cellTapped];
 }
 
 #pragma mark - NITableViewModelDelegate Methods
