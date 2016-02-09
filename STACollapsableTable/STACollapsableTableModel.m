@@ -128,7 +128,8 @@ typedef void (^ObjectEnumeratorBlock)(id object);
     [tableView beginUpdates];
     [tableView insertRowsAtIndexPaths:addedIndexPaths withRowAnimation:UITableViewRowAnimationNone];
     [tableView endUpdates];
-    [tableView reloadRowsAtIndexPaths:addedIndexPaths withRowAnimation:UITableViewRowAnimationNone];
+//    [tableView reloadRowsAtIndexPaths:addedIndexPaths withRowAnimation:UITableViewRowAnimationNone];
+    
 //    UITableViewScrollPosition scrollPosition = UITableViewScrollPositionTop;
 //    if (cellModel.children.count < 4) {
 //        scrollPosition = UITableViewScrollPositionMiddle;
@@ -137,9 +138,6 @@ typedef void (^ObjectEnumeratorBlock)(id object);
     
     cellModel.isExpanded = YES;
     [self.expandedSectionsSet addObject:cellModel];
-    
-//    LegendCategoryTableViewCell *cell = (LegendCategoryTableViewCell *)[self.tableView cellForRowAtIndexPath:indexPath];
-//    [cell cellTapped];
 }
 
 - (void)collapse:(STACellModel *)cellModel fromIndexPath:(NSIndexPath *)indexPath inTableView:(UITableView *)tableView animated:(BOOL)animated {

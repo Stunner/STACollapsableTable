@@ -30,9 +30,13 @@
                            [STATableModelSpecifier createWithTitle:@"sr 4" children:nil userInfo:nil]];
     NSArray *children2 = @[[STATableModelSpecifier createWithTitle:@"sr 1" children:nil userInfo:nil],
                           [STATableModelSpecifier createWithTitle:@"sr 2" children:nil userInfo:nil],
-                          [STATableModelSpecifier createWithTitle:@"Category" children:children1 userInfo:nil]];
+                          [STATableModelSpecifier createWithTitle:@"SubCategory" children:children1 userInfo:nil]];
+    NSArray *children3 = @[[STATableModelSpecifier createWithTitle:@"sr 5" children:nil userInfo:nil],
+                           [STATableModelSpecifier createWithTitle:@"sr 6" children:nil userInfo:nil],
+                           [STATableModelSpecifier createWithTitle:@"sr 7" children:nil userInfo:nil]];
     NSArray *sectionedArray = @[[STATableModelSpecifier createWithTitle:@"Category" children:children2 userInfo:nil],
-                                [STATableModelSpecifier createWithTitle:@"Empty Category" children:@[] userInfo:nil]];
+                                [STATableModelSpecifier createWithTitle:@"Empty Category" children:@[] userInfo:nil],
+                                [STATableModelSpecifier createWithTitle:@"Category 2" children:children3 userInfo:nil]];
     
     self.tableModel = [[STACollapsableTableModel alloc] initWithContentsArray:sectionedArray
                                                            initiallyCollapsed:YES
