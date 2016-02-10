@@ -8,17 +8,17 @@
 
 #import "STATableViewDelegate.h"
 
-@interface STATableViewDelegate () <UITableViewDelegate>
+@interface STATableViewDelegate () <UITableViewDelegate, UISearchResultsUpdating>
 
 @property (nonatomic, weak) id internalDelegate;
-@property (nonatomic, weak) id <UITableViewDelegate>externalDelegate;
+@property (nonatomic, weak) id <UITableViewDelegate,UISearchResultsUpdating>externalDelegate;
 
 @end
 
 @implementation STATableViewDelegate
 
 - (instancetype)initWithInternalDelegate:(id)internalDelegate
-                        externalDelegate:(id<UITableViewDelegate>)externalDelegate
+                        externalDelegate:(id<UITableViewDelegate,UISearchResultsUpdating>)externalDelegate
 {
     if (self = [super init]) {
         _internalDelegate = internalDelegate;
@@ -315,6 +315,15 @@ withAnimationCoordinator:(UIFocusAnimationCoordinator *)coordinator
         return [self.externalDelegate indexPathForPreferredFocusedViewInTableView:tableView];
     }
     return nil;
+}
+
+#pragma mark - UISearchResultsUpdating Delegate Method
+
+- (void)updateSearchResultsForSearchController:(UISearchController *)searchController {
+    if ([self.externalDelegate respondsToSelector:@selector(updateSearchResultsForSearchController:)]) {
+        [self.externalDelegate updateSearchResultsForSearchController:searchController];
+    }
+    [self.internalDelegate updateSearchResultsForSearchController:searchController];
 }
 
 @end

@@ -183,4 +183,12 @@ typedef void (^ObjectEnumeratorBlock)(id object);
     }
 }
 
+#pragma mark - UISearchResultsUpdating Delegate Method
+
+- (void)updateSearchResultsForSearchController:(UISearchController *)searchController {
+    NSLog(@"%s", __PRETTY_FUNCTION__);
+    
+    
+}
+
 @end

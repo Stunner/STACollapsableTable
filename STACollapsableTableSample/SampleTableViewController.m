@@ -18,6 +18,7 @@
 @interface SampleTableViewController () <STACollapsableTableModelDelegate>
 
 @property (nonatomic, strong) STACollapsableTableModel *tableModel;
+@property (nonatomic, strong) UISearchController *searchController;
 
 @end
 
@@ -43,6 +44,15 @@
                                                                      delegate:self];
     self.tableView.dataSource = [self.tableModel tableViewDataSource];
     self.tableView.delegate = [self.tableModel tableViewDelegate];
+    
+    self.searchController = [[UISearchController alloc] initWithSearchResultsController:nil];
+    self.searchController.searchResultsUpdater = [self.tableModel tableViewDelegate];;
+    self.searchController.dimsBackgroundDuringPresentation = NO;
+//    self.searchController.searchBar.scopeButtonTitles = @[NSLocalizedString(@"ScopeButtonCountry",@"Country"),
+//                                                          NSLocalizedString(@"ScopeButtonCapital",@"Capital")];
+//    self.searchController.searchBar.delegate = self;
+    self.tableView.tableHeaderView = self.searchController.searchBar;
+    self.definesPresentationContext = YES;
 }
 
 - (void)didReceiveMemoryWarning {
@@ -98,6 +108,14 @@
 
 - (NSInteger)tableView:(UITableView *)tableView indentationLevelForRowAtIndexPath:(NSIndexPath *)indexPath {
     return [self.tableModel cellModelAtIndexPath:indexPath].depth * 2;
+}
+
+#pragma mark - UISearchResultsUpdating Delegate Method
+
+- (void)updateSearchResultsForSearchController:(UISearchController *)searchController {
+    NSLog(@"%s", __PRETTY_FUNCTION__);
+    
+    
 }
 
 @end
