@@ -19,6 +19,6 @@
                          inTableView:(UITableView *)tableView
                             userInfo:(NSDictionary *)userInfo;
 
-- (void)isSearchResultStateChanged:(BOOL)isSearchResult;
+- (void)cellTapped;
 
 @end

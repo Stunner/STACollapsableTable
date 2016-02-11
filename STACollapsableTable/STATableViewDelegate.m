@@ -331,8 +331,8 @@ withAnimationCoordinator:(UIFocusAnimationCoordinator *)coordinator
 
 - (void)searchBarTextDidBeginEditing:(UISearchBar *)searchBar {
     [self.internalDelegate searchBarTextDidBeginEditing:searchBar];
-    if ([self.externalDelegate respondsToSelector:@selector(searchBarTextDidEndEditing:)]) {
-        [self.externalDelegate searchBarTextDidEndEditing:searchBar];
+    if ([self.externalDelegate respondsToSelector:@selector(searchBarTextDidBeginEditing:)]) {
+        [self.externalDelegate searchBarTextDidBeginEditing:searchBar];
     }
 }
 

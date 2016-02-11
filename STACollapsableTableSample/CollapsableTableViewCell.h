@@ -14,6 +14,5 @@
 + (UITableViewCell *)createFromModel:(STACellModel *)cellModel
                          inTableView:(UITableView *)tableView
                             userInfo:(NSDictionary *)userInfo;
-- (void)cellTapped;
 
 @end
