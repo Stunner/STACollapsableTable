@@ -14,6 +14,7 @@
 #import "STACellModel.h"
 #import "CollapsableTableViewCell.h"
 #import "SubCollapsableTableViewCell.h"
+#import "LeafNodeTableViewCell.h"
 
 @interface SampleTableViewController () <STACollapsableTableModelDelegate>
 
@@ -79,12 +80,8 @@
             cell = [SubCollapsableTableViewCell createFromModel:model inTableView:tableView userInfo:@{@"isSearching" : @(self.isSearching)}];
         }
     } else {
-        cell = [tableView dequeueReusableCellWithIdentifier:@"row"];
-        if (nil == cell) {
-            cell = [[UITableViewCell alloc] initWithStyle: UITableViewCellStyleDefault
-                                          reuseIdentifier: @"row"];
-        }
-        cell.textLabel.text = model.title;
+        cell = [LeafNodeTableViewCell createFromModel:model inTableView:tableView userInfo:@{@"isSearching" : @(self.isSearching)}];
+//        cell.textLabel.text = model.title;
     }
     return cell;
 }
@@ -101,11 +98,7 @@
     NSLog(@"%s", __PRETTY_FUNCTION__);
     
     UITableViewCell *cell = [tableView cellForRowAtIndexPath:indexPath];
-    if ([cell isKindOfClass:[CollapsableTableViewCell class]]) {
-        [(CollapsableTableViewCell *)cell cellTapped];
-    } else if ([cell isKindOfClass:[SubCollapsableTableViewCell class]]) {
-        [(SubCollapsableTableViewCell *)cell cellTapped];
-    }
+    [(BaseCollapsableTableViewCell *)cell cellTapped];
 }
 
 - (NSInteger)tableView:(UITableView *)tableView indentationLevelForRowAtIndexPath:(NSIndexPath *)indexPath {

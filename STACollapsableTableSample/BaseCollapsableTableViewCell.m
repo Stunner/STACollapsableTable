@@ -36,6 +36,30 @@
     cell.titleLabel.text = cellModel.title;
     [cell updateRotatedImageViewStatus];
     
+    [cell isSearchResultStateChanged:cellModel.isSearchResult];
+    if (![userInfo[@"isSearching"] boolValue]) {
+        cellModel.isSearchResult = YES;
+    }
+    
+    return cell;
+}
+
++ (UITableViewCell *)createFromModel:(STACellModel *)cellModel
+                      reusableCellID:(NSString *)reusableCellID
+                           className:(NSString *)className
+                         inTableView:(UITableView *)tableView
+                            userInfo:(NSDictionary *)userInfo
+{
+    BaseCollapsableTableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:reusableCellID];
+    if (nil == cell) {
+        cell = [(BaseCollapsableTableViewCell *)[NSClassFromString(className) alloc] initWithStyle:UITableViewCellStyleDefault
+                                                                                   reuseIdentifier:reusableCellID];
+    }
+    
+    cell.cellModel = cellModel;
+    cell.textLabel.text = cellModel.title;
+    
+    [cell isSearchResultStateChanged:cellModel.isSearchResult];
     if (![userInfo[@"isSearching"] boolValue]) {
         cellModel.isSearchResult = YES;
     }
@@ -71,7 +95,11 @@
 }
 
 - (void)isSearchResultStateChanged:(BOOL)isSearchResult {
-    self.titleLabel.alpha = isSearchResult ? 1.0 : 0.5;
+    if (self.titleLabel) {
+        self.titleLabel.alpha = isSearchResult ? 1.0 : 0.5;
+    } else {
+        self.textLabel.alpha = isSearchResult ? 1.0 : 0.5;
+    }
 }
 
 - (void)updateRotatedImageViewStatus {
