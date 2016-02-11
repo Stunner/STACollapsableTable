@@ -75,6 +75,19 @@ typedef void (^ObjectEnumeratorBlock)(id object);
     return self.tableViewDelegateArbiter;
 }
 
+#pragma mark - Setters
+
+- (void)setStopSearching:(BOOL)stopSearching {
+    
+    if (stopSearching && _stopSearching != stopSearching) {
+        if (self.operationQueue.operationCount > 0) {
+            self.lastHighestSeenOperationID = self.searchOperationID + 1; // make any change "out of reach"
+            [self.operationQueue cancelAllOperations];
+        }
+    }
+    _stopSearching = stopSearching;
+}
+
 #pragma mark - Public Methods
 
 - (STACellModel *)cellModelAtIndexPath:(NSIndexPath *)indexPath {
@@ -132,7 +145,7 @@ typedef void (^ObjectEnumeratorBlock)(id object);
     
     NSArray<NSDictionary *> *indexPathsToAdd = [cellModel indexPathsToAddForExpansionFromIndexPath:indexPath
                                                                                       inTableModel:self
-                                                                                       isSearching:NO/*self.isSearching*/];
+                                                                                       isSearching:self.isSearching];
     NSMutableArray *addedIndexPaths = [NSMutableArray arrayWithCapacity:indexPathsToAdd.count];
     for (NSDictionary *dict in indexPathsToAdd) {
         NSUInteger index = [dict[@"index"] integerValue];
@@ -162,7 +175,7 @@ typedef void (^ObjectEnumeratorBlock)(id object);
     NSMutableArray *removableIndexPaths = [NSMutableArray arrayWithCapacity:10];
     [removableIndexPaths addObjectsFromArray:[cellModel indexPathsToRemoveForCollapseFromIndexPath:indexPath
                                                                                       inTableModel:self
-                                                                                       isSearching:NO/*self.isSearching*/]];
+                                                                                       isSearching:self.isSearching]];
     for (NSInteger i = removableIndexPaths.count - 1; i >= 0; i--) {
         NSIndexPath *removedIndexPath = removableIndexPaths[i];
         [self.tableModel removeObjectAtIndexPath:removedIndexPath];
@@ -199,21 +212,31 @@ typedef void (^ObjectEnumeratorBlock)(id object);
     }
 }
 
+#pragma mark - UISearchbarDelegate Methods
+
+- (void)searchBarTextDidBeginEditing:(UISearchBar *)searchBar {
+    self.isSearching = YES;
+}
+
+- (void)searchBarTextDidEndEditing:(UISearchBar *)searchBar {
+    self.isSearching = NO;
+}
+
 #pragma mark - UISearchResultsUpdating Delegate Method
 
 - (void)updateSearchResultsForSearchController:(UISearchController *)searchController {
     NSLog(@"%s", __PRETTY_FUNCTION__);
     
     NSString *searchString = searchController.searchBar.text;
-//    if ([searchString isEqualToString:@""]) {
-//        self.stopSearching = YES;
-//        
-//        // reset table model data
-//        [self.tableModel removeSectionAtIndex:0];
-////        [self.tableModel addObject:[NITitleCellObject objectWithTitle:@"search bar placeholder"]];
-//        [self.tableModel addObjectsFromArray:self.dataArray];
-////        [self.tableView reloadData];
-//    }
+    if ([searchString isEqualToString:@""]) {
+        self.stopSearching = YES;
+        
+        // reset table model data
+        [self.tableModel removeSectionAtIndex:0];
+//        [self.tableModel addObject:[NITitleCellObject objectWithTitle:@"search bar placeholder"]];
+        [self.tableModel addObjectsFromArray:self.dataArray];
+        [self.tableView reloadData];
+    }
     
     STASearchOperation *searchOperation = [[STASearchOperation alloc] initWithDataArray:self.dataArray
                                                                        withSearchString:searchString];

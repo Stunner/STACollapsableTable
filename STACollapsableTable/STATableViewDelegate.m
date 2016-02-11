@@ -8,17 +8,17 @@
 
 #import "STATableViewDelegate.h"
 
-@interface STATableViewDelegate () <UITableViewDelegate, UISearchResultsUpdating>
+@interface STATableViewDelegate () <UITableViewDelegate, UISearchResultsUpdating, UISearchBarDelegate>
 
 @property (nonatomic, weak) id internalDelegate;
-@property (nonatomic, weak) id <UITableViewDelegate,UISearchResultsUpdating>externalDelegate;
+@property (nonatomic, weak) id <UITableViewDelegate,UISearchResultsUpdating,UISearchBarDelegate>externalDelegate;
 
 @end
 
 @implementation STATableViewDelegate
 
 - (instancetype)initWithInternalDelegate:(id)internalDelegate
-                        externalDelegate:(id<UITableViewDelegate,UISearchResultsUpdating>)externalDelegate
+                        externalDelegate:(id<UITableViewDelegate,UISearchResultsUpdating,UISearchBarDelegate>)externalDelegate
 {
     if (self = [super init]) {
         _internalDelegate = internalDelegate;
@@ -315,6 +315,88 @@ withAnimationCoordinator:(UIFocusAnimationCoordinator *)coordinator
         return [self.externalDelegate indexPathForPreferredFocusedViewInTableView:tableView];
     }
     return nil;
+}
+
+#pragma mark - UISearchbarDelegate Methods -
+
+// Editing Text
+#pragma mark Editing Text
+
+- (BOOL)searchBarShouldBeginEditing:(UISearchBar *)searchBar {
+    if ([self.externalDelegate respondsToSelector:@selector(searchBarShouldBeginEditing:)]) {
+        return [self.externalDelegate searchBarShouldBeginEditing:searchBar];
+    }
+    return YES;
+}
+
+- (void)searchBarTextDidBeginEditing:(UISearchBar *)searchBar {
+    [self.internalDelegate searchBarTextDidBeginEditing:searchBar];
+    if ([self.externalDelegate respondsToSelector:@selector(searchBarTextDidEndEditing:)]) {
+        [self.externalDelegate searchBarTextDidEndEditing:searchBar];
+    }
+}
+
+- (BOOL)searchBarShouldEndEditing:(UISearchBar *)searchBar {
+    if ([self.externalDelegate respondsToSelector:@selector(searchBarShouldEndEditing:)]) {
+        return [self.externalDelegate searchBarShouldEndEditing:searchBar];
+    }
+    return YES;
+}
+
+- (void)searchBarTextDidEndEditing:(UISearchBar *)searchBar {
+    [self.internalDelegate searchBarTextDidEndEditing:searchBar];
+    if ([self.externalDelegate respondsToSelector:@selector(searchBarTextDidEndEditing:)]) {
+        [self.externalDelegate searchBarTextDidEndEditing:searchBar];
+    }
+}
+
+- (void)searchBar:(UISearchBar *)searchBar textDidChange:(NSString *)searchText {
+    if ([self.externalDelegate respondsToSelector:@selector(searchBar:textDidChange:)]) {
+        [self.externalDelegate searchBar:searchBar textDidChange:searchText];
+    }
+}
+
+- (BOOL)searchBar:(UISearchBar *)searchBar shouldChangeTextInRange:(NSRange)range replacementText:(NSString *)text {
+    if ([self.externalDelegate respondsToSelector:@selector(searchBar:shouldChangeTextInRange:replacementText:)]) {
+        return [self.externalDelegate searchBar:searchBar shouldChangeTextInRange:range replacementText:text];
+    }
+    return YES;
+}
+
+// Clicking Buttons
+#pragma mark Clicking Buttons
+
+- (void)searchBarSearchButtonClicked:(UISearchBar *)searchBar {
+    if ([self.externalDelegate respondsToSelector:@selector(searchBarSearchButtonClicked:)]) {
+        [self.externalDelegate searchBarSearchButtonClicked:searchBar];
+    }
+}
+
+- (void)searchBarBookmarkButtonClicked:(UISearchBar *)searchBar {
+    if ([self.externalDelegate respondsToSelector:@selector(searchBarBookmarkButtonClicked:)]) {
+        [self.externalDelegate searchBarBookmarkButtonClicked:searchBar];
+    }
+}
+
+- (void)searchBarCancelButtonClicked:(UISearchBar *)searchBar {
+    if ([self.externalDelegate respondsToSelector:@selector(searchBarCancelButtonClicked:)]) {
+        [self.externalDelegate searchBarCancelButtonClicked:searchBar];
+    }
+}
+
+- (void)searchBarResultsListButtonClicked:(UISearchBar *)searchBar {
+    if ([self.externalDelegate respondsToSelector:@selector(searchBarResultsListButtonClicked:)]) {
+        [self.externalDelegate searchBarResultsListButtonClicked:searchBar];
+    }
+}
+
+// Scope Button
+#pragma mark Scope Button
+
+- (void)searchBar:(UISearchBar *)searchBar selectedScopeButtonIndexDidChange:(NSInteger)selectedScope {
+    if ([self.externalDelegate respondsToSelector:@selector(searchBar:selectedScopeButtonIndexDidChange:)]) {
+        [self.externalDelegate searchBar:searchBar selectedScopeButtonIndexDidChange:selectedScope];
+    }
 }
 
 #pragma mark - UISearchResultsUpdating Delegate Method

@@ -33,6 +33,7 @@ typedef NSIndexPath * (^ObjectEnumeratorBlock)(STACellModel *cellModel, NSUInteg
             [childrenArray addObject:cellModel];
         }
         _children = childrenArray;
+        _descendantSearchResultSet = [NSCountedSet setWithCapacity:childrenArray.count];
     }
     return self;
 }
@@ -64,6 +65,15 @@ typedef NSIndexPath * (^ObjectEnumeratorBlock)(STACellModel *cellModel, NSUInteg
         }
     }
     _isExpanded = isExpanded;
+}
+
+- (void)setIsSearchResult:(BOOL)isSearchResult {
+    if (_isSearchResult != isSearchResult) {
+//        for (id parent in [self.parents allObjects]) {
+            [self.parent descendant:self isSearchResult:isSearchResult];
+//        }
+    }
+    _isSearchResult = isSearchResult;
 }
 
 #pragma mark - Public Methods
@@ -110,7 +120,7 @@ typedef NSIndexPath * (^ObjectEnumeratorBlock)(STACellModel *cellModel, NSUInteg
     return [self enumerateObjects:^NSIndexPath * (STACellModel *cellModel, NSUInteger row) {
         NSIndexPath *removableIndexPath = nil;
         if (isSearching) {
-            if (!cellModel.isSearchResult) {
+            if (!cellModel.isSearchResult && !cellModel.descendantsInSearchResults) {
                 removableIndexPath = [NSIndexPath indexPathForRow:row inSection:indexPath.section];
             }
         } else {
@@ -153,6 +163,17 @@ typedef NSIndexPath * (^ObjectEnumeratorBlock)(STACellModel *cellModel, NSUInteg
         }
     }
     return allSearchResults;
+}
+
+- (void)descendant:(STACellModel *)cellModel isSearchResult:(BOOL)isSearchResult {
+    NSLog(@"%s", __PRETTY_FUNCTION__);
+    
+    if (isSearchResult) {
+        [self.descendantSearchResultSet addObject:cellModel];
+    } else {
+        [self.descendantSearchResultSet removeObject:cellModel];
+    }
+    [self.parent descendant:self isSearchResult:isSearchResult];
 }
 
 #pragma mark - Helper Methods

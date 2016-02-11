@@ -47,11 +47,11 @@
     self.tableView.delegate = [self.tableModel tableViewDelegate];
     
     self.searchController = [[UISearchController alloc] initWithSearchResultsController:nil];
-    self.searchController.searchResultsUpdater = [self.tableModel tableViewDelegate];;
+    self.searchController.searchResultsUpdater = [self.tableModel tableViewDelegate];
     self.searchController.dimsBackgroundDuringPresentation = NO;
 //    self.searchController.searchBar.scopeButtonTitles = @[NSLocalizedString(@"ScopeButtonCountry",@"Country"),
 //                                                          NSLocalizedString(@"ScopeButtonCapital",@"Capital")];
-//    self.searchController.searchBar.delegate = self;
+    self.searchController.searchBar.delegate = [self.tableModel tableViewDelegate];
     self.tableView.tableHeaderView = self.searchController.searchBar;
     self.definesPresentationContext = YES;
 }
