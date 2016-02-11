@@ -19,6 +19,7 @@ typedef NSIndexPath * (^ObjectEnumeratorBlock)(STACellModel *cellModel, NSUInteg
         _title = modelSpecifier.title;
         _specifier = modelSpecifier;
         _isExpanded = NO;
+        _isSearchResult = YES; // make cells show up as black instead of gray initially
         
         if (parent) {
             _parent = parent;

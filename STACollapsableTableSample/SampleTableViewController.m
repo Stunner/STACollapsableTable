@@ -19,6 +19,7 @@
 
 @property (nonatomic, strong) STACollapsableTableModel *tableModel;
 @property (nonatomic, strong) UISearchController *searchController;
+@property (nonatomic, assign) BOOL isSearching;
 
 @end
 
@@ -73,9 +74,9 @@
     UITableViewCell *cell;
     if (model.children.count) {
         if (model.depth == 0) {
-            cell = [CollapsableTableViewCell createFromModel:model inTableView:tableView userInfo:nil];
+            cell = [CollapsableTableViewCell createFromModel:model inTableView:tableView userInfo:@{@"isSearching" : @(self.isSearching)}];
         } else {
-            cell = [SubCollapsableTableViewCell createFromModel:model inTableView:tableView userInfo:nil];
+            cell = [SubCollapsableTableViewCell createFromModel:model inTableView:tableView userInfo:@{@"isSearching" : @(self.isSearching)}];
         }
     } else {
         cell = [tableView dequeueReusableCellWithIdentifier:@"row"];
@@ -117,6 +118,16 @@
     NSLog(@"%s", __PRETTY_FUNCTION__);
     
 //    [self.tableView reloadData];
+}
+
+#pragma mark - UISearchbarDelegate Methods
+
+- (void)searchBarTextDidBeginEditing:(UISearchBar *)searchBar {
+    self.isSearching = YES;
+}
+
+- (void)searchBarTextDidEndEditing:(UISearchBar *)searchBar {
+    self.isSearching = NO;
 }
 
 @end

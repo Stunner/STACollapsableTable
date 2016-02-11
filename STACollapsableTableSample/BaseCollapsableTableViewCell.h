@@ -11,10 +11,14 @@
 
 @interface BaseCollapsableTableViewCell : UITableViewCell
 
+@property (nonatomic, strong) STACellModel *cellModel;
+
 + (UITableViewCell *)createFromModel:(STACellModel *)cellModel
                       reusableCellID:(NSString *)reusableCellID
                              nibName:(NSString *)nibName
                          inTableView:(UITableView *)tableView
                             userInfo:(NSDictionary *)userInfo;
+
+- (void)isSearchResultStateChanged:(BOOL)isSearchResult;
 
 @end

@@ -8,10 +8,9 @@
 
 #import "BaseCollapsableTableViewCell.h"
 #import "STACellModel.h"
+#import <ReactiveCocoa/ReactiveCocoa.h>
 
 @interface BaseCollapsableTableViewCell ()
-
-@property (nonatomic, strong) STACellModel *cellModel;
 
 @end
 
@@ -33,6 +32,27 @@
     cell.cellModel = cellModel;
     return cell;
 }
+
+- (void)setCellModel:(STACellModel *)cellModel {
+    _cellModel = cellModel;
+    
+    @weakify(self);
+    [[RACObserve(self.cellModel, isSearchResult)
+      combinePreviousWithStart:@(self.cellModel.isSearchResult)
+      reduce:^id(NSNumber *previousValue, NSNumber *currentValue)
+      {
+          return @(([previousValue boolValue] != [currentValue boolValue]));
+      }] subscribeNext:^(NSNumber *statusChanged) {
+          @strongify(self);
+          if ([statusChanged boolValue]) {
+              [self isSearchResultStateChanged:cellModel.isSearchResult];
+          }
+      }];
+}
+
+//- (void)isSearchResultStateChanged:(BOOL)isSearchResult {
+//    
+//}
 
 - (void)awakeFromNib {
     // Initialization code

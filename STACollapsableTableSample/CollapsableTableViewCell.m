@@ -13,8 +13,6 @@
 @property (nonatomic, strong) IBOutlet UIImageView *collapsedStatusImageView;
 @property (nonatomic, strong) IBOutlet UILabel *titleLabel;
 
-@property (nonatomic, strong) STACellModel *cellModel;
-
 @end
 
 @implementation CollapsableTableViewCell
@@ -30,7 +28,16 @@
                                                                                userInfo:userInfo];
     cell.titleLabel.text = cellModel.title;
     [cell updateRotatedImageViewStatus];
+    
+    if (![userInfo[@"isSearching"] boolValue]) {
+        [cell isSearchResultStateChanged:cellModel.isSearchResult];
+    }
+    
     return cell;
+}
+
+- (void)isSearchResultStateChanged:(BOOL)isSearchResult {
+    self.titleLabel.alpha = isSearchResult ? 1.0 : 0.5;
 }
 
 - (void)updateRotatedImageViewStatus {
