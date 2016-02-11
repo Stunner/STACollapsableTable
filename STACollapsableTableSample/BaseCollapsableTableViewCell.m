@@ -82,6 +82,17 @@
               [self isSearchResultStateChanged:cellModel.isSearchResult];
           }
       }];
+    [[RACObserve(self.cellModel, isExpanded)
+      combinePreviousWithStart:@(self.cellModel.isExpanded)
+      reduce:^id(NSNumber *previousStatus, NSNumber *currentStatus)
+      {
+          return @(([previousStatus boolValue] != [currentStatus boolValue]));
+      }] subscribeNext:^(NSNumber *statusChanged) {
+          @strongify(self);
+          if ([statusChanged boolValue]) {
+              [self cellTapped];
+          }
+      }];
 }
 
 - (void)awakeFromNib {
