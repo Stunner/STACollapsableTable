@@ -120,6 +120,41 @@ typedef NSIndexPath * (^ObjectEnumeratorBlock)(STACellModel *cellModel, NSUInteg
     }];
 }
 
+- (NSArray *)filterContentsWithSearchString:(NSString *)searchString {
+    NSPredicate *filterPredicate = [NSPredicate predicateWithBlock:^BOOL(STACellModel *object, NSDictionary *bindings) {
+        if (searchString.length > 0 &&
+            [object.title rangeOfString:searchString options:NSCaseInsensitiveSearch].location != NSNotFound)
+        {
+            object.isSearchResult = YES;
+            return YES;
+        }
+        object.isSearchResult = NO;
+        return NO;
+    }];
+    NSArray *searchResults = [NSMutableArray arrayWithArray:[self.children filteredArrayUsingPredicate:filterPredicate]];
+    
+    NSMutableArray *allSearchResults = [NSMutableArray array];
+    for (NSUInteger i = 0; i < self.children.count; i++) {
+        STACellModel *container = self.children[i];
+        NSArray *filteredArray = [container filterContentsWithSearchString:searchString];
+        if (filteredArray.count > 0) {
+            [allSearchResults addObject:container];
+            // if is not of Accessibility type
+//            if (!(container.locationsArray.count > 0 && ((Location *)[container.locationsArray firstObject]).locations)) {
+                [allSearchResults addObjectsFromArray:filteredArray]; // filteredArray
+//            }
+            continue;
+        }
+        
+        NSPredicate *titlePredicate = [NSPredicate predicateWithFormat:@"title = %@", container.title];
+        STACellModel *matchingContainer = [[searchResults filteredArrayUsingPredicate:titlePredicate] firstObject];
+        if (matchingContainer) {
+            [allSearchResults addObject:matchingContainer];
+        }
+    }
+    return allSearchResults;
+}
+
 #pragma mark - Helper Methods
 
 - (BOOL)isDescendant:(STACellModel *)cellModel {

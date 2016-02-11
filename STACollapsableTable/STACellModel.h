@@ -45,4 +45,6 @@
                                            inTableModel:(STACollapsableTableModel *)tableModel
                                             isSearching:(BOOL)isSearching;
 
+- (NSArray *)filterContentsWithSearchString:(NSString *)searchString;
+
 @end

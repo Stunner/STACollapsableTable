@@ -5,6 +5,7 @@
 
 target 'STACollapsableTable' do
   pod 'Nimbus', '~> 1.3'
+  pod 'ReactiveCocoa', '~> 2.4'
 end
 
 target 'STACollapsableTableTests' do

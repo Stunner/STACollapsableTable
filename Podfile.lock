@@ -71,12 +71,21 @@ PODS:
     - Nimbus/Core
   - Nimbus/WebController (1.3.0):
     - Nimbus/Core
+  - ReactiveCocoa (2.5):
+    - ReactiveCocoa/UI (= 2.5)
+  - ReactiveCocoa/Core (2.5):
+    - ReactiveCocoa/no-arc
+  - ReactiveCocoa/no-arc (2.5)
+  - ReactiveCocoa/UI (2.5):
+    - ReactiveCocoa/Core
 
 DEPENDENCIES:
   - Nimbus (~> 1.3)
+  - ReactiveCocoa (~> 2.4)
 
 SPEC CHECKSUMS:
   AFNetworking: cb8d14a848e831097108418f5d49217339d4eb60
   Nimbus: e7f33bc6d6cb4fe5ea0aee0c7e0883696123422c
+  ReactiveCocoa: e2db045570aa97c695e7aa97c2bcab222ae51f4a
 
 COCOAPODS: 0.39.0

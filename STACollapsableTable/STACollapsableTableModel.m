@@ -12,6 +12,8 @@
 #import "STATableModelSpecifier.h"
 #import "STACellModel.h"
 #import "STATableViewDelegate.h"
+#import <ReactiveCocoa/ReactiveCocoa.h>
+#import "STASearchOperation.h"
 
 typedef void (^ObjectEnumeratorBlock)(id object);
 
@@ -23,6 +25,16 @@ typedef void (^ObjectEnumeratorBlock)(id object);
 @property (nonatomic, strong) STATableViewDelegate *tableViewDelegateArbiter;
 
 @property (nonatomic, strong) NSMutableSet *expandedSectionsSet;
+@property (nonatomic, strong) UITableView *tableView;
+
+// Search
+@property (nonatomic, assign) BOOL isSearching;
+@property (nonatomic, strong) NSString *prevSearchString;
+@property (nonatomic, strong) NSOperationQueue *operationQueue;
+@property (nonatomic, strong) NSMutableDictionary *processingOperationsDictionary;
+@property (nonatomic, assign) NSUInteger searchOperationID;
+@property (atomic, assign) NSUInteger lastHighestSeenOperationID;
+@property (nonatomic, assign) BOOL stopSearching;
 
 @end
 
@@ -30,6 +42,7 @@ typedef void (^ObjectEnumeratorBlock)(id object);
 
 // designated initializer
 - (instancetype)initWithContentsArray:(NSArray *)contentsArray
+                            tableView:(UITableView *)tableView
                    initiallyCollapsed:(BOOL)initiallyCollapsed
                              delegate:(id<STACollapsableTableModelDelegate, UITableViewDelegate>)delegate
 {
@@ -39,14 +52,17 @@ typedef void (^ObjectEnumeratorBlock)(id object);
         [self parseContents:contentsArray];
         _delegate = delegate;
         _expandedSectionsSet = [NSMutableSet set];
+        _operationQueue = [[NSOperationQueue alloc] init];
+        _tableView = tableView;
     }
     return self;
 }
 
 - (instancetype)initWithContentsArray:(NSArray *)contentsArray
+                            tableView:(UITableView *)tableView
                              delegate:(id<STACollapsableTableModelDelegate, UITableViewDelegate>)delegate
 {
-    return [self initWithContentsArray:contentsArray initiallyCollapsed:NO delegate:delegate];
+    return [self initWithContentsArray:contentsArray tableView:tableView initiallyCollapsed:NO delegate:delegate];
 }
 
 #pragma mark - Getters
@@ -188,7 +204,53 @@ typedef void (^ObjectEnumeratorBlock)(id object);
 - (void)updateSearchResultsForSearchController:(UISearchController *)searchController {
     NSLog(@"%s", __PRETTY_FUNCTION__);
     
+    NSString *searchString = searchController.searchBar.text;
+//    if ([searchString isEqualToString:@""]) {
+//        self.stopSearching = YES;
+//        
+//        // reset table model data
+//        [self.tableModel removeSectionAtIndex:0];
+////        [self.tableModel addObject:[NITitleCellObject objectWithTitle:@"search bar placeholder"]];
+//        [self.tableModel addObjectsFromArray:self.dataArray];
+////        [self.tableView reloadData];
+//    }
     
+    STASearchOperation *searchOperation = [[STASearchOperation alloc] initWithDataArray:self.dataArray
+                                                                       withSearchString:searchString];
+    searchOperation.operationID = ++self.searchOperationID;
+    
+    // cancel previously run operations
+    STASearchOperation *previousSearchOperation = [self.processingOperationsDictionary objectForKey:self.prevSearchString];
+    if (previousSearchOperation) {
+        [previousSearchOperation cancel];
+        [self.processingOperationsDictionary removeObjectForKey:self.prevSearchString];
+    }
+    [self.processingOperationsDictionary setObject:searchOperation forKey:searchString];
+    
+    @weakify(self);
+    [RACObserve(searchOperation, isFinished) subscribeNext:^(NSNumber *isFinished) {
+        @strongify(self);
+        if ([isFinished boolValue]) {
+            if (searchOperation.operationID > self.lastHighestSeenOperationID) {
+                self.lastHighestSeenOperationID = searchOperation.operationID;
+                dispatch_async(dispatch_get_main_queue(), ^{
+                    [self.tableModel removeSectionAtIndex:0];
+//                    if (self.isSearching) {
+//                        [self.tableModel addObject:[NITitleCellObject objectWithTitle:@"search bar placeholder"]];
+//                    }
+                    [self.tableModel addObjectsFromArray:searchOperation.allSearchResults];
+                    [self.tableView reloadData];
+                });
+            }
+        }
+    }];
+    [self.operationQueue addOperation:searchOperation];
+    
+    // analytics
+//    [NSObject cancelPreviousPerformRequestsWithTarget:self selector:@selector(logSearchStringToGA:) object:self.prevSearchString];
+//    [self performSelector:@selector(logSearchStringToGA:) withObject:searchString afterDelay:GA_LOGGING_MAP_SEARCH_DELAY];
+    
+    self.prevSearchString = searchString;
 }
 
 @end

@@ -85,9 +85,11 @@
 }
 
 - (NSIndexSet *)removeSectionAtIndex:(NSUInteger)index {
-  NIDASSERT(index >= 0 && index < self.sections.count);
-  [self.sections removeObjectAtIndex:index];
-  return [NSIndexSet indexSetWithIndex:index];
+  if (index >= 0 && index < self.sections.count) {
+    [self.sections removeObjectAtIndex:index];
+    return [NSIndexSet indexSetWithIndex:index];
+  }
+  return nil;
 }
 
 - (void)updateSectionIndex {

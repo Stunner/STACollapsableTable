@@ -320,10 +320,10 @@ withAnimationCoordinator:(UIFocusAnimationCoordinator *)coordinator
 #pragma mark - UISearchResultsUpdating Delegate Method
 
 - (void)updateSearchResultsForSearchController:(UISearchController *)searchController {
+    [self.internalDelegate updateSearchResultsForSearchController:searchController];
     if ([self.externalDelegate respondsToSelector:@selector(updateSearchResultsForSearchController:)]) {
         [self.externalDelegate updateSearchResultsForSearchController:searchController];
     }
-    [self.internalDelegate updateSearchResultsForSearchController:searchController];
 }
 
 @end

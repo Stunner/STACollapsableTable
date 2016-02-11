@@ -40,6 +40,7 @@
                                 [STATableModelSpecifier createWithTitle:@"Category 2" children:children3 userInfo:nil]];
     
     self.tableModel = [[STACollapsableTableModel alloc] initWithContentsArray:sectionedArray
+                                                                    tableView:self.tableView
                                                            initiallyCollapsed:YES
                                                                      delegate:self];
     self.tableView.dataSource = [self.tableModel tableViewDataSource];
@@ -115,7 +116,7 @@
 - (void)updateSearchResultsForSearchController:(UISearchController *)searchController {
     NSLog(@"%s", __PRETTY_FUNCTION__);
     
-    
+//    [self.tableView reloadData];
 }
 
 @end

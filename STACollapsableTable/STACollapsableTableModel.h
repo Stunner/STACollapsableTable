@@ -37,11 +37,13 @@
 
 // designated initializer
 - (instancetype)initWithContentsArray:(NSArray *)contentsArray
+                            tableView:(UITableView *)tableView
                    initiallyCollapsed:(BOOL)initiallyCollapsed
                              delegate:(id<STACollapsableTableModelDelegate, UITableViewDelegate>)delegate;
 
 - (instancetype)initWithContentsArray:(NSArray *)contentsArray
-                             delegate:(id<STACollapsableTableModelDelegate>)delegate;
+                            tableView:(UITableView *)tableView
+                             delegate:(id<STACollapsableTableModelDelegate, UITableViewDelegate>)delegate;
 
 - (STACellModel *)cellModelAtIndexPath:(NSIndexPath *)indexPath;
 - (void)collapseExpandedCellState;
