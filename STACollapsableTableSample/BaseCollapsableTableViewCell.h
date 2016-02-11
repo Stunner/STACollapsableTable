@@ -1,19 +1,20 @@
 //
-//  CollapsableTableViewCell.h
+//  BaseCollapsableTableViewCell.h
 //  STACollapsableTable
 //
-//  Created by Aaron Jubbal on 2/9/16.
+//  Created by Aaron Jubbal on 2/10/16.
 //  Copyright © 2016 Aaron Jubbal. All rights reserved.
 //
 
 #import <UIKit/UIKit.h>
-#import "BaseCollapsableTableViewCell.h"
+#import "STACellModel.h"
 
-@interface CollapsableTableViewCell : BaseCollapsableTableViewCell
+@interface BaseCollapsableTableViewCell : UITableViewCell
 
 + (UITableViewCell *)createFromModel:(STACellModel *)cellModel
+                      reusableCellID:(NSString *)reusableCellID
+                             nibName:(NSString *)nibName
                          inTableView:(UITableView *)tableView
                             userInfo:(NSDictionary *)userInfo;
-- (void)cellTapped;
 
 @end

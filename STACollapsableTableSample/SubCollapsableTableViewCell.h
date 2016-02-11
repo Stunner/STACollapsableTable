@@ -7,9 +7,9 @@
 //
 
 #import <UIKit/UIKit.h>
-#import "STACellModel.h"
+#import "BaseCollapsableTableViewCell.h"
 
-@interface SubCollapsableTableViewCell : UITableViewCell
+@interface SubCollapsableTableViewCell : BaseCollapsableTableViewCell
 
 + (UITableViewCell *)createFromModel:(STACellModel *)cellModel
                          inTableView:(UITableView *)tableView

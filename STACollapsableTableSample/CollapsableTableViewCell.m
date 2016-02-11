@@ -19,19 +19,16 @@
 
 @implementation CollapsableTableViewCell
 
-+ (UITableViewCell *)createFromModel:(STACellModel *)cellModel
-                         inTableView:(UITableView *)tableView
-                            userInfo:(NSDictionary *)userInfo
++ (CollapsableTableViewCell *)createFromModel:(STACellModel *)cellModel
+                                  inTableView:(UITableView *)tableView
+                                     userInfo:(NSDictionary *)userInfo
 {
-    CollapsableTableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:@"CollapsableTableViewCellID"];
-    if (nil == cell) {
-        [tableView registerNib:[UINib nibWithNibName:@"CollapsableTableViewCell" bundle:nil]
-        forCellReuseIdentifier:@"CollapsableTableViewCellID"];
-        cell = [tableView dequeueReusableCellWithIdentifier:@"CollapsableTableViewCellID"];
-    }
-    
+    CollapsableTableViewCell *cell = (CollapsableTableViewCell *)[super createFromModel:cellModel
+                                                                         reusableCellID:@"CollapsableTableViewCellID"
+                                                                                nibName:@"CollapsableTableViewCell"
+                                                                            inTableView:tableView
+                                                                               userInfo:userInfo];
     cell.titleLabel.text = cellModel.title;
-    cell.cellModel = cellModel;
     [cell updateRotatedImageViewStatus];
     return cell;
 }
