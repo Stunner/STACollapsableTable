@@ -77,6 +77,13 @@ typedef void (^ObjectEnumeratorBlock)(id object);
 
 #pragma mark - Setters
 
+- (void)setIsSearching:(BOOL)isSearching {
+    if (isSearching != _isSearching) {
+        [self collapseExpandedCellState];
+    }
+    _isSearching = isSearching;
+}
+
 - (void)setStopSearching:(BOOL)stopSearching {
     
     if (stopSearching && _stopSearching != stopSearching) {
