@@ -49,8 +49,8 @@ typedef void (^ObjectEnumeratorBlock)(id object);
     if (self = [super init]) {
         _tableViewDelegateArbiter = [[STATableViewDelegate alloc] initWithInternalDelegate:self externalDelegate:delegate];
         _initiallyCollapsed = initiallyCollapsed;
-        [self parseContents:contentsArray];
         _delegate = delegate;
+        [self parseContents:contentsArray];
         _expandedSectionsSet = [NSMutableSet set];
         _operationQueue = [[NSOperationQueue alloc] init];
         _tableView = tableView;
@@ -112,10 +112,20 @@ typedef void (^ObjectEnumeratorBlock)(id object);
 
 #pragma mark - Private Methods
 
+- (STACellModel *)cellModelForSpecifier:(STATableModelSpecifier *)specifier
+                                 parent:(STACellModel *)parent
+                             tableModel:(STACollapsableTableModel *)tableModel
+{
+    if ([self.delegate respondsToSelector:@selector(cellModelForSpecifier:parent:tableModel:)]) {
+        return [self.delegate cellModelForSpecifier:specifier parent:parent tableModel:tableModel];
+    }
+    return [[STACellModel alloc] initWithModelSpecifier:specifier parent:parent tableModel:tableModel];
+}
+
 - (void)parseContents:(NSArray *)contentsArray {
     NSMutableArray *mutableDataArray = [NSMutableArray arrayWithCapacity:contentsArray.count];
     for (STATableModelSpecifier *specifier in contentsArray) { // loop through root level objects
-        STACellModel *cellModel = [[STACellModel alloc] initWithModelSpecifier:specifier parent:nil];
+        STACellModel *cellModel = [self cellModelForSpecifier:specifier parent:nil tableModel:self];
         [mutableDataArray addObject:cellModel];
     }
     self.dataArray = mutableDataArray;

@@ -11,6 +11,7 @@
 
 @class STACellModel;
 @class STACollapsableTableModel;
+@class STATableModelSpecifier;
 
 @protocol STACollapsableTableModelDelegate <NSObject>
 
@@ -19,6 +20,10 @@
 - (NSUInteger)displayedDescendantsCount;
 - (NSUInteger)descendantsInSearchResults;
 - (BOOL)isSearchResult;
+
+- (STACellModel *)cellModelForSpecifier:(STATableModelSpecifier *)specifier
+                                 parent:(STACellModel *)parent
+                             tableModel:(STACollapsableTableModel *)tableModel;
 
 @required
 
@@ -47,5 +52,10 @@
 
 - (STACellModel *)cellModelAtIndexPath:(NSIndexPath *)indexPath;
 - (void)collapseExpandedCellState;
+
+//TODO: conceal this method - it shouldn't be public
+- (STACellModel *)cellModelForSpecifier:(STATableModelSpecifier *)specifier
+                                 parent:(STACellModel *)parent
+                             tableModel:(STACollapsableTableModel *)tableModel;
 
 @end

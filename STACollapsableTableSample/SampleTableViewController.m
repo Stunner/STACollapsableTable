@@ -15,6 +15,7 @@
 #import "CollapsableTableViewCell.h"
 #import "SubCollapsableTableViewCell.h"
 #import "LeafNodeTableViewCell.h"
+#import "CustomCellModel.h"
 
 @interface SampleTableViewController () <STACollapsableTableModelDelegate>
 
@@ -65,6 +66,15 @@
 
 #pragma mark - Table view data source
 
+- (STACellModel *)cellModelForSpecifier:(STATableModelSpecifier *)specifier
+                                 parent:(STACellModel *)parent
+                             tableModel:(STACollapsableTableModel *)tableModel
+{
+    return [[CustomCellModel alloc] initWithModelSpecifier:specifier
+                                                    parent:parent
+                                                tableModel:tableModel];
+}
+
 - (UITableViewCell *)tableViewModel:(NITableViewModel *)tableViewModel
                    cellForTableView:(UITableView *)tableView
                         atIndexPath:(NSIndexPath *)indexPath
@@ -81,7 +91,6 @@
         }
     } else {
         cell = [LeafNodeTableViewCell createFromModel:model inTableView:tableView userInfo:@{@"isSearching" : @(self.isSearching)}];
-//        cell.textLabel.text = model.title;
     }
     return cell;
 }

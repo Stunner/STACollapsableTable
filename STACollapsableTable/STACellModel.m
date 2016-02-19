@@ -14,7 +14,10 @@ typedef NSIndexPath * (^ObjectEnumeratorBlock)(STACellModel *cellModel, NSUInteg
 
 @implementation STACellModel
 
-- (instancetype)initWithModelSpecifier:(STATableModelSpecifier *)modelSpecifier parent:(STACellModel *)parent {
+- (instancetype)initWithModelSpecifier:(STATableModelSpecifier *)modelSpecifier
+                                parent:(STACellModel *)parent
+                            tableModel:(STACollapsableTableModel *)tableModel
+{
     if (self = [super init]) {
         _title = modelSpecifier.title;
         _specifier = modelSpecifier;
@@ -30,11 +33,18 @@ typedef NSIndexPath * (^ObjectEnumeratorBlock)(STACellModel *cellModel, NSUInteg
         
         NSMutableArray *childrenArray = [NSMutableArray arrayWithCapacity:modelSpecifier.children.count];
         for (STATableModelSpecifier *specifier in modelSpecifier.children) {
-            STACellModel *cellModel = [[STACellModel alloc] initWithModelSpecifier:specifier parent:self];
+            STACellModel *cellModel = [tableModel cellModelForSpecifier:specifier parent:self tableModel:tableModel];
             [childrenArray addObject:cellModel];
         }
         _children = childrenArray;
         _descendantSearchResultSet = [NSCountedSet setWithCapacity:childrenArray.count];
+    }
+    return self;
+}
+
+- (instancetype)initWithModelSpecifier:(STATableModelSpecifier *)modelSpecifier parent:(STACellModel *)parent {
+    if (self = [self initWithModelSpecifier:modelSpecifier parent:parent tableModel:nil]) {
+        
     }
     return self;
 }
@@ -78,6 +88,8 @@ typedef NSIndexPath * (^ObjectEnumeratorBlock)(STACellModel *cellModel, NSUInteg
 }
 
 #pragma mark - Public Methods
+
+
 
 - (NSArray *)indexPathsToAddForExpansionFromIndexPath:(NSIndexPath *)indexPath
                                          inTableModel:(STACollapsableTableModel *)tableModel

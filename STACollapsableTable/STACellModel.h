@@ -35,7 +35,10 @@
 @property (atomic, strong) NSCountedSet *descendantSearchResultSet;
 @property (nonatomic, assign, readonly) NSUInteger displayedDescendantsCount;
 
-- (instancetype)initWithModelSpecifier:(STATableModelSpecifier *)contentsArray parent:(STACellModel *)parent;
+- (instancetype)initWithModelSpecifier:(STATableModelSpecifier *)modelSpecifier parent:(STACellModel *)parent;
+- (instancetype)initWithModelSpecifier:(STATableModelSpecifier *)modelSpecifier
+                                parent:(STACellModel *)parent
+                            tableModel:(STACollapsableTableModel *)tableModel;
 
 - (NSArray *)indexPathsToAddForExpansionFromIndexPath:(NSIndexPath *)indexPath
                                          inTableModel:(STACollapsableTableModel *)tableModel
