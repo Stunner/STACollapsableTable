@@ -20,21 +20,22 @@ typedef void (^ObjectEnumeratorBlock)(id object);
 @interface STACollapsableTableModel () <NITableViewModelDelegate>
 
 @property (nonatomic, assign) BOOL initiallyCollapsed;
-@property (nonatomic, strong) NSArray *dataArray;
 @property (nonatomic, strong) NIMutableTableViewModel *tableModel;
 @property (nonatomic, strong) STATableViewDelegate *tableViewDelegateArbiter;
 
 @property (nonatomic, strong) NSMutableSet *expandedSectionsSet;
 @property (nonatomic, strong) UITableView *tableView;
+@property (nonatomic, strong, readwrite) NSArray *contentsArray;
 
 // Search
-@property (nonatomic, assign) BOOL isSearching;
 @property (nonatomic, strong) NSString *prevSearchString;
 @property (nonatomic, strong) NSOperationQueue *operationQueue;
 @property (nonatomic, strong) NSMutableDictionary *processingOperationsDictionary;
 @property (nonatomic, assign) NSUInteger searchOperationID;
 @property (atomic, assign) NSUInteger lastHighestSeenOperationID;
 @property (nonatomic, assign) BOOL stopSearching;
+//@property (nonatomic, assign) BOOL userHasPerformedCustomContentReset;
+@property (nonatomic, strong) NSArray *userProvidedContentArray;
 
 @end
 
@@ -97,8 +98,29 @@ typedef void (^ObjectEnumeratorBlock)(id object);
 
 #pragma mark - Public Methods
 
+- (void)resetTableWithModelData:(NSArray *)contentsArray {
+    NSLog(@"%s", __PRETTY_FUNCTION__);
+    
+    [self.tableModel removeSectionAtIndex:0];
+    self.userProvidedContentArray = contentsArray;
+    [self.tableModel addObjectsFromArray:self.userProvidedContentArray];
+    [self.tableView reloadData];
+}
+
+- (void)resetTableModelData {
+    NSLog(@"%s", __PRETTY_FUNCTION__);
+    
+    [self.tableModel removeSectionAtIndex:0];
+    [self.tableModel addObjectsFromArray:self.contentsArray];
+    [self.tableView reloadData];
+}
+
 - (STACellModel *)cellModelAtIndexPath:(NSIndexPath *)indexPath {
     return [self.tableModel objectAtIndexPath:indexPath];
+}
+
+- (NSIndexPath *)indexPathForCellModel:(STACellModel *)cellModel {
+    return [self.tableModel indexPathForObject:cellModel];
 }
 
 - (void)collapseExpandedCellState {
@@ -108,6 +130,10 @@ typedef void (^ObjectEnumeratorBlock)(id object);
         cellModel.isExpanded = NO;
         [self.expandedSectionsSet removeObject:cellModel];
     }
+}
+
+- (void)expand:(STACellModel *)container fromRowFromIndexPath:(NSIndexPath *)indexPath {
+    [self expand:container fromIndexPath:indexPath inTableView:self.tableView animated:YES];
 }
 
 #pragma mark - Private Methods
@@ -128,10 +154,12 @@ typedef void (^ObjectEnumeratorBlock)(id object);
         STACellModel *cellModel = [self cellModelForSpecifier:specifier parent:nil tableModel:self];
         [mutableDataArray addObject:cellModel];
     }
-    self.dataArray = mutableDataArray;
+    self.contentsArray = mutableDataArray;
     
     NSMutableArray *nimbusContents = [NSMutableArray array];
-    [self enumerateObjects:self.dataArray block:^(STACellModel *cellModel) {
+    @weakify(self);
+    [self enumerateObjects:self.contentsArray block:^(STACellModel *cellModel) {
+        @strongify(self);
         cellModel.isExpanded = !self.initiallyCollapsed;
         [nimbusContents addObject:cellModel];
     }];
@@ -208,7 +236,7 @@ typedef void (^ObjectEnumeratorBlock)(id object);
 - (UITableViewCell *)tableViewModel:(NITableViewModel *)tableViewModel
                    cellForTableView:(UITableView *)tableView
                         atIndexPath:(NSIndexPath *)indexPath
-                         withObject:(id)object
+                         withObject:(STACellModel *)object
 {
     if ([self.delegate respondsToSelector:@selector(tableViewModel:cellForTableView:atIndexPath:withModel:)]) {
         return [self.delegate tableViewModel:self cellForTableView:tableView atIndexPath:indexPath withModel:object];
@@ -222,6 +250,9 @@ typedef void (^ObjectEnumeratorBlock)(id object);
     NSLog(@"%s", __PRETTY_FUNCTION__);
     
     STACellModel *cellModel = [self cellModelAtIndexPath:indexPath];
+    if (!cellModel.children.count) {
+        return; // collapsing/expansion can't be done on a cell without children
+    }
     if (cellModel.isExpanded) { // collapse
         [self collapse:cellModel fromIndexPath:indexPath inTableView:tableView animated:YES];
     } else { // expand
@@ -237,6 +268,7 @@ typedef void (^ObjectEnumeratorBlock)(id object);
 
 - (void)searchBarTextDidEndEditing:(UISearchBar *)searchBar {
     self.isSearching = NO;
+    self.userProvidedContentArray = nil;
 }
 
 #pragma mark - UISearchResultsUpdating Delegate Method
@@ -248,14 +280,17 @@ typedef void (^ObjectEnumeratorBlock)(id object);
     if ([searchString isEqualToString:@""]) {
         self.stopSearching = YES;
         
-        // reset table model data
-        [self.tableModel removeSectionAtIndex:0];
-//        [self.tableModel addObject:[NITitleCellObject objectWithTitle:@"search bar placeholder"]];
-        [self.tableModel addObjectsFromArray:self.dataArray];
-        [self.tableView reloadData];
+        if (!self.userProvidedContentArray) {
+            // reset table model data
+            [self resetTableModelData];
+        }
+//        [self.tableModel removeSectionAtIndex:0];
+////        [self.tableModel addObject:[NITitleCellObject objectWithTitle:@"search bar placeholder"]];
+//        [self.tableModel addObjectsFromArray:self.contentsArray];
+//        [self.tableView reloadData];
     }
     
-    STASearchOperation *searchOperation = [[STASearchOperation alloc] initWithDataArray:self.dataArray
+    STASearchOperation *searchOperation = [[STASearchOperation alloc] initWithDataArray:self.contentsArray
                                                                        withSearchString:searchString];
     searchOperation.operationID = ++self.searchOperationID;
     
@@ -278,7 +313,12 @@ typedef void (^ObjectEnumeratorBlock)(id object);
 //                    if (self.isSearching) {
 //                        [self.tableModel addObject:[NITitleCellObject objectWithTitle:@"search bar placeholder"]];
 //                    }
-                    [self.tableModel addObjectsFromArray:searchOperation.allSearchResults];
+                    if ([self.delegate respondsToSelector:@selector(searchOperationCompletedWithContents:)]) {
+                        NSArray *overriddenContents = [self.delegate searchOperationCompletedWithContents:searchOperation.allSearchResults];
+                        [self.tableModel addObjectsFromArray:overriddenContents];
+                    } else {
+                        [self.tableModel addObjectsFromArray:searchOperation.allSearchResults];
+                    }
                     [self.tableView reloadData];
                 });
             }

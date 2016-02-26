@@ -10,11 +10,11 @@
 
 @implementation STATableModelSpecifier
 
-+ (instancetype)createWithTitle:(NSString *)title children:(NSArray *)children userInfo:(NSDictionary *)userInfo {
++ (instancetype)createWithTitle:(NSString *)title children:(NSArray *)children userInfo:(id)userInfo {
     return [[STATableModelSpecifier alloc] initWithTitle:title children:children userInfo:userInfo];
 }
 
-- (instancetype)initWithTitle:(NSString *)title children:(NSArray *)children userInfo:(NSDictionary *)userInfo {
+- (instancetype)initWithTitle:(NSString *)title children:(NSArray *)children userInfo:(id)userInfo {
     if (self = [super init]) {
         self.title = title;
         self.children = children;

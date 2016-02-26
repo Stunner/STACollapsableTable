@@ -23,9 +23,10 @@ typedef NSIndexPath * (^ObjectEnumeratorBlock)(STACellModel *cellModel, NSUInteg
         _specifier = modelSpecifier;
         _isExpanded = NO;
         _isSearchResult = YES; // make cells show up as black instead of gray initially
+        _tableModel = tableModel;
         
         if (parent) {
-            _parent = parent;
+            _parents = [NSMutableSet setWithObject:parent];
             _depth = parent.depth + 1;
         } else {
             _depth = 0; // no parent means this element is a root (depth of 0)
@@ -80,16 +81,20 @@ typedef NSIndexPath * (^ObjectEnumeratorBlock)(STACellModel *cellModel, NSUInteg
 
 - (void)setIsSearchResult:(BOOL)isSearchResult {
     if (_isSearchResult != isSearchResult) {
-//        for (id parent in [self.parents allObjects]) {
-            [self.parent descendant:self isSearchResult:isSearchResult];
-//        }
+        for (STACellModel *parent in [self.parents allObjects]) {
+            [parent descendant:self isSearchResult:isSearchResult];
+        }
     }
     _isSearchResult = isSearchResult;
 }
 
 #pragma mark - Public Methods
 
-
+- (void)addParent:(STACellModel *)cellModel {
+    NSLog(@"%s", __PRETTY_FUNCTION__);
+    
+    [self.parents addObject:cellModel];
+}
 
 - (NSArray *)indexPathsToAddForExpansionFromIndexPath:(NSIndexPath *)indexPath
                                          inTableModel:(STACollapsableTableModel *)tableModel
@@ -186,7 +191,10 @@ typedef NSIndexPath * (^ObjectEnumeratorBlock)(STACellModel *cellModel, NSUInteg
     } else {
         [self.descendantSearchResultSet removeObject:cellModel];
     }
-    [self.parent descendant:self isSearchResult:isSearchResult];
+    for (id parent in [self.parents allObjects]) {
+        [parent descendant:self isSearchResult:isSearchResult];
+    }
+//    [self.parent descendant:self isSearchResult:isSearchResult];
 }
 
 #pragma mark - Helper Methods
@@ -194,13 +202,20 @@ typedef NSIndexPath * (^ObjectEnumeratorBlock)(STACellModel *cellModel, NSUInteg
 - (BOOL)isDescendant:(STACellModel *)cellModel {
     NSLog(@"%s", __PRETTY_FUNCTION__);
     
-    if (!cellModel.parent) {
+    if (!cellModel.parents) {
         return NO;
     }
-    if (cellModel.parent == self) {
+    if ([cellModel.parents containsObject:self]) {
         return YES;
     }
-    return [self isDescendant:cellModel.parent];
+    BOOL isDescendant = NO;
+    for (STACellModel *parent in [cellModel.parents allObjects]) {
+        isDescendant = [self isDescendant:parent];
+        if (isDescendant) {
+            return YES;
+        }
+    }
+    return isDescendant;
 }
 
 /**

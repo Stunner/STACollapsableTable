@@ -12,9 +12,9 @@
 
 @property (nonatomic, strong) NSString *title;
 @property (nonatomic, strong) NSArray *children;
-@property (nonatomic, strong) NSDictionary *userInfo;
+@property (nonatomic, strong) id userInfo;
 
-+ (instancetype)createWithTitle:(NSString *)title children:(NSArray *)children userInfo:(NSDictionary *)userInfo;
-- (instancetype)initWithTitle:(NSString *)title children:(NSArray *)children userInfo:(NSDictionary *)userInfo;
++ (instancetype)createWithTitle:(NSString *)title children:(NSArray *)children userInfo:(id)userInfo;
+- (instancetype)initWithTitle:(NSString *)title children:(NSArray *)children userInfo:(id)userInfo;
 
 @end

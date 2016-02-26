@@ -75,7 +75,7 @@
                                                 tableModel:tableModel];
 }
 
-- (UITableViewCell *)tableViewModel:(NITableViewModel *)tableViewModel
+- (UITableViewCell *)tableViewModel:(STACollapsableTableModel *)tableViewModel
                    cellForTableView:(UITableView *)tableView
                         atIndexPath:(NSIndexPath *)indexPath
                           withModel:(STACellModel *)model

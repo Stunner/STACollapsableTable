@@ -22,7 +22,7 @@
 @property (nonatomic, assign) BOOL isSearchResult;
 @property (nonatomic, assign, readonly) NSUInteger descendantsInSearchResults;
 
-@property (nonatomic, strong, readonly) STACellModel *parent;
+@property (nonatomic, strong, readonly) NSMutableSet <STACellModel *> *parents;
 /**
  Distance from root node.
  */
@@ -39,6 +39,8 @@
 - (instancetype)initWithModelSpecifier:(STATableModelSpecifier *)modelSpecifier
                                 parent:(STACellModel *)parent
                             tableModel:(STACollapsableTableModel *)tableModel;
+
+- (void)addParent:(STACellModel *)cellModel;
 
 - (NSArray *)indexPathsToAddForExpansionFromIndexPath:(NSIndexPath *)indexPath
                                          inTableModel:(STACollapsableTableModel *)tableModel
