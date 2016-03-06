@@ -163,6 +163,7 @@
 		9376D25F1C64A05800FC2782 /* STACollapsableTable */ = {
 			isa = PBXGroup;
 			children = (
+				9376D29F1C6F3CD300FC2782 /* STACollapsableTable.h */,
 				9376D2691C64AD8900FC2782 /* STACollapsableTableModel.h */,
 				9376D26A1C64AD8900FC2782 /* STACollapsableTableModel.m */,
 				9376D2741C65E7FF00FC2782 /* STATableModelSpecifier.h */,
@@ -173,7 +174,6 @@
 				9376D27B1C6879C700FC2782 /* STATableViewDelegate.m */,
 				9376D2A21C6F3E2400FC2782 /* STASearchOperation.h */,
 				9376D2A31C6F3E2400FC2782 /* STASearchOperation.m */,
-				9376D29F1C6F3CD300FC2782 /* STACollapsableTable.h */,
 			);
 			path = STACollapsableTable;
 			sourceTree = "<group>";

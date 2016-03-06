@@ -169,10 +169,7 @@ typedef NSIndexPath * (^ObjectEnumeratorBlock)(STACellModel *cellModel, NSUInteg
         NSArray *filteredArray = [container filterContentsWithSearchString:searchString];
         if (filteredArray.count > 0) {
             [allSearchResults addObject:container];
-            // if is not of Accessibility type
-//            if (!(container.locationsArray.count > 0 && ((Location *)[container.locationsArray firstObject]).locations)) {
-                [allSearchResults addObjectsFromArray:filteredArray]; // filteredArray
-//            }
+            [allSearchResults addObjectsFromArray:filteredArray]; // filteredArray
             continue;
         }
         
@@ -196,7 +193,6 @@ typedef NSIndexPath * (^ObjectEnumeratorBlock)(STACellModel *cellModel, NSUInteg
     for (id parent in [self.parents allObjects]) {
         [parent descendant:self isSearchResult:isSearchResult];
     }
-//    [self.parent descendant:self isSearchResult:isSearchResult];
 }
 
 #pragma mark - Helper Methods

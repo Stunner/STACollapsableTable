@@ -35,7 +35,6 @@ typedef void (^ObjectEnumeratorBlock)(id object);
 @property (nonatomic, assign) NSUInteger searchOperationID;
 @property (atomic, assign) NSUInteger lastHighestSeenOperationID;
 @property (nonatomic, assign) BOOL stopSearching;
-//@property (nonatomic, assign) BOOL userHasPerformedCustomContentReset;
 @property (nonatomic, strong) NSArray *userProvidedContentArray;
 
 @end
@@ -255,13 +254,6 @@ typedef void (^ObjectEnumeratorBlock)(id object);
     [tableView beginUpdates];
     [tableView insertRowsAtIndexPaths:addedIndexPaths withRowAnimation:UITableViewRowAnimationNone];
     [tableView endUpdates];
-//    [tableView reloadRowsAtIndexPaths:addedIndexPaths withRowAnimation:UITableViewRowAnimationNone];
-    
-//    UITableViewScrollPosition scrollPosition = UITableViewScrollPositionTop;
-//    if (cellModel.children.count < 4) {
-//        scrollPosition = UITableViewScrollPositionMiddle;
-//    }
-//    [tableView scrollToRowAtIndexPath:indexPath atScrollPosition:scrollPosition animated:animated];
     
     cellModel.isExpanded = YES;
     [self.expandedSectionsSet addObject:cellModel];
