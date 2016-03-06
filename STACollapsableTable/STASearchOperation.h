@@ -11,8 +11,9 @@
 @interface STASearchOperation : NSOperation
 
 @property (atomic, strong) NSArray *allSearchResults;
-@property (atomic, strong) NSString *searchString;
 @property (atomic, assign) NSUInteger operationID;
+@property (atomic, strong, readonly) NSString *searchString;
+@property (nonatomic, strong, readonly) NSArray *dataArray;
 
 - (instancetype)initWithDataArray:(NSArray *)dataArray withSearchString:(NSString *)searchString;
 

@@ -26,6 +26,7 @@ typedef void (^ObjectEnumeratorBlock)(id object);
 @property (nonatomic, strong) NSMutableSet *expandedSectionsSet;
 @property (nonatomic, strong) UITableView *tableView;
 @property (nonatomic, strong, readwrite) NSArray *contentsArray;
+@property (nonatomic, strong) NSArray *externalContentsArray;
 
 // Search
 @property (nonatomic, strong) NSString *prevSearchString;
@@ -51,10 +52,12 @@ typedef void (^ObjectEnumeratorBlock)(id object);
         _tableViewDelegateArbiter = [[STATableViewDelegate alloc] initWithInternalDelegate:self externalDelegate:delegate];
         _initiallyCollapsed = initiallyCollapsed;
         _delegate = delegate;
+        _externalContentsArray = contentsArray;
         [self parseContents:contentsArray];
         _expandedSectionsSet = [NSMutableSet set];
         _operationQueue = [[NSOperationQueue alloc] init];
         _tableView = tableView;
+        _processingOperationsDictionary = [NSMutableDictionary dictionary];
     }
     return self;
 }
@@ -136,16 +139,66 @@ typedef void (^ObjectEnumeratorBlock)(id object);
     [self expand:container fromIndexPath:indexPath inTableView:self.tableView animated:YES];
 }
 
+- (void)performSearchWithQuery:(NSString *)searchQuery {
+    NSLog(@"%s", __PRETTY_FUNCTION__);
+    
+    STASearchOperation *searchOperation = nil;
+    if ([self.delegate respondsToSelector:@selector(searchOperationOnData:withSearchQuery:)]) {
+        searchOperation = [self.delegate searchOperationOnData:self.contentsArray withSearchQuery:searchQuery];
+    }
+    if (!searchOperation) {
+        searchOperation = [[STASearchOperation alloc] initWithDataArray:self.contentsArray
+                                                       withSearchString:searchQuery];
+    }
+    searchOperation.operationID = ++self.searchOperationID;
+    
+    // cancel previously run operations
+    STASearchOperation *previousSearchOperation = [self.processingOperationsDictionary objectForKey:self.prevSearchString];
+    if (previousSearchOperation) {
+        [previousSearchOperation cancel];
+        [self.processingOperationsDictionary removeObjectForKey:self.prevSearchString];
+    }
+    [self.processingOperationsDictionary setObject:searchOperation forKey:searchQuery];
+    
+    @weakify(self);
+    [RACObserve(searchOperation, isFinished) subscribeNext:^(NSNumber *isFinished) {
+        @strongify(self);
+        if (self.isSearching && [isFinished boolValue]) {
+            if (searchOperation.operationID > self.lastHighestSeenOperationID) {
+                dispatch_async(dispatch_get_main_queue(), ^{
+                    self.lastHighestSeenOperationID = searchOperation.operationID;
+                    [self.tableModel removeSectionAtIndex:0];
+                    
+                    if ([self.delegate respondsToSelector:@selector(searchOperationCompletedWithContents:)]) {
+                        NSArray *overriddenContents = [self.delegate searchOperationCompletedWithContents:searchOperation.allSearchResults];
+                        [self.tableModel addObjectsFromArray:overriddenContents];
+                    } else {
+                        [self.tableModel addObjectsFromArray:searchOperation.allSearchResults];
+                    }
+                    [self.tableView reloadData];
+                });
+            }
+        }
+    }];
+    [self.operationQueue addOperation:searchOperation];
+    
+    self.prevSearchString = searchQuery;
+}
+
 #pragma mark - Private Methods
 
 - (STACellModel *)cellModelForSpecifier:(STATableModelSpecifier *)specifier
                                  parent:(STACellModel *)parent
                              tableModel:(STACollapsableTableModel *)tableModel
 {
+    STACellModel *cellModel = nil;
     if ([self.delegate respondsToSelector:@selector(cellModelForSpecifier:parent:tableModel:)]) {
-        return [self.delegate cellModelForSpecifier:specifier parent:parent tableModel:tableModel];
+        cellModel = [self.delegate cellModelForSpecifier:specifier parent:parent tableModel:tableModel];
     }
-    return [[STACellModel alloc] initWithModelSpecifier:specifier parent:parent tableModel:tableModel];
+    if (!cellModel) {
+        cellModel = [[STACellModel alloc] initWithModelSpecifier:specifier parent:parent tableModel:tableModel];
+    }
+    return cellModel;
 }
 
 - (void)parseContents:(NSArray *)contentsArray {
@@ -225,7 +278,9 @@ typedef void (^ObjectEnumeratorBlock)(id object);
         NSIndexPath *removedIndexPath = removableIndexPaths[i];
         [self.tableModel removeObjectAtIndexPath:removedIndexPath];
     }
+    [tableView beginUpdates];
     [tableView deleteRowsAtIndexPaths:removableIndexPaths withRowAnimation:UITableViewRowAnimationNone];
+    [tableView endUpdates];
     
     cellModel.isExpanded = NO;
     [self.expandedSectionsSet removeObject:cellModel];
@@ -284,53 +339,12 @@ typedef void (^ObjectEnumeratorBlock)(id object);
             // reset table model data
             [self resetTableModelData];
         }
-//        [self.tableModel removeSectionAtIndex:0];
-////        [self.tableModel addObject:[NITitleCellObject objectWithTitle:@"search bar placeholder"]];
-//        [self.tableModel addObjectsFromArray:self.contentsArray];
-//        [self.tableView reloadData];
-    }
-    
-    STASearchOperation *searchOperation = [[STASearchOperation alloc] initWithDataArray:self.contentsArray
-                                                                       withSearchString:searchString];
-    searchOperation.operationID = ++self.searchOperationID;
-    
-    // cancel previously run operations
-    STASearchOperation *previousSearchOperation = [self.processingOperationsDictionary objectForKey:self.prevSearchString];
-    if (previousSearchOperation) {
-        [previousSearchOperation cancel];
-        [self.processingOperationsDictionary removeObjectForKey:self.prevSearchString];
-    }
-    [self.processingOperationsDictionary setObject:searchOperation forKey:searchString];
-    
-    @weakify(self);
-    [RACObserve(searchOperation, isFinished) subscribeNext:^(NSNumber *isFinished) {
-        @strongify(self);
-        if ([isFinished boolValue]) {
-            if (searchOperation.operationID > self.lastHighestSeenOperationID) {
-                self.lastHighestSeenOperationID = searchOperation.operationID;
-                dispatch_async(dispatch_get_main_queue(), ^{
-                    [self.tableModel removeSectionAtIndex:0];
-//                    if (self.isSearching) {
-//                        [self.tableModel addObject:[NITitleCellObject objectWithTitle:@"search bar placeholder"]];
-//                    }
-                    if ([self.delegate respondsToSelector:@selector(searchOperationCompletedWithContents:)]) {
-                        NSArray *overriddenContents = [self.delegate searchOperationCompletedWithContents:searchOperation.allSearchResults];
-                        [self.tableModel addObjectsFromArray:overriddenContents];
-                    } else {
-                        [self.tableModel addObjectsFromArray:searchOperation.allSearchResults];
-                    }
-                    [self.tableView reloadData];
-                });
-            }
+        if (!self.isSearching) {
+            return;
         }
-    }];
-    [self.operationQueue addOperation:searchOperation];
+    }
     
-    // analytics
-//    [NSObject cancelPreviousPerformRequestsWithTarget:self selector:@selector(logSearchStringToGA:) object:self.prevSearchString];
-//    [self performSelector:@selector(logSearchStringToGA:) withObject:searchString afterDelay:GA_LOGGING_MAP_SEARCH_DELAY];
-    
-    self.prevSearchString = searchString;
+    [self performSearchWithQuery:searchString];
 }
 
 @end

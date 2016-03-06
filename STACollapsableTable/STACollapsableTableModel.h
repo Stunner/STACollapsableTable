@@ -12,18 +12,18 @@
 @class STACellModel;
 @class STACollapsableTableModel;
 @class STATableModelSpecifier;
+@class STASearchOperation;
 
 @protocol STACollapsableTableModelDelegate <NSObject>
 
 @optional
 
-- (NSUInteger)displayedDescendantsCount;
-- (NSUInteger)descendantsInSearchResults;
-- (BOOL)isSearchResult;
-
 - (STACellModel *)cellModelForSpecifier:(STATableModelSpecifier *)specifier
                                  parent:(STACellModel *)parent
                              tableModel:(STACollapsableTableModel *)tableModel;
+
+- (STASearchOperation *)searchOperationOnData:(NSArray *)data withSearchQuery:(NSString *)searchQuery;
+
 /**
  @param filteredContents NSArray of STACellModels's that match search criteria
  
@@ -64,6 +64,7 @@
 - (NSIndexPath *)indexPathForCellModel:(STACellModel *)cellModel;
 - (void)collapseExpandedCellState;
 - (void)expand:(STACellModel *)container fromRowFromIndexPath:(NSIndexPath *)indexPath;
+- (void)performSearchWithQuery:(NSString *)searchQuery;
 
 //TODO: conceal this method - it shouldn't be public
 - (STACellModel *)cellModelForSpecifier:(STATableModelSpecifier *)specifier

@@ -16,11 +16,17 @@
 
 - (instancetype)initWithTitle:(NSString *)title children:(NSArray *)children userInfo:(id)userInfo {
     if (self = [super init]) {
-        self.title = title;
-        self.children = children;
-        self.userInfo = userInfo;
+        _title = title;
+        _children = children;
+        _userInfo = userInfo;
     }
     return self;
+}
+
+- (NSString *)description {
+    return [NSString stringWithFormat:@"title: %@\n"
+            @"children: %@\n"
+            @"userInfo: %@\n", self.title, self.children, self.userInfo];
 }
 
 @end

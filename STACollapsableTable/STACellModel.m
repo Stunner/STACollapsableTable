@@ -35,7 +35,9 @@ typedef NSIndexPath * (^ObjectEnumeratorBlock)(STACellModel *cellModel, NSUInteg
         NSMutableArray *childrenArray = [NSMutableArray arrayWithCapacity:modelSpecifier.children.count];
         for (STATableModelSpecifier *specifier in modelSpecifier.children) {
             STACellModel *cellModel = [tableModel cellModelForSpecifier:specifier parent:self tableModel:tableModel];
-            [childrenArray addObject:cellModel];
+            if (cellModel) {
+                [childrenArray addObject:cellModel];
+            }
         }
         _children = childrenArray;
         _descendantSearchResultSet = [NSCountedSet setWithCapacity:childrenArray.count];
@@ -91,8 +93,6 @@ typedef NSIndexPath * (^ObjectEnumeratorBlock)(STACellModel *cellModel, NSUInteg
 #pragma mark - Public Methods
 
 - (void)addParent:(STACellModel *)cellModel {
-    NSLog(@"%s", __PRETTY_FUNCTION__);
-    
     [self.parents addObject:cellModel];
 }
 
@@ -149,6 +149,8 @@ typedef NSIndexPath * (^ObjectEnumeratorBlock)(STACellModel *cellModel, NSUInteg
 }
 
 - (NSArray *)filterContentsWithSearchString:(NSString *)searchString {
+    NSLog(@"%s", __PRETTY_FUNCTION__);
+    
     NSPredicate *filterPredicate = [NSPredicate predicateWithBlock:^BOOL(STACellModel *object, NSDictionary *bindings) {
         if (searchString.length > 0 &&
             [object.title rangeOfString:searchString options:NSCaseInsensitiveSearch].location != NSNotFound)
@@ -184,7 +186,7 @@ typedef NSIndexPath * (^ObjectEnumeratorBlock)(STACellModel *cellModel, NSUInteg
 }
 
 - (void)descendant:(STACellModel *)cellModel isSearchResult:(BOOL)isSearchResult {
-    NSLog(@"%s", __PRETTY_FUNCTION__);
+//    NSLog(@"%s", __PRETTY_FUNCTION__);
     
     if (isSearchResult) {
         [self.descendantSearchResultSet addObject:cellModel];
@@ -199,7 +201,7 @@ typedef NSIndexPath * (^ObjectEnumeratorBlock)(STACellModel *cellModel, NSUInteg
 
 #pragma mark - Helper Methods
 
-- (BOOL)isDescendant:(STACellModel *)cellModel {
+- (BOOL)hasDescendant:(STACellModel *)cellModel {
     NSLog(@"%s", __PRETTY_FUNCTION__);
     
     if (!cellModel.parents) {
@@ -210,7 +212,7 @@ typedef NSIndexPath * (^ObjectEnumeratorBlock)(STACellModel *cellModel, NSUInteg
     }
     BOOL isDescendant = NO;
     for (STACellModel *parent in [cellModel.parents allObjects]) {
-        isDescendant = [self isDescendant:parent];
+        isDescendant = [self hasDescendant:parent];
         if (isDescendant) {
             return YES;
         }
@@ -230,7 +232,7 @@ typedef NSIndexPath * (^ObjectEnumeratorBlock)(STACellModel *cellModel, NSUInteg
     
     NSInteger i = 1;
     STACellModel *cellModel = [self.tableModel cellModelAtIndexPath:[NSIndexPath indexPathForRow:r + i inSection:self.indexPath.section]];
-    while (cellModel && [self isDescendant:cellModel]) {
+    while (cellModel && [self hasDescendant:cellModel]) {
         NSIndexPath *removableIndexPath = block(cellModel, r + i);
         if (removableIndexPath) {
             [indexPathsToRemoveArray addObject:removableIndexPath];

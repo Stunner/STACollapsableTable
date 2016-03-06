@@ -11,8 +11,6 @@
 
 @interface STASearchOperation ()
 
-@property (nonatomic, strong) NSArray *dataArray;
-
 @end
 
 @implementation STASearchOperation
