@@ -11,7 +11,7 @@
 @interface STATableModelSpecifier : NSObject
 
 @property (nonatomic, strong) NSString *title;
-@property (nonatomic, strong) NSArray *children;
+@property (nonatomic, strong) NSArray <STATableModelSpecifier *> *children;
 @property (nonatomic, strong) id userInfo;
 
 + (instancetype)createWithTitle:(NSString *)title children:(NSArray *)children userInfo:(id)userInfo;

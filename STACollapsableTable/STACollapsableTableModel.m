@@ -35,6 +35,7 @@ typedef void (^ObjectEnumeratorBlock)(id object);
 @property (nonatomic, assign) NSUInteger searchOperationID;
 @property (atomic, assign) NSUInteger lastHighestSeenOperationID;
 @property (nonatomic, assign) BOOL stopSearching;
+//@property (nonatomic, assign) BOOL userHasPerformedCustomContentReset;
 @property (nonatomic, strong) NSArray *userProvidedContentArray;
 
 @end
