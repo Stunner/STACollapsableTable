@@ -53,10 +53,10 @@ typedef void (^ObjectEnumeratorBlock)(id object);
         _initiallyCollapsed = initiallyCollapsed;
         _delegate = delegate;
         _externalContentsArray = contentsArray;
+        _tableView = tableView;
         [self parseContents:contentsArray];
         _expandedSectionsSet = [NSMutableSet set];
         _operationQueue = [[NSOperationQueue alloc] init];
-        _tableView = tableView;
         _processingOperationsDictionary = [NSMutableDictionary dictionary];
     }
     return self;
@@ -201,7 +201,7 @@ typedef void (^ObjectEnumeratorBlock)(id object);
     return cellModel;
 }
 
-- (void)parseContents:(NSArray *)contentsArray {
+- (void)parseContents:(NSArray <STATableModelSpecifier *>*)contentsArray {
     NSMutableArray *mutableDataArray = [NSMutableArray arrayWithCapacity:contentsArray.count];
     for (STATableModelSpecifier *specifier in contentsArray) { // loop through root level objects
         STACellModel *cellModel = [self cellModelForSpecifier:specifier parent:nil tableModel:self];
@@ -214,7 +214,12 @@ typedef void (^ObjectEnumeratorBlock)(id object);
     [self enumerateObjects:self.contentsArray block:^(STACellModel *cellModel) {
         @strongify(self);
         cellModel.isExpanded = !self.initiallyCollapsed;
-        [nimbusContents addObject:cellModel];
+        if (cellModel.depth == 0) { // root
+            [nimbusContents addObject:cellModel.title];
+            [nimbusContents addObjectsFromArray:cellModel.children];
+        } else {
+            [nimbusContents addObject:cellModel];
+        }
     }];
     self.tableModel = [[NIMutableTableViewModel alloc] initWithSectionedArray:nimbusContents
                                                                      delegate:self];
