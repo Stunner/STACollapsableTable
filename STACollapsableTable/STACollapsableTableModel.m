@@ -228,15 +228,24 @@ typedef void (^ObjectEnumeratorBlock)(id object);
     [self enumerateObjects:self.contentsArray block:^(STACellModel *cellModel) {
         @strongify(self);
         cellModel.isExpanded = !self.initiallyCollapsed;
+        if ([cellModel.title isEqualToString:@"SubCategory"]) {
+            NSLog(@"bad!");
+        }
         if (self.useTableSections) {
             if (cellModel.depth == 0) { // root
                 [nimbusContents addObject:cellModel.title];
-                [nimbusContents addObjectsFromArray:cellModel.children];
+//                if (cellModel.isExpanded) {
+                    [nimbusContents addObjectsFromArray:cellModel.children];
+//                }
             } else {
-                [nimbusContents addObject:cellModel];
+//                if (cellModel.isExpanded) {
+                    [nimbusContents addObject:cellModel];
+//                }
             }
         } else {
-            [nimbusContents addObject:cellModel];
+//            if (cellModel.isExpanded) {
+                [nimbusContents addObject:cellModel];
+//            }
         }
     }];
     self.tableModel = [[NIMutableTableViewModel alloc] initWithSectionedArray:nimbusContents

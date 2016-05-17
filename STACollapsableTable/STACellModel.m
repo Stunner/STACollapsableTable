@@ -243,4 +243,8 @@ typedef NSIndexPath * (^ObjectEnumeratorBlock)(STACellModel *cellModel, NSUInteg
     return indexPathsToRemoveArray;
 }
 
+- (NSString *)description {
+    return [NSString stringWithFormat:@"STACellModel:\ntitle: %@\nchildren: %@", self.title, self.children];
+}
+
 @end
