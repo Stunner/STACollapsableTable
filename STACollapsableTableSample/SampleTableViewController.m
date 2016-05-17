@@ -45,6 +45,7 @@
     self.tableModel = [[STACollapsableTableModel alloc] initWithContentsArray:sectionedArray
                                                                     tableView:self.tableView
                                                            initiallyCollapsed:YES
+                                                             useTableSections:YES
                                                                      delegate:self];
     self.tableView.dataSource = [self.tableModel tableViewDataSource];
     self.tableView.delegate = [self.tableModel tableViewDelegate];

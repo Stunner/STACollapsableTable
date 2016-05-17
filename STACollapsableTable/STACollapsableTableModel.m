@@ -46,11 +46,13 @@ typedef void (^ObjectEnumeratorBlock)(id object);
 - (instancetype)initWithContentsArray:(NSArray *)contentsArray
                             tableView:(UITableView *)tableView
                    initiallyCollapsed:(BOOL)initiallyCollapsed
+                     useTableSections:(BOOL)useTableSections
                              delegate:(id<STACollapsableTableModelDelegate, UITableViewDelegate>)delegate
 {
     if (self = [super init]) {
         _tableViewDelegateArbiter = [[STATableViewDelegate alloc] initWithInternalDelegate:self externalDelegate:delegate];
         _initiallyCollapsed = initiallyCollapsed;
+        _useTableSections = useTableSections;
         _delegate = delegate;
         _externalContentsArray = contentsArray;
         _tableView = tableView;
@@ -60,6 +62,18 @@ typedef void (^ObjectEnumeratorBlock)(id object);
         _processingOperationsDictionary = [NSMutableDictionary dictionary];
     }
     return self;
+}
+
+- (instancetype)initWithContentsArray:(NSArray *)contentsArray
+                            tableView:(UITableView *)tableView
+                   initiallyCollapsed:(BOOL)initiallyCollapsed
+                             delegate:(id<STACollapsableTableModelDelegate, UITableViewDelegate>)delegate
+{
+    return [self initWithContentsArray:contentsArray
+                             tableView:tableView
+                    initiallyCollapsed:NO
+                      useTableSections:NO
+                              delegate:delegate];
 }
 
 - (instancetype)initWithContentsArray:(NSArray *)contentsArray
@@ -214,9 +228,13 @@ typedef void (^ObjectEnumeratorBlock)(id object);
     [self enumerateObjects:self.contentsArray block:^(STACellModel *cellModel) {
         @strongify(self);
         cellModel.isExpanded = !self.initiallyCollapsed;
-        if (cellModel.depth == 0) { // root
-            [nimbusContents addObject:cellModel.title];
-            [nimbusContents addObjectsFromArray:cellModel.children];
+        if (self.useTableSections) {
+            if (cellModel.depth == 0) { // root
+                [nimbusContents addObject:cellModel.title];
+                [nimbusContents addObjectsFromArray:cellModel.children];
+            } else {
+                [nimbusContents addObject:cellModel];
+            }
         } else {
             [nimbusContents addObject:cellModel];
         }

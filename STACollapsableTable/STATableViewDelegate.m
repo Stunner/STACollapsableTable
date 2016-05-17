@@ -7,10 +7,11 @@
 //
 
 #import "STATableViewDelegate.h"
+#import "STACollapsableTableModel.h"
 
 @interface STATableViewDelegate () <UITableViewDelegate, UISearchResultsUpdating, UISearchBarDelegate>
 
-@property (nonatomic, weak) id internalDelegate;
+@property (nonatomic, weak) STACollapsableTableModel *internalDelegate;
 @property (nonatomic, weak) id <UITableViewDelegate,UISearchResultsUpdating,UISearchBarDelegate>externalDelegate;
 
 @end
@@ -84,7 +85,10 @@
     if ([self.externalDelegate respondsToSelector:@selector(tableView:heightForHeaderInSection:)]) {
         return [self.externalDelegate tableView:tableView heightForHeaderInSection:section];
     }
-    return 44.0;
+    if (self.internalDelegate.useTableSections) {
+        return 44.0;
+    }
+    return 0.0;
 }
 
 - (CGFloat)tableView:(UITableView *)tableView heightForFooterInSection:(NSInteger)section {
@@ -111,7 +115,10 @@
     if ([self.externalDelegate respondsToSelector:@selector(tableView:estimatedHeightForHeaderInSection:)]) {
         return [self.externalDelegate tableView:tableView estimatedHeightForHeaderInSection:section];
     }
-    return 44.0;
+    if (self.internalDelegate.useTableSections) {
+        return 44.0;
+    }
+    return 0.0;
 }
 
 - (CGFloat)tableView:(UITableView *)tableView estimatedHeightForFooterInSection:(NSInteger)section {
@@ -199,7 +206,7 @@
 }
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
-    [self.internalDelegate tableView:tableView didSelectRowAtIndexPath:indexPath];
+    [(id)self.internalDelegate tableView:tableView didSelectRowAtIndexPath:indexPath];
     if ([self.externalDelegate respondsToSelector:@selector(tableView:didSelectRowAtIndexPath:)]) {
         [self.externalDelegate tableView:tableView didSelectRowAtIndexPath:indexPath];
     }
@@ -346,7 +353,7 @@ withAnimationCoordinator:(UIFocusAnimationCoordinator *)coordinator
 }
 
 - (void)searchBarTextDidBeginEditing:(UISearchBar *)searchBar {
-    [self.internalDelegate searchBarTextDidBeginEditing:searchBar];
+    [(id)self.internalDelegate searchBarTextDidBeginEditing:searchBar];
     if ([self.externalDelegate respondsToSelector:@selector(searchBarTextDidBeginEditing:)]) {
         [self.externalDelegate searchBarTextDidBeginEditing:searchBar];
     }
@@ -360,7 +367,7 @@ withAnimationCoordinator:(UIFocusAnimationCoordinator *)coordinator
 }
 
 - (void)searchBarTextDidEndEditing:(UISearchBar *)searchBar {
-    [self.internalDelegate searchBarTextDidEndEditing:searchBar];
+    [(id)self.internalDelegate searchBarTextDidEndEditing:searchBar];
     if ([self.externalDelegate respondsToSelector:@selector(searchBarTextDidEndEditing:)]) {
         [self.externalDelegate searchBarTextDidEndEditing:searchBar];
     }
@@ -418,7 +425,7 @@ withAnimationCoordinator:(UIFocusAnimationCoordinator *)coordinator
 #pragma mark - UISearchResultsUpdating Delegate Method
 
 - (void)updateSearchResultsForSearchController:(UISearchController *)searchController {
-    [self.internalDelegate updateSearchResultsForSearchController:searchController];
+    [(id)self.internalDelegate updateSearchResultsForSearchController:searchController];
     if ([self.externalDelegate respondsToSelector:@selector(updateSearchResultsForSearchController:)]) {
         [self.externalDelegate updateSearchResultsForSearchController:searchController];
     }

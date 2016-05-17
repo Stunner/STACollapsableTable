@@ -45,10 +45,17 @@
 @property (nonatomic, weak) id<STACollapsableTableModelDelegate> delegate;
 @property (nonatomic, readonly) id tableViewDataSource;
 @property (nonatomic, readonly) id tableViewDelegate;
+@property (nonatomic, assign, readonly) BOOL useTableSections;
 @property (nonatomic, strong, readonly) NSArray *contentsArray;
 @property (nonatomic, assign) BOOL isSearching;
 
 // designated initializer
+- (instancetype)initWithContentsArray:(NSArray *)contentsArray
+                            tableView:(UITableView *)tableView
+                   initiallyCollapsed:(BOOL)initiallyCollapsed
+                     useTableSections:(BOOL)useTableSections
+                             delegate:(id<STACollapsableTableModelDelegate, UITableViewDelegate>)delegate;
+
 - (instancetype)initWithContentsArray:(NSArray *)contentsArray
                             tableView:(UITableView *)tableView
                    initiallyCollapsed:(BOOL)initiallyCollapsed
