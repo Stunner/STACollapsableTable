@@ -120,7 +120,10 @@
     HeaderView *headerView = [self.headerViewsDictionary objectForKey:@(section)];
     if (!headerView) {
         STACellModel *model = [self.tableModel.contentsArray objectAtIndex:section];
-        headerView = [HeaderView createFromModel:model userInfo:@{@"isSearching" : @(self.isSearching)}];
+        headerView = [HeaderView createHeaderInSection:section
+                                             fromModel:model
+                                            tableModel:self.tableModel
+                                              userInfo:@{@"isSearching" : @(self.isSearching)}];
         [self.headerViewsDictionary setObject:headerView forKey:@(section)];
     }
     return headerView;

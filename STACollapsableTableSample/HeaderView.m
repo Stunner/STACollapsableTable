@@ -12,18 +12,24 @@
 
 @property (nonatomic, strong) IBOutlet UIImageView *collapsedStatusImageView;
 @property (nonatomic, strong) IBOutlet UILabel *titleLabel;
+@property (nonatomic, weak) STACollapsableTableModel *tableModel;
+@property (nonatomic, assign, readwrite) NSInteger section;
 
 @end
 
 @implementation HeaderView
 
-+ (HeaderView *)createFromModel:(STACellModel *)cellModel
-                       userInfo:(NSDictionary *)userInfo
++ (HeaderView *)createHeaderInSection:(NSInteger)section
+                            fromModel:(STACellModel *)cellModel
+                           tableModel:(STACollapsableTableModel *)tableModel
+                             userInfo:(NSDictionary *)userInfo
 {
     NSArray *topLevelObjects = [[NSBundle mainBundle] loadNibNamed:@"HeaderView" owner:self options:nil];
     HeaderView *headerView = [topLevelObjects objectAtIndex:0];
+    headerView.section = section;
     headerView.cellModel = cellModel;
     headerView.titleLabel.text = cellModel.title;
+    headerView.tableModel = tableModel;
     return headerView;
 }
 
@@ -43,7 +49,21 @@
 - (void)tapGestureHandler:(UITapGestureRecognizer *)gesture {
     NSLog(@"%s", __PRETTY_FUNCTION__);
     
-    
+    if (!self.cellModel.children.count) {
+        return; // collapsing/expansion can't be done on a cell without children
+    }
+    if (self.cellModel.isExpanded) { // collapse
+        [self.tableModel collapse:self.cellModel fromSection:self.section];
+    } else { // expand
+        [self.tableModel expand:self.cellModel fromSection:self.section];
+    }
+    [UIView animateWithDuration:0.33 animations:^{
+        [self updateRotatedImageViewStatus];
+    } completion:^(BOOL finished) {
+        if (finished) {
+            [self updateRotatedImageViewStatus];
+        }
+    }];
 }
 
 - (void)updateRotatedImageViewStatus {

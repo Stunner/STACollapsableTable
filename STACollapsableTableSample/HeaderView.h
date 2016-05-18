@@ -8,12 +8,16 @@
 
 #import <UIKit/UIKit.h>
 #import "STACellModel.h"
+#import "STACollapsableTableModel.h"
 
 @interface HeaderView : UIView
 
 @property (nonatomic, strong) STACellModel *cellModel;
+@property (nonatomic, assign, readonly) NSInteger section;
 
-+ (HeaderView *)createFromModel:(STACellModel *)cellModel
-                       userInfo:(NSDictionary *)userInfo;
++ (HeaderView *)createHeaderInSection:(NSInteger)section
+                            fromModel:(STACellModel *)cellModel
+                           tableModel:(STACollapsableTableModel *)tableModel
+                             userInfo:(NSDictionary *)userInfo;
 
 @end

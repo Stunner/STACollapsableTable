@@ -71,6 +71,8 @@
 - (NSIndexPath *)indexPathForCellModel:(STACellModel *)cellModel;
 - (void)collapseExpandedCellState;
 - (void)expand:(STACellModel *)container fromRowFromIndexPath:(NSIndexPath *)indexPath;
+- (void)expand:(STACellModel *)container fromSection:(NSInteger)section;
+- (void)collapse:(STACellModel *)container fromSection:(NSInteger)section;
 - (void)performSearchWithQuery:(NSString *)searchQuery;
 
 //TODO: conceal this method - it shouldn't be public
