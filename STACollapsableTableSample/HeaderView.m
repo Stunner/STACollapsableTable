@@ -30,6 +30,7 @@
     headerView.cellModel = cellModel;
     headerView.titleLabel.text = cellModel.title;
     headerView.tableModel = tableModel;
+    [headerView updateRotatedImageViewStatus];
     return headerView;
 }
 
