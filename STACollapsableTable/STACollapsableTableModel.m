@@ -118,17 +118,17 @@ typedef void (^ObjectEnumeratorBlock)(id object);
 - (void)resetTableWithModelData:(NSArray *)contentsArray {
     NSLog(@"%s", __PRETTY_FUNCTION__);
     
-    [self.tableModel removeSectionAtIndex:0];
+    [self.tableModel removeAllSections];
     self.userProvidedContentArray = contentsArray;
-    [self.tableModel addObjectsFromArray:self.userProvidedContentArray];
+    [self addObjectsFromArrayToTableModel:self.userProvidedContentArray];
     [self.tableView reloadData];
 }
 
 - (void)resetTableModelData {
     NSLog(@"%s", __PRETTY_FUNCTION__);
     
-    [self.tableModel removeSectionAtIndex:0];
-    [self.tableModel addObjectsFromArray:self.contentsArray];
+    [self.tableModel removeAllSections];
+    [self addObjectsFromArrayToTableModel:self.contentsArray];
     [self.tableView reloadData];
 }
 
@@ -161,6 +161,28 @@ typedef void (^ObjectEnumeratorBlock)(id object);
     [self collapse:container fromSection:section inTableView:self.tableView animated:YES];
 }
 
+- (void)addObjectsFromArrayToTableModel:(NSArray *)array {
+    NSMutableArray *nimbusContents = [NSMutableArray array];
+    for (STACellModel *cellModel in array) {
+        if (self.useTableSections) {
+            if (cellModel.depth == 0) { // root
+//                [nimbusContents addObject:cellModel.title];
+                [self.tableModel addSectionWithTitle:cellModel.title];
+            } else {
+//                [nimbusContents addObject:cellModel];
+                [self.tableModel addObject:cellModel];
+            }
+        } else {
+//            [nimbusContents addObject:cellModel];
+            [self.tableModel addObject:cellModel];
+        }
+    }
+    [self.tableView reloadData];
+//    [self.tableModel addObjectsFromArray:nimbusContents];
+//    self.tableModel = [[NIMutableTableViewModel alloc] initWithSectionedArray:nimbusContents
+//                                                                     delegate:self];
+}
+
 - (void)performSearchWithQuery:(NSString *)searchQuery {
     NSLog(@"%s", __PRETTY_FUNCTION__);
     
@@ -189,13 +211,13 @@ typedef void (^ObjectEnumeratorBlock)(id object);
             if (searchOperation.operationID > self.lastHighestSeenOperationID) {
                 dispatch_async(dispatch_get_main_queue(), ^{
                     self.lastHighestSeenOperationID = searchOperation.operationID;
-                    [self.tableModel removeSectionAtIndex:0];
+                    [self.tableModel removeAllSections];
                     
                     if ([self.delegate respondsToSelector:@selector(searchOperationCompletedWithContents:)]) {
                         NSArray *overriddenContents = [self.delegate searchOperationCompletedWithContents:searchOperation.allSearchResults];
-                        [self.tableModel addObjectsFromArray:overriddenContents];
+                        [self addObjectsFromArrayToTableModel:overriddenContents];
                     } else {
-                        [self.tableModel addObjectsFromArray:searchOperation.allSearchResults];
+                        [self addObjectsFromArrayToTableModel:searchOperation.allSearchResults];
                     }
                     [self.tableView reloadData];
                 });

@@ -92,6 +92,10 @@
   return nil;
 }
 
+- (void)removeAllSections {
+    [self.sections removeAllObjects];
+}
+
 - (void)updateSectionIndex {
   [self _compileSectionIndex];
 }

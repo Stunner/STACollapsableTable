@@ -7,6 +7,7 @@
 //
 
 #import "HeaderView.h"
+#import <ReactiveCocoa/ReactiveCocoa.h>
 
 @interface HeaderView ()
 
@@ -47,6 +48,34 @@
     return self;
 }
 
+- (void)setCellModel:(STACellModel *)cellModel {
+    _cellModel = cellModel;
+    
+    @weakify(self);
+    [[RACObserve(self.cellModel, isSearchResult)
+      combinePreviousWithStart:@(self.cellModel.isSearchResult)
+      reduce:^id(NSNumber *previousValue, NSNumber *currentValue)
+      {
+          return @(([previousValue boolValue] != [currentValue boolValue]));
+      }] subscribeNext:^(NSNumber *statusChanged) {
+          @strongify(self);
+          if ([statusChanged boolValue]) {
+              [self isSearchResultStateChanged:cellModel.isSearchResult];
+          }
+      }];
+//    [[RACObserve(self.cellModel, isExpanded)
+//      combinePreviousWithStart:@(self.cellModel.isExpanded)
+//      reduce:^id(NSNumber *previousStatus, NSNumber *currentStatus)
+//      {
+//          return @(([previousStatus boolValue] != [currentStatus boolValue]));
+//      }] subscribeNext:^(NSNumber *statusChanged) {
+//          @strongify(self);
+//          if ([statusChanged boolValue]) {
+//              [self cellTapped];
+//          }
+//      }];
+}
+
 - (void)tapGestureHandler:(UITapGestureRecognizer *)gesture {
     NSLog(@"%s", __PRETTY_FUNCTION__);
     
@@ -65,6 +94,15 @@
             [self updateRotatedImageViewStatus];
         }
     }];
+}
+
+- (void)isSearchResultStateChanged:(BOOL)isSearchResult {
+    if (self.titleLabel) {
+        self.titleLabel.alpha = isSearchResult ? 1.0 : 0.5;
+    }
+//    } else {
+//        self.textLabel.alpha = isSearchResult ? 1.0 : 0.5;
+//    }
 }
 
 - (void)updateRotatedImageViewStatus {
