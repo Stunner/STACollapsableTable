@@ -117,15 +117,15 @@
 - (nullable UIView *)tableView:(UITableView *)tableView viewForHeaderInSection:(NSInteger)section {
     NSLog(@"%s", __PRETTY_FUNCTION__);
     
-    HeaderView *headerView = [self.headerViewsDictionary objectForKey:@(section)];
-    if (!headerView) {
-        STACellModel *model = [self.tableModel.contentsArray objectAtIndex:section];
-        headerView = [HeaderView createHeaderInSection:section
-                                             fromModel:model
-                                            tableModel:self.tableModel
-                                              userInfo:@{@"isSearching" : @(self.isSearching)}];
-        [self.headerViewsDictionary setObject:headerView forKey:@(section)];
-    }
+//    HeaderView *headerView = [self.headerViewsDictionary objectForKey:@(section)];
+//    if (!headerView) {
+        STACellModel *model = [self.tableModel.topLevelObjects objectAtIndex:section];
+        HeaderView *headerView = [HeaderView createHeaderInSection:section
+                                                         fromModel:model
+                                                        tableModel:self.tableModel
+                                                          userInfo:@{@"isSearching" : @(self.isSearching)}];
+//        [self.headerViewsDictionary setObject:headerView forKey:@(section)];
+//    }
     return headerView;
 }
 

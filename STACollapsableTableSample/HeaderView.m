@@ -32,6 +32,7 @@
     headerView.titleLabel.text = cellModel.title;
     headerView.tableModel = tableModel;
     [headerView updateRotatedImageViewStatus];
+    [headerView isSearchResultStateChanged:cellModel.isSearchResult];
     return headerView;
 }
 

@@ -47,6 +47,7 @@
 @property (nonatomic, readonly) id tableViewDelegate;
 @property (nonatomic, assign, readonly) BOOL useTableSections;
 @property (nonatomic, strong, readonly) NSArray *contentsArray;
+@property (nonatomic, strong, readonly) NSArray *topLevelObjects;
 @property (nonatomic, assign) BOOL isSearching;
 
 // designated initializer
