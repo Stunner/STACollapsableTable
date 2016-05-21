@@ -28,6 +28,7 @@
  */
 @property (nonatomic, assign, readonly) NSUInteger depth;
 
+@property (nonatomic, assign) NSInteger section;
 @property (nonatomic, weak) NSIndexPath *indexPath;
 @property (nonatomic, weak) STACollapsableTableModel *tableModel;
 
@@ -46,9 +47,17 @@
                                          inTableModel:(STACollapsableTableModel *)tableModel
                                           isSearching:(BOOL)isSearching;
 
+- (NSArray *)indexPathsToAddForExpansionFromSection:(NSInteger)section
+                                       inTableModel:(STACollapsableTableModel *)tableModel
+                                        isSearching:(BOOL)isSearching;
+
 - (NSArray *)indexPathsToRemoveForCollapseFromIndexPath:(NSIndexPath *)indexPath
                                            inTableModel:(STACollapsableTableModel *)tableModel
                                             isSearching:(BOOL)isSearching;
+
+- (NSArray *)indexPathsToRemoveForCollapseFromSection:(NSInteger)section
+                                         inTableModel:(STACollapsableTableModel *)tableModel
+                                          isSearching:(BOOL)isSearching;
 
 - (NSArray *)filterContentsWithSearchString:(NSString *)searchString;
 

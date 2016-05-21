@@ -16,12 +16,14 @@
 #import "SubCollapsableTableViewCell.h"
 #import "LeafNodeTableViewCell.h"
 #import "CustomCellModel.h"
+#import "HeaderView.h"
 
 @interface SampleTableViewController () <STACollapsableTableModelDelegate>
 
 @property (nonatomic, strong) STACollapsableTableModel *tableModel;
 @property (nonatomic, strong) UISearchController *searchController;
 @property (nonatomic, assign) BOOL isSearching;
+@property (nonatomic, strong) NSMutableDictionary *headerViewsDictionary;
 
 @end
 
@@ -30,14 +32,28 @@
 - (void)viewDidLoad {
     [super viewDidLoad];
     
+    self.headerViewsDictionary = [NSMutableDictionary dictionary];
+    
     NSArray *children1 = @[[STATableModelSpecifier createWithTitle:@"sr 3" children:nil userInfo:nil],
                            [STATableModelSpecifier createWithTitle:@"sr 4" children:nil userInfo:nil]];
     NSArray *children2 = @[[STATableModelSpecifier createWithTitle:@"sr 1" children:nil userInfo:nil],
-                          [STATableModelSpecifier createWithTitle:@"sr 2" children:nil userInfo:nil],
+                           [STATableModelSpecifier createWithTitle:@"sr 2" children:nil userInfo:nil],
+                           [STATableModelSpecifier createWithTitle:@"sr 20" children:nil userInfo:nil],
+                           [STATableModelSpecifier createWithTitle:@"sr 21" children:nil userInfo:nil],
+                           [STATableModelSpecifier createWithTitle:@"sr 22" children:nil userInfo:nil],
+                           [STATableModelSpecifier createWithTitle:@"sr 23" children:nil userInfo:nil],
                           [STATableModelSpecifier createWithTitle:@"SubCategory" children:children1 userInfo:nil]];
     NSArray *children3 = @[[STATableModelSpecifier createWithTitle:@"sr 5" children:nil userInfo:nil],
                            [STATableModelSpecifier createWithTitle:@"sr 6" children:nil userInfo:nil],
-                           [STATableModelSpecifier createWithTitle:@"sr 7" children:nil userInfo:nil]];
+                           [STATableModelSpecifier createWithTitle:@"sr 7" children:nil userInfo:nil],
+                           [STATableModelSpecifier createWithTitle:@"sr 8" children:nil userInfo:nil],
+                           [STATableModelSpecifier createWithTitle:@"sr 9" children:nil userInfo:nil],
+                           [STATableModelSpecifier createWithTitle:@"sr 10" children:nil userInfo:nil],
+                           [STATableModelSpecifier createWithTitle:@"sr 11" children:nil userInfo:nil],
+                           [STATableModelSpecifier createWithTitle:@"sr 12" children:nil userInfo:nil],
+                           [STATableModelSpecifier createWithTitle:@"sr 13" children:nil userInfo:nil],
+                           [STATableModelSpecifier createWithTitle:@"sr 14" children:nil userInfo:nil],
+                           [STATableModelSpecifier createWithTitle:@"sr 15" children:nil userInfo:nil]];
     NSArray *sectionedArray = @[[STATableModelSpecifier createWithTitle:@"Category" children:children2 userInfo:nil],
                                 [STATableModelSpecifier createWithTitle:@"Empty Category" children:@[] userInfo:nil],
                                 [STATableModelSpecifier createWithTitle:@"Category 2" children:children3 userInfo:nil]];
@@ -45,6 +61,7 @@
     self.tableModel = [[STACollapsableTableModel alloc] initWithContentsArray:sectionedArray
                                                                     tableView:self.tableView
                                                            initiallyCollapsed:YES
+                                                             useTableSections:YES
                                                                      delegate:self];
     self.tableView.dataSource = [self.tableModel tableViewDataSource];
     self.tableView.delegate = [self.tableModel tableViewDelegate];
@@ -96,6 +113,17 @@
 }
 
 #pragma mark - Table View Delegate
+
+- (nullable UIView *)tableView:(UITableView *)tableView viewForHeaderInSection:(NSInteger)section {
+    NSLog(@"%s", __PRETTY_FUNCTION__);
+    
+    STACellModel *model = [self.tableModel.topLevelObjects objectAtIndex:section];
+    HeaderView *headerView = [HeaderView createHeaderInSection:section
+                                                     fromModel:model
+                                                    tableModel:self.tableModel
+                                                      userInfo:@{@"isSearching" : @(self.isSearching)}];
+    return headerView;
+}
 
 - (BOOL)tableView:(UITableView *)tableView shouldHighlightRowAtIndexPath:(NSIndexPath *)indexPath {
     NSLog(@"%s", __PRETTY_FUNCTION__);

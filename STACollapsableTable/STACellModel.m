@@ -24,6 +24,7 @@ typedef NSIndexPath * (^ObjectEnumeratorBlock)(STACellModel *cellModel, NSUInteg
         _isExpanded = NO;
         _isSearchResult = YES; // make cells show up as black instead of gray initially
         _tableModel = tableModel;
+        _section = -1;
         
         if (parent) {
             _parents = [NSMutableSet setWithObject:parent];
@@ -126,6 +127,36 @@ typedef NSIndexPath * (^ObjectEnumeratorBlock)(STACellModel *cellModel, NSUInteg
     return addedIndexPaths;
 }
 
+- (NSArray *)indexPathsToAddForExpansionFromSection:(NSInteger)section
+                                       inTableModel:(STACollapsableTableModel *)tableModel
+                                        isSearching:(BOOL)isSearching
+{
+    NSLog(@"%s", __PRETTY_FUNCTION__);
+    
+    NSMutableArray *addedIndexPaths = [NSMutableArray array];
+    NSUInteger offsetCount = 0;
+    NSUInteger rowsCounter = 0;
+    for (STACellModel *cellModel in self.children) {
+        if (isSearching) {
+            if (!cellModel.isSearchResult && !cellModel.descendantsInSearchResults) {
+                [addedIndexPaths addObject:@{@"container" : cellModel,
+                                             @"index" : @(rowsCounter + offsetCount)}];
+            } else {
+                if (cellModel.isExpanded) {
+                    offsetCount += cellModel.children.count;
+                } else {
+                    offsetCount += cellModel.descendantsInSearchResults;
+                }
+            }
+        } else {
+            [addedIndexPaths addObject:@{@"container" : cellModel,
+                                         @"index" : @(rowsCounter + offsetCount)}];
+        }
+        offsetCount++;
+    }
+    return addedIndexPaths;
+}
+
 - (NSArray *)indexPathsToRemoveForCollapseFromIndexPath:(NSIndexPath *)indexPath
                                            inTableModel:(STACollapsableTableModel *)tableModel
                                             isSearching:(BOOL)isSearching
@@ -143,6 +174,28 @@ typedef NSIndexPath * (^ObjectEnumeratorBlock)(STACellModel *cellModel, NSUInteg
             }
         } else {
             removableIndexPath = [NSIndexPath indexPathForRow:row inSection:indexPath.section];
+        }
+        return removableIndexPath;
+    }];
+}
+
+- (NSArray *)indexPathsToRemoveForCollapseFromSection:(NSInteger)section
+                                         inTableModel:(STACollapsableTableModel *)tableModel
+                                          isSearching:(BOOL)isSearching
+{
+    NSLog(@"%s", __PRETTY_FUNCTION__);
+    
+    self.section = section;
+    self.tableModel = tableModel;
+    
+    return [self enumerateObjects:^NSIndexPath * (STACellModel *cellModel, NSUInteger row) {
+        NSIndexPath *removableIndexPath = nil;
+        if (isSearching) {
+            if (!cellModel.isSearchResult && !cellModel.descendantsInSearchResults) {
+                removableIndexPath = [NSIndexPath indexPathForRow:row inSection:section];
+            }
+        } else {
+            removableIndexPath = [NSIndexPath indexPathForRow:row inSection:section];
         }
         return removableIndexPath;
     }];
@@ -228,19 +281,32 @@ typedef NSIndexPath * (^ObjectEnumeratorBlock)(STACellModel *cellModel, NSUInteg
     
     NSUInteger displayedDescendantsCount = self.displayedDescendantsCount;
     NSMutableArray *indexPathsToRemoveArray = [NSMutableArray arrayWithCapacity:displayedDescendantsCount];
-    NSUInteger r = self.indexPath.row;
     
+    NSUInteger r = self.indexPath.row;
     NSInteger i = 1;
     STACellModel *cellModel = [self.tableModel cellModelAtIndexPath:[NSIndexPath indexPathForRow:r + i inSection:self.indexPath.section]];
+    if (self.section != -1) {
+        r = 0;
+        i = 0; // if cell model represends a header, there is no need to skip the first row
+        cellModel = [self.tableModel cellModelAtIndexPath:[NSIndexPath indexPathForRow:r + i inSection:self.section]];
+    }
     while (cellModel && [self hasDescendant:cellModel]) {
         NSIndexPath *removableIndexPath = block(cellModel, r + i);
         if (removableIndexPath) {
             [indexPathsToRemoveArray addObject:removableIndexPath];
         }
         i++;
-        cellModel = [self.tableModel cellModelAtIndexPath:[NSIndexPath indexPathForRow:r + i inSection:self.indexPath.section]];
+        if (self.section != -1) {
+            cellModel = [self.tableModel cellModelAtIndexPath:[NSIndexPath indexPathForRow:r + i inSection:self.section]];
+        } else {
+            cellModel = [self.tableModel cellModelAtIndexPath:[NSIndexPath indexPathForRow:r + i inSection:self.indexPath.section]];
+        }
     }
     return indexPathsToRemoveArray;
+}
+
+- (NSString *)description {
+    return [NSString stringWithFormat:@"STACellModel:\ntitle: %@\nchildren: %@", self.title, self.children];
 }
 
 @end

@@ -26,7 +26,7 @@ typedef void (^ObjectEnumeratorBlock)(id object);
 @property (nonatomic, strong) NSMutableSet *expandedSectionsSet;
 @property (nonatomic, strong) UITableView *tableView;
 @property (nonatomic, strong, readwrite) NSArray *contentsArray;
-@property (nonatomic, strong) NSArray *externalContentsArray;
+@property (nonatomic, strong, readwrite) NSArray *topLevelObjects;
 
 // Search
 @property (nonatomic, strong) NSString *prevSearchString;
@@ -35,7 +35,6 @@ typedef void (^ObjectEnumeratorBlock)(id object);
 @property (nonatomic, assign) NSUInteger searchOperationID;
 @property (atomic, assign) NSUInteger lastHighestSeenOperationID;
 @property (nonatomic, assign) BOOL stopSearching;
-//@property (nonatomic, assign) BOOL userHasPerformedCustomContentReset;
 @property (nonatomic, strong) NSArray *userProvidedContentArray;
 
 @end
@@ -46,17 +45,18 @@ typedef void (^ObjectEnumeratorBlock)(id object);
 - (instancetype)initWithContentsArray:(NSArray *)contentsArray
                             tableView:(UITableView *)tableView
                    initiallyCollapsed:(BOOL)initiallyCollapsed
+                     useTableSections:(BOOL)useTableSections
                              delegate:(id<STACollapsableTableModelDelegate, UITableViewDelegate>)delegate
 {
     if (self = [super init]) {
         _tableViewDelegateArbiter = [[STATableViewDelegate alloc] initWithInternalDelegate:self externalDelegate:delegate];
         _initiallyCollapsed = initiallyCollapsed;
+        _useTableSections = useTableSections;
         _delegate = delegate;
-        _externalContentsArray = contentsArray;
+        _tableView = tableView;
         [self parseContents:contentsArray];
         _expandedSectionsSet = [NSMutableSet set];
         _operationQueue = [[NSOperationQueue alloc] init];
-        _tableView = tableView;
         _processingOperationsDictionary = [NSMutableDictionary dictionary];
     }
     return self;
@@ -64,9 +64,24 @@ typedef void (^ObjectEnumeratorBlock)(id object);
 
 - (instancetype)initWithContentsArray:(NSArray *)contentsArray
                             tableView:(UITableView *)tableView
+                   initiallyCollapsed:(BOOL)initiallyCollapsed
                              delegate:(id<STACollapsableTableModelDelegate, UITableViewDelegate>)delegate
 {
-    return [self initWithContentsArray:contentsArray tableView:tableView initiallyCollapsed:NO delegate:delegate];
+    return [self initWithContentsArray:contentsArray
+                             tableView:tableView
+                    initiallyCollapsed:NO
+                      useTableSections:NO
+                              delegate:delegate];
+}
+
+- (instancetype)initWithContentsArray:(NSArray *)contentsArray
+                            tableView:(UITableView *)tableView
+                             delegate:(id<STACollapsableTableModelDelegate, UITableViewDelegate>)delegate
+{
+    return [self initWithContentsArray:contentsArray
+                             tableView:tableView
+                    initiallyCollapsed:NO
+                              delegate:delegate];
 }
 
 #pragma mark - Getters
@@ -104,17 +119,17 @@ typedef void (^ObjectEnumeratorBlock)(id object);
 - (void)resetTableWithModelData:(NSArray *)contentsArray {
     NSLog(@"%s", __PRETTY_FUNCTION__);
     
-    [self.tableModel removeSectionAtIndex:0];
+    [self.tableModel removeAllSections];
     self.userProvidedContentArray = contentsArray;
-    [self.tableModel addObjectsFromArray:self.userProvidedContentArray];
+    [self addObjectsFromArrayToTableModel:self.userProvidedContentArray];
     [self.tableView reloadData];
 }
 
 - (void)resetTableModelData {
     NSLog(@"%s", __PRETTY_FUNCTION__);
     
-    [self.tableModel removeSectionAtIndex:0];
-    [self.tableModel addObjectsFromArray:self.contentsArray];
+    [self.tableModel removeAllSections];
+    [self addObjectsFromArrayToTableModel:self.contentsArray];
     [self.tableView reloadData];
 }
 
@@ -129,7 +144,7 @@ typedef void (^ObjectEnumeratorBlock)(id object);
 - (void)collapseExpandedCellState {
     NSLog(@"%s", __PRETTY_FUNCTION__);
     
-    for (STACellModel *cellModel in [self.expandedSectionsSet allObjects] ) {
+    for (STACellModel *cellModel in [self.expandedSectionsSet allObjects]) {
         cellModel.isExpanded = NO;
         [self.expandedSectionsSet removeObject:cellModel];
     }
@@ -137,6 +152,38 @@ typedef void (^ObjectEnumeratorBlock)(id object);
 
 - (void)expand:(STACellModel *)container fromRowFromIndexPath:(NSIndexPath *)indexPath {
     [self expand:container fromIndexPath:indexPath inTableView:self.tableView animated:YES];
+}
+
+- (void)expand:(STACellModel *)container fromSection:(NSInteger)section {
+    [self expand:container fromSection:section inTableView:self.tableView animated:YES];
+}
+
+- (void)collapse:(STACellModel *)container fromSection:(NSInteger)section {
+    [self collapse:container fromSection:section inTableView:self.tableView animated:YES];
+}
+
+- (STACellModel *)addCellModelToTableModel:(STACellModel *)cellModel {
+    if (self.useTableSections) {
+        if (cellModel.depth == 0) { // root
+            [self.tableModel addSectionWithTitle:cellModel.title];
+            return cellModel;
+        } else {
+            [self.tableModel addObject:cellModel];
+        }
+    } else {
+        [self.tableModel addObject:cellModel];
+    }
+    return nil;
+}
+
+- (void)addObjectsFromArrayToTableModel:(NSArray *)array {
+    NSMutableArray *topLevelObjects = [NSMutableArray array];
+    for (STACellModel *cellModel in array) {
+        STACellModel *topLevelCellModel = [self addCellModelToTableModel:cellModel];
+        if (topLevelCellModel) [topLevelObjects addObject:topLevelCellModel];
+    }
+    self.topLevelObjects = topLevelObjects;
+    [self.tableView reloadData];
 }
 
 - (void)performSearchWithQuery:(NSString *)searchQuery {
@@ -167,13 +214,13 @@ typedef void (^ObjectEnumeratorBlock)(id object);
             if (searchOperation.operationID > self.lastHighestSeenOperationID) {
                 dispatch_async(dispatch_get_main_queue(), ^{
                     self.lastHighestSeenOperationID = searchOperation.operationID;
-                    [self.tableModel removeSectionAtIndex:0];
+                    [self.tableModel removeAllSections];
                     
                     if ([self.delegate respondsToSelector:@selector(searchOperationCompletedWithContents:)]) {
                         NSArray *overriddenContents = [self.delegate searchOperationCompletedWithContents:searchOperation.allSearchResults];
-                        [self.tableModel addObjectsFromArray:overriddenContents];
+                        [self addObjectsFromArrayToTableModel:overriddenContents];
                     } else {
-                        [self.tableModel addObjectsFromArray:searchOperation.allSearchResults];
+                        [self addObjectsFromArrayToTableModel:searchOperation.allSearchResults];
                     }
                     [self.tableView reloadData];
                 });
@@ -201,7 +248,7 @@ typedef void (^ObjectEnumeratorBlock)(id object);
     return cellModel;
 }
 
-- (void)parseContents:(NSArray *)contentsArray {
+- (void)parseContents:(NSArray <STATableModelSpecifier *>*)contentsArray {
     NSMutableArray *mutableDataArray = [NSMutableArray arrayWithCapacity:contentsArray.count];
     for (STATableModelSpecifier *specifier in contentsArray) { // loop through root level objects
         STACellModel *cellModel = [self cellModelForSpecifier:specifier parent:nil tableModel:self];
@@ -209,15 +256,17 @@ typedef void (^ObjectEnumeratorBlock)(id object);
     }
     self.contentsArray = mutableDataArray;
     
-    NSMutableArray *nimbusContents = [NSMutableArray array];
+    NSMutableArray *topLevelObjects = [NSMutableArray array];
+    self.tableModel = [[NIMutableTableViewModel alloc] initWithSectionedArray:nil
+                                                                     delegate:self];
     @weakify(self);
     [self enumerateObjects:self.contentsArray block:^(STACellModel *cellModel) {
         @strongify(self);
         cellModel.isExpanded = !self.initiallyCollapsed;
-        [nimbusContents addObject:cellModel];
+        STACellModel *topLevelCellModel = [self addCellModelToTableModel:cellModel];
+        if (topLevelCellModel) [topLevelObjects addObject:topLevelCellModel];
     }];
-    self.tableModel = [[NIMutableTableViewModel alloc] initWithSectionedArray:nimbusContents
-                                                                     delegate:self];
+    self.topLevelObjects = topLevelObjects;
 }
 
 - (void)enumerateObjects:(NSArray *)contentsArray block:(ObjectEnumeratorBlock)block {
@@ -260,11 +309,55 @@ typedef void (^ObjectEnumeratorBlock)(id object);
     [self.expandedSectionsSet addObject:cellModel];
 }
 
+- (void)expand:(STACellModel *)cellModel fromSection:(NSInteger)section inTableView:(UITableView *)tableView animated:(BOOL)animated {
+    NSLog(@"%s", __PRETTY_FUNCTION__);
+    
+    if (cellModel.isExpanded) return;
+    
+    NSArray<NSDictionary *> *indexPathsToAdd = [cellModel indexPathsToAddForExpansionFromSection:section
+                                                                                    inTableModel:self
+                                                                                     isSearching:self.isSearching];
+    
+    NSMutableArray *addedIndexPaths = [NSMutableArray arrayWithCapacity:indexPathsToAdd.count];
+    for (NSDictionary *dict in indexPathsToAdd) {
+        NSUInteger index = [dict[@"index"] integerValue];
+        STACellModel *addedCellModel = dict[@"container"];
+        [self.tableModel insertObject:addedCellModel atRow:index inSection:section];
+        NSIndexPath *newIndexPath = [NSIndexPath indexPathForRow:index inSection:section];
+        [addedIndexPaths addObject:newIndexPath];
+    }
+    [tableView beginUpdates];
+    [tableView insertRowsAtIndexPaths:addedIndexPaths withRowAnimation:UITableViewRowAnimationNone];
+    [tableView endUpdates];
+    
+    cellModel.isExpanded = YES;
+    [self.expandedSectionsSet addObject:cellModel];
+}
+
 - (void)collapse:(STACellModel *)cellModel fromIndexPath:(NSIndexPath *)indexPath inTableView:(UITableView *)tableView animated:(BOOL)animated {
     NSLog(@"%s", __PRETTY_FUNCTION__);
     
     NSMutableArray *removableIndexPaths = [NSMutableArray arrayWithCapacity:10];
     [removableIndexPaths addObjectsFromArray:[cellModel indexPathsToRemoveForCollapseFromIndexPath:indexPath
+                                                                                      inTableModel:self
+                                                                                       isSearching:self.isSearching]];
+    for (NSInteger i = removableIndexPaths.count - 1; i >= 0; i--) {
+        NSIndexPath *removedIndexPath = removableIndexPaths[i];
+        [self.tableModel removeObjectAtIndexPath:removedIndexPath];
+    }
+    [tableView beginUpdates];
+    [tableView deleteRowsAtIndexPaths:removableIndexPaths withRowAnimation:UITableViewRowAnimationNone];
+    [tableView endUpdates];
+    
+    cellModel.isExpanded = NO;
+    [self.expandedSectionsSet removeObject:cellModel];
+}
+
+- (void)collapse:(STACellModel *)cellModel fromSection:(NSInteger)section inTableView:(UITableView *)tableView animated:(BOOL)animated {
+    NSLog(@"%s", __PRETTY_FUNCTION__);
+    
+    NSMutableArray *removableIndexPaths = [NSMutableArray arrayWithCapacity:10];
+    [removableIndexPaths addObjectsFromArray:[cellModel indexPathsToRemoveForCollapseFromSection:section
                                                                                       inTableModel:self
                                                                                        isSearching:self.isSearching]];
     for (NSInteger i = removableIndexPaths.count - 1; i >= 0; i--) {

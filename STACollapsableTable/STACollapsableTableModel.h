@@ -45,10 +45,29 @@
 @property (nonatomic, weak) id<STACollapsableTableModelDelegate> delegate;
 @property (nonatomic, readonly) id tableViewDataSource;
 @property (nonatomic, readonly) id tableViewDelegate;
+@property (nonatomic, assign, readonly) BOOL useTableSections;
+/**
+ Array of all contents in the table view model.
+ 
+ This does not update during a search.
+ */
 @property (nonatomic, strong, readonly) NSArray *contentsArray;
-@property (nonatomic, assign) BOOL isSearching;
+/**
+ Array of all cell models with root depth (of 0).
+ 
+ This is leveraged in order to reference the cell model of a section header.
+ This updates during a search.
+ */
+@property (nonatomic, strong, readonly) NSArray *topLevelObjects;
+@property (nonatomic, assign, readonly) BOOL isSearching;
 
 // designated initializer
+- (instancetype)initWithContentsArray:(NSArray *)contentsArray
+                            tableView:(UITableView *)tableView
+                   initiallyCollapsed:(BOOL)initiallyCollapsed
+                     useTableSections:(BOOL)useTableSections
+                             delegate:(id<STACollapsableTableModelDelegate, UITableViewDelegate>)delegate;
+
 - (instancetype)initWithContentsArray:(NSArray *)contentsArray
                             tableView:(UITableView *)tableView
                    initiallyCollapsed:(BOOL)initiallyCollapsed
@@ -64,6 +83,8 @@
 - (NSIndexPath *)indexPathForCellModel:(STACellModel *)cellModel;
 - (void)collapseExpandedCellState;
 - (void)expand:(STACellModel *)container fromRowFromIndexPath:(NSIndexPath *)indexPath;
+- (void)expand:(STACellModel *)container fromSection:(NSInteger)section;
+- (void)collapse:(STACellModel *)container fromSection:(NSInteger)section;
 - (void)performSearchWithQuery:(NSString *)searchQuery;
 
 //TODO: conceal this method - it shouldn't be public
