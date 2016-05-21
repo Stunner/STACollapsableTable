@@ -160,23 +160,27 @@ typedef void (^ObjectEnumeratorBlock)(id object);
     [self collapse:container fromSection:section inTableView:self.tableView animated:YES];
 }
 
-- (void)addObjectsFromArrayToTableModel:(NSArray *)array {
-    NSMutableArray *topLevelObjects = [NSMutableArray array];
-    for (STACellModel *cellModel in array) {
-        if (self.useTableSections) {
-            if (cellModel.depth == 0) { // root
-                [topLevelObjects addObject:cellModel];
-                [self.tableModel addSectionWithTitle:cellModel.title];
-            } else {
-                [self.tableModel addObject:cellModel];
-            }
+- (STACellModel *)addCellModelToTableModel:(STACellModel *)cellModel {
+    if (self.useTableSections) {
+        if (cellModel.depth == 0) { // root
+            [self.tableModel addSectionWithTitle:cellModel.title];
+            return cellModel;
         } else {
             [self.tableModel addObject:cellModel];
         }
+    } else {
+        [self.tableModel addObject:cellModel];
     }
-    if (self.useTableSections) {
-        self.topLevelObjects = topLevelObjects;
+    return nil;
+}
+
+- (void)addObjectsFromArrayToTableModel:(NSArray *)array {
+    NSMutableArray *topLevelObjects = [NSMutableArray array];
+    for (STACellModel *cellModel in array) {
+        STACellModel *topLevelCellModel = [self addCellModelToTableModel:cellModel];
+        if (topLevelCellModel) [topLevelObjects addObject:topLevelCellModel];
     }
+    self.topLevelObjects = topLevelObjects;
     [self.tableView reloadData];
 }
 
@@ -251,25 +255,16 @@ typedef void (^ObjectEnumeratorBlock)(id object);
     self.contentsArray = mutableDataArray;
     
     NSMutableArray *topLevelObjects = [NSMutableArray array];
-    NSMutableArray *nimbusContents = [NSMutableArray array];
+    self.tableModel = [[NIMutableTableViewModel alloc] initWithSectionedArray:nil
+                                                                     delegate:self];
     @weakify(self);
     [self enumerateObjects:self.contentsArray block:^(STACellModel *cellModel) {
         @strongify(self);
         cellModel.isExpanded = !self.initiallyCollapsed;
-        if (self.useTableSections) {
-            if (cellModel.depth == 0) { // root
-                [topLevelObjects addObject:cellModel];
-                [nimbusContents addObject:cellModel.title];
-            } else {
-                [nimbusContents addObject:cellModel];
-            }
-        } else {
-            [nimbusContents addObject:cellModel];
-        }
+        STACellModel *topLevelCellModel = [self addCellModelToTableModel:cellModel];
+        if (topLevelCellModel) [topLevelObjects addObject:topLevelCellModel];
     }];
     self.topLevelObjects = topLevelObjects;
-    self.tableModel = [[NIMutableTableViewModel alloc] initWithSectionedArray:nimbusContents
-                                                                     delegate:self];
 }
 
 - (void)enumerateObjects:(NSArray *)contentsArray block:(ObjectEnumeratorBlock)block {

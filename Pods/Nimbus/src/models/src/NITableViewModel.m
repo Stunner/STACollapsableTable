@@ -230,18 +230,15 @@
 
 
 - (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView {
-    NSLog(@"sections: %lu", self.sections.count);
   return self.sections.count;
 }
 
 - (NSString *)tableView:(UITableView *)tableView titleForHeaderInSection:(NSInteger)section {
   NIDASSERT((section >= 0 && (NSUInteger)section < self.sections.count) || 0 == self.sections.count);
   if (section >= 0 && (NSUInteger)section < self.sections.count) {
-      NSLog(@"Sections header title: %@", [[self.sections objectAtIndex:section] headerTitle]);
     return [[self.sections objectAtIndex:section] headerTitle];
 
   } else {
-      NSLog(@"No section header title");
     return nil;
   }
 }
