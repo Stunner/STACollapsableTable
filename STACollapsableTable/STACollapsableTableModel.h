@@ -46,9 +46,20 @@
 @property (nonatomic, readonly) id tableViewDataSource;
 @property (nonatomic, readonly) id tableViewDelegate;
 @property (nonatomic, assign, readonly) BOOL useTableSections;
+/**
+ Array of all contents in the table view model.
+ 
+ This does not update during a search.
+ */
 @property (nonatomic, strong, readonly) NSArray *contentsArray;
+/**
+ Array of all cell models with root depth (of 0).
+ 
+ This is leveraged in order to reference the cell model of a section header.
+ This updates during a search.
+ */
 @property (nonatomic, strong, readonly) NSArray *topLevelObjects;
-@property (nonatomic, assign) BOOL isSearching;
+@property (nonatomic, assign, readonly) BOOL isSearching;
 
 // designated initializer
 - (instancetype)initWithContentsArray:(NSArray *)contentsArray
