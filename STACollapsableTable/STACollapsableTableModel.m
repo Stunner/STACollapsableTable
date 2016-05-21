@@ -161,28 +161,23 @@ typedef void (^ObjectEnumeratorBlock)(id object);
 }
 
 - (void)addObjectsFromArrayToTableModel:(NSArray *)array {
-    NSMutableArray *nimbusContents = [NSMutableArray array];
     NSMutableArray *topLevelObjects = [NSMutableArray array];
     for (STACellModel *cellModel in array) {
         if (self.useTableSections) {
             if (cellModel.depth == 0) { // root
-//                [nimbusContents addObject:cellModel.title];
                 [topLevelObjects addObject:cellModel];
                 [self.tableModel addSectionWithTitle:cellModel.title];
             } else {
-//                [nimbusContents addObject:cellModel];
                 [self.tableModel addObject:cellModel];
             }
         } else {
-//            [nimbusContents addObject:cellModel];
             [self.tableModel addObject:cellModel];
         }
     }
-    self.topLevelObjects = topLevelObjects;
+    if (self.useTableSections) {
+        self.topLevelObjects = topLevelObjects;
+    }
     [self.tableView reloadData];
-//    [self.tableModel addObjectsFromArray:nimbusContents];
-//    self.tableModel = [[NIMutableTableViewModel alloc] initWithSectionedArray:nimbusContents
-//                                                                     delegate:self];
 }
 
 - (void)performSearchWithQuery:(NSString *)searchQuery {
