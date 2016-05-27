@@ -87,9 +87,4 @@
 - (void)collapse:(STACellModel *)container fromSection:(NSInteger)section;
 - (void)performSearchWithQuery:(NSString *)searchQuery;
 
-//TODO: conceal this method - it shouldn't be public
-- (STACellModel *)cellModelForSpecifier:(STATableModelSpecifier *)specifier
-                                 parent:(STACellModel *)parent
-                             tableModel:(STACollapsableTableModel *)tableModel;
-
 @end

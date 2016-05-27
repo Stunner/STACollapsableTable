@@ -15,7 +15,6 @@
 		9376D2581C649FB500FC2782 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 9376D24C1C649FB500FC2782 /* Assets.xcassets */; };
 		9376D2591C649FB500FC2782 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 9376D24D1C649FB500FC2782 /* LaunchScreen.storyboard */; };
 		9376D25A1C649FB500FC2782 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 9376D24F1C649FB500FC2782 /* Main.storyboard */; };
-		9376D25B1C649FB500FC2782 /* Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 9376D2511C649FB500FC2782 /* Info.plist */; };
 		9376D25C1C649FB500FC2782 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 9376D2521C649FB500FC2782 /* main.m */; };
 		9376D25D1C649FB500FC2782 /* SampleTableViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 9376D2541C649FB500FC2782 /* SampleTableViewController.m */; };
 		9376D26B1C64AD8900FC2782 /* STACollapsableTableModel.m in Sources */ = {isa = PBXBuildFile; fileRef = 9376D26A1C64AD8900FC2782 /* STACollapsableTableModel.m */; };
@@ -28,9 +27,9 @@
 		9376D2881C6A8C3700FC2782 /* SubCollapsableTableViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 9376D2861C6A8C3700FC2782 /* SubCollapsableTableViewCell.xib */; };
 		9376D28E1C6C513A00FC2782 /* BaseCollapsableTableViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 9376D28D1C6C513A00FC2782 /* BaseCollapsableTableViewCell.m */; };
 		9376D2911C6C988500FC2782 /* LeafNodeTableViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 9376D2901C6C988500FC2782 /* LeafNodeTableViewCell.m */; };
-		9376D2A01C6F3CD300FC2782 /* STACollapsableTable.h in Sources */ = {isa = PBXBuildFile; fileRef = 9376D29F1C6F3CD300FC2782 /* STACollapsableTable.h */; };
 		9376D2A41C6F3E2400FC2782 /* STASearchOperation.m in Sources */ = {isa = PBXBuildFile; fileRef = 9376D2A31C6F3E2400FC2782 /* STASearchOperation.m */; };
 		9376D2C61C76F81A00FC2782 /* CustomCellModel.m in Sources */ = {isa = PBXBuildFile; fileRef = 9376D2C51C76F81A00FC2782 /* CustomCellModel.m */; };
+		93D10EA81CF83264005C8676 /* STACollapsableTableModel+Private.m in Sources */ = {isa = PBXBuildFile; fileRef = 93D10EA71CF83264005C8676 /* STACollapsableTableModel+Private.m */; };
 		93F879371CE9025500DEB426 /* CoreFoundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 93F879361CE9025500DEB426 /* CoreFoundation.framework */; };
 /* End PBXBuildFile section */
 
@@ -85,6 +84,8 @@
 		9376D2A31C6F3E2400FC2782 /* STASearchOperation.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = STASearchOperation.m; sourceTree = "<group>"; };
 		9376D2C41C76F81A00FC2782 /* CustomCellModel.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CustomCellModel.h; sourceTree = "<group>"; };
 		9376D2C51C76F81A00FC2782 /* CustomCellModel.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CustomCellModel.m; sourceTree = "<group>"; };
+		93D10EA61CF83264005C8676 /* STACollapsableTableModel+Private.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "STACollapsableTableModel+Private.h"; sourceTree = "<group>"; };
+		93D10EA71CF83264005C8676 /* STACollapsableTableModel+Private.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "STACollapsableTableModel+Private.m"; sourceTree = "<group>"; };
 		93F879361CE9025500DEB426 /* CoreFoundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreFoundation.framework; path = System/Library/Frameworks/CoreFoundation.framework; sourceTree = SDKROOT; };
 		B11300C9268E6B1CC3A20906 /* Pods-STACollapsableTable.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-STACollapsableTable.release.xcconfig"; path = "Pods/Target Support Files/Pods-STACollapsableTable/Pods-STACollapsableTable.release.xcconfig"; sourceTree = "<group>"; };
 		E9F18E2C01F0AB9AB7B6ACDC /* Pods-STACollapsableTable.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-STACollapsableTable.debug.xcconfig"; path = "Pods/Target Support Files/Pods-STACollapsableTable/Pods-STACollapsableTable.debug.xcconfig"; sourceTree = "<group>"; };
@@ -185,6 +186,8 @@
 				9376D27B1C6879C700FC2782 /* STATableViewDelegate.m */,
 				9376D2A21C6F3E2400FC2782 /* STASearchOperation.h */,
 				9376D2A31C6F3E2400FC2782 /* STASearchOperation.m */,
+				93D10EA61CF83264005C8676 /* STACollapsableTableModel+Private.h */,
+				93D10EA71CF83264005C8676 /* STACollapsableTableModel+Private.m */,
 			);
 			path = STACollapsableTable;
 			sourceTree = "<group>";
@@ -292,7 +295,6 @@
 			files = (
 				9376D2831C6A7D6500FC2782 /* CollapsableTableViewCell.xib in Resources */,
 				9376D2881C6A8C3700FC2782 /* SubCollapsableTableViewCell.xib in Resources */,
-				9376D25B1C649FB500FC2782 /* Info.plist in Resources */,
 				9376D25A1C649FB500FC2782 /* Main.storyboard in Resources */,
 				9376D2581C649FB500FC2782 /* Assets.xcassets in Resources */,
 				9376D2591C649FB500FC2782 /* LaunchScreen.storyboard in Resources */,
@@ -376,7 +378,7 @@
 				9376D2871C6A8C3700FC2782 /* SubCollapsableTableViewCell.m in Sources */,
 				9376D2761C65E80000FC2782 /* STATableModelSpecifier.m in Sources */,
 				9376D2911C6C988500FC2782 /* LeafNodeTableViewCell.m in Sources */,
-				9376D2A01C6F3CD300FC2782 /* STACollapsableTable.h in Sources */,
+				93D10EA81CF83264005C8676 /* STACollapsableTableModel+Private.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -454,7 +456,7 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 9.2;
+				IPHONEOS_DEPLOYMENT_TARGET = 8.0;
 				MTL_ENABLE_DEBUG_INFO = YES;
 				ONLY_ACTIVE_ARCH = YES;
 				SDKROOT = iphoneos;
@@ -491,7 +493,7 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 9.2;
+				IPHONEOS_DEPLOYMENT_TARGET = 8.0;
 				MTL_ENABLE_DEBUG_INFO = NO;
 				SDKROOT = iphoneos;
 				VALIDATE_PRODUCT = YES;

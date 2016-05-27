@@ -23,7 +23,6 @@
 @property (nonatomic, strong) STACollapsableTableModel *tableModel;
 @property (nonatomic, strong) UISearchController *searchController;
 @property (nonatomic, assign) BOOL isSearching;
-@property (nonatomic, strong) NSMutableDictionary *headerViewsDictionary;
 
 @end
 
@@ -32,7 +31,7 @@
 - (void)viewDidLoad {
     [super viewDidLoad];
     
-    self.headerViewsDictionary = [NSMutableDictionary dictionary];
+    self.title = @"STACollapsableTable";
     
     NSArray *children1 = @[[STATableModelSpecifier createWithTitle:@"sr 3" children:nil userInfo:nil],
                            [STATableModelSpecifier createWithTitle:@"sr 4" children:nil userInfo:nil]];
@@ -69,16 +68,9 @@
     self.searchController = [[UISearchController alloc] initWithSearchResultsController:nil];
     self.searchController.searchResultsUpdater = [self.tableModel tableViewDelegate];
     self.searchController.dimsBackgroundDuringPresentation = NO;
-//    self.searchController.searchBar.scopeButtonTitles = @[NSLocalizedString(@"ScopeButtonCountry",@"Country"),
-//                                                          NSLocalizedString(@"ScopeButtonCapital",@"Capital")];
     self.searchController.searchBar.delegate = [self.tableModel tableViewDelegate];
     self.tableView.tableHeaderView = self.searchController.searchBar;
     self.definesPresentationContext = YES;
-}
-
-- (void)didReceiveMemoryWarning {
-    [super didReceiveMemoryWarning];
-    // Dispose of any resources that can be recreated.
 }
 
 #pragma mark - Table view data source
@@ -126,13 +118,11 @@
 }
 
 - (BOOL)tableView:(UITableView *)tableView shouldHighlightRowAtIndexPath:(NSIndexPath *)indexPath {
-    NSLog(@"%s", __PRETTY_FUNCTION__);
     
     return YES;
 }
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
-    NSLog(@"%s", __PRETTY_FUNCTION__);
     
     UITableViewCell *cell = [tableView cellForRowAtIndexPath:indexPath];
     [(BaseCollapsableTableViewCell *)cell cellTapped];
@@ -145,9 +135,7 @@
 #pragma mark - UISearchResultsUpdating Delegate Method
 
 - (void)updateSearchResultsForSearchController:(UISearchController *)searchController {
-    NSLog(@"%s", __PRETTY_FUNCTION__);
     
-//    [self.tableView reloadData];
 }
 
 #pragma mark - UISearchbarDelegate Methods

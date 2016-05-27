@@ -9,6 +9,7 @@
 #import "STACellModel.h"
 #import <UIKit/UIKit.h>
 #import "STACollapsableTableModel.h"
+#import "STACollapsableTableModel+Private.h"
 
 typedef NSIndexPath * (^ObjectEnumeratorBlock)(STACellModel *cellModel, NSUInteger row);
 
