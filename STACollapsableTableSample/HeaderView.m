@@ -71,7 +71,6 @@
 }
 
 - (void)tapGestureHandler:(UITapGestureRecognizer *)gesture {
-    NSLog(@"%s", __PRETTY_FUNCTION__);
     
     if (!self.cellModel.children.count) {
         return; // collapsing/expansion can't be done on a cell without children
@@ -97,7 +96,6 @@
 }
 
 - (void)updateRotatedImageViewStatus {
-    NSLog(@"%s", __PRETTY_FUNCTION__);
     
     if (self.cellModel.isExpanded) {
         self.collapsedStatusImageView.transform = CGAffineTransformMakeRotation(M_PI / 2);

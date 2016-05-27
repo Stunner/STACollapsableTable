@@ -117,7 +117,6 @@ typedef void (^ObjectEnumeratorBlock)(id object);
 #pragma mark - Public Methods
 
 - (void)resetTableWithModelData:(NSArray *)contentsArray {
-    NSLog(@"%s", __PRETTY_FUNCTION__);
     
     [self.tableModel removeAllSections];
     self.userProvidedContentArray = contentsArray;
@@ -126,7 +125,6 @@ typedef void (^ObjectEnumeratorBlock)(id object);
 }
 
 - (void)resetTableModelData {
-    NSLog(@"%s", __PRETTY_FUNCTION__);
     
     [self.tableModel removeAllSections];
     [self addObjectsFromArrayToTableModel:self.contentsArray];
@@ -142,7 +140,6 @@ typedef void (^ObjectEnumeratorBlock)(id object);
 }
 
 - (void)collapseExpandedCellState {
-    NSLog(@"%s", __PRETTY_FUNCTION__);
     
     for (STACellModel *cellModel in [self.expandedSectionsSet allObjects]) {
         cellModel.isExpanded = NO;
@@ -183,11 +180,9 @@ typedef void (^ObjectEnumeratorBlock)(id object);
         if (topLevelCellModel) [topLevelObjects addObject:topLevelCellModel];
     }
     self.topLevelObjects = topLevelObjects;
-    [self.tableView reloadData];
 }
 
 - (void)performSearchWithQuery:(NSString *)searchQuery {
-    NSLog(@"%s", __PRETTY_FUNCTION__);
     
     STASearchOperation *searchOperation = nil;
     if ([self.delegate respondsToSelector:@selector(searchOperationOnData:withSearchQuery:)]) {
@@ -286,7 +281,6 @@ typedef void (^ObjectEnumeratorBlock)(id object);
 }
 
 - (void)expand:(STACellModel *)cellModel fromIndexPath:(NSIndexPath *)indexPath inTableView:(UITableView *)tableView animated:(BOOL)animated {
-    NSLog(@"%s", __PRETTY_FUNCTION__);
     
     if (cellModel.isExpanded) return;
     
@@ -310,7 +304,6 @@ typedef void (^ObjectEnumeratorBlock)(id object);
 }
 
 - (void)expand:(STACellModel *)cellModel fromSection:(NSInteger)section inTableView:(UITableView *)tableView animated:(BOOL)animated {
-    NSLog(@"%s", __PRETTY_FUNCTION__);
     
     if (cellModel.isExpanded) return;
     
@@ -335,7 +328,6 @@ typedef void (^ObjectEnumeratorBlock)(id object);
 }
 
 - (void)collapse:(STACellModel *)cellModel fromIndexPath:(NSIndexPath *)indexPath inTableView:(UITableView *)tableView animated:(BOOL)animated {
-    NSLog(@"%s", __PRETTY_FUNCTION__);
     
     NSMutableArray *removableIndexPaths = [NSMutableArray arrayWithCapacity:10];
     [removableIndexPaths addObjectsFromArray:[cellModel indexPathsToRemoveForCollapseFromIndexPath:indexPath
@@ -354,7 +346,6 @@ typedef void (^ObjectEnumeratorBlock)(id object);
 }
 
 - (void)collapse:(STACellModel *)cellModel fromSection:(NSInteger)section inTableView:(UITableView *)tableView animated:(BOOL)animated {
-    NSLog(@"%s", __PRETTY_FUNCTION__);
     
     NSMutableArray *removableIndexPaths = [NSMutableArray arrayWithCapacity:10];
     [removableIndexPaths addObjectsFromArray:[cellModel indexPathsToRemoveForCollapseFromSection:section
@@ -388,7 +379,6 @@ typedef void (^ObjectEnumeratorBlock)(id object);
 #pragma mark - UITableViewDelegate Methods
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
-    NSLog(@"%s", __PRETTY_FUNCTION__);
     
     STACellModel *cellModel = [self cellModelAtIndexPath:indexPath];
     if (!cellModel.children.count) {
@@ -415,7 +405,6 @@ typedef void (^ObjectEnumeratorBlock)(id object);
 #pragma mark - UISearchResultsUpdating Delegate Method
 
 - (void)updateSearchResultsForSearchController:(UISearchController *)searchController {
-    NSLog(@"%s", __PRETTY_FUNCTION__);
     
     NSString *searchString = searchController.searchBar.text;
     if ([searchString isEqualToString:@""]) {

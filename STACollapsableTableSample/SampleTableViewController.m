@@ -89,7 +89,6 @@
                         atIndexPath:(NSIndexPath *)indexPath
                           withModel:(STACellModel *)model
 {
-    NSLog(@"%s", __PRETTY_FUNCTION__);
     
     UITableViewCell *cell;
     if (model.children.count) {
@@ -107,7 +106,6 @@
 #pragma mark - Table View Delegate
 
 - (nullable UIView *)tableView:(UITableView *)tableView viewForHeaderInSection:(NSInteger)section {
-    NSLog(@"%s", __PRETTY_FUNCTION__);
     
     STACellModel *model = [self.tableModel.topLevelObjects objectAtIndex:section];
     HeaderView *headerView = [HeaderView createHeaderInSection:section

@@ -80,7 +80,6 @@
 }
 
 - (CGFloat)tableView:(UITableView *)tableView heightForHeaderInSection:(NSInteger)section {
-    NSLog(@"%s", __PRETTY_FUNCTION__);
     
     if ([self.externalDelegate respondsToSelector:@selector(tableView:heightForHeaderInSection:)]) {
         return [self.externalDelegate tableView:tableView heightForHeaderInSection:section];
@@ -92,7 +91,6 @@
 }
 
 - (CGFloat)tableView:(UITableView *)tableView heightForFooterInSection:(NSInteger)section {
-    NSLog(@"%s", __PRETTY_FUNCTION__);
     
     if ([self.externalDelegate respondsToSelector:@selector(tableView:heightForFooterInSection:)]) {
         return [self.externalDelegate tableView:tableView heightForFooterInSection:section];
@@ -101,7 +99,6 @@
 }
 
 - (CGFloat)tableView:(UITableView *)tableView estimatedHeightForRowAtIndexPath:(NSIndexPath *)indexPath {
-    NSLog(@"%s", __PRETTY_FUNCTION__);
     
     if ([self.externalDelegate respondsToSelector:@selector(tableView:estimatedHeightForRowAtIndexPath:)]) {
         return [self.externalDelegate tableView:tableView estimatedHeightForRowAtIndexPath:indexPath];
@@ -110,7 +107,6 @@
 }
 
 - (CGFloat)tableView:(UITableView *)tableView estimatedHeightForHeaderInSection:(NSInteger)section {
-    NSLog(@"%s", __PRETTY_FUNCTION__);
     
     if ([self.externalDelegate respondsToSelector:@selector(tableView:estimatedHeightForHeaderInSection:)]) {
         return [self.externalDelegate tableView:tableView estimatedHeightForHeaderInSection:section];
@@ -122,7 +118,6 @@
 }
 
 - (CGFloat)tableView:(UITableView *)tableView estimatedHeightForFooterInSection:(NSInteger)section {
-    NSLog(@"%s", __PRETTY_FUNCTION__);
     
     if ([self.externalDelegate respondsToSelector:@selector(tableView:estimatedHeightForFooterInSection:)]) {
         return [self.externalDelegate tableView:tableView estimatedHeightForFooterInSection:section];
@@ -134,7 +129,6 @@
 #pragma mark Section Header & Footer Information
 
 - (nullable UIView *)tableView:(UITableView *)tableView viewForHeaderInSection:(NSInteger)section {
-    NSLog(@"%s", __PRETTY_FUNCTION__);
     
     if ([self.externalDelegate respondsToSelector:@selector(tableView:viewForHeaderInSection:)]) {
         return [self.externalDelegate tableView:tableView viewForHeaderInSection:section];
@@ -143,7 +137,6 @@
 }
 
 - (nullable UIView *)tableView:(UITableView *)tableView viewForFooterInSection:(NSInteger)section {
-    NSLog(@"%s", __PRETTY_FUNCTION__);
     
     if ([self.externalDelegate respondsToSelector:@selector(tableView:viewForFooterInSection:)]) {
         return [self.externalDelegate tableView:tableView viewForFooterInSection:section];
@@ -162,7 +155,6 @@
 //}
 
 - (void)tableView:(UITableView *)tableView accessoryButtonTappedForRowWithIndexPath:(NSIndexPath *)indexPath {
-    NSLog(@"%s", __PRETTY_FUNCTION__);
     
     if ([self.externalDelegate respondsToSelector:@selector(tableView:accessoryButtonTappedForRowWithIndexPath:)]) {
         [self.externalDelegate tableView:tableView accessoryButtonTappedForRowWithIndexPath:indexPath];

@@ -282,11 +282,9 @@
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section {
   NIDASSERT((NSUInteger)section < self.sections.count || 0 == self.sections.count);
   if ((NSUInteger)section < self.sections.count) {
-      NSLog(@"rows in section: %lu", [[[self.sections objectAtIndex:section] rows] count]);
     return [[[self.sections objectAtIndex:section] rows] count];
 
   } else {
-      NSLog(@"rows in section is 0");
     return 0;
   }
 }

@@ -18,10 +18,20 @@
 
 @optional
 
+/**
+ Use this method to provide a custom model object to correspond to your custom table view cells.
+ 
+ @returns STACellModel instance that is to correspond to the passed in specifier and parent
+ */
 - (STACellModel *)cellModelForSpecifier:(STATableModelSpecifier *)specifier
                                  parent:(STACellModel *)parent
                              tableModel:(STACollapsableTableModel *)tableModel;
 
+/**
+ Use this method to provide a custom search operation object which should be run when executing the search (which happens immediately after this method returns).
+ 
+ @returns STASearchOperation instance which should be used to perform search query with. Returning nil causes the default search operation to be run.
+ */
 - (STASearchOperation *)searchOperationOnData:(NSArray *)data withSearchQuery:(NSString *)searchQuery;
 
 /**
@@ -33,6 +43,9 @@
 
 @required
 
+/**
+ @returns UITableViewCell corresponding to passed in STACellModel instance.
+ */
 - (UITableViewCell *)tableViewModel:(STACollapsableTableModel *)tableViewModel
                    cellForTableView:(UITableView *)tableView
                         atIndexPath:(NSIndexPath *)indexPath

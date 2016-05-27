@@ -55,13 +55,11 @@ typedef NSIndexPath * (^ObjectEnumeratorBlock)(STACellModel *cellModel, NSUInteg
 }
 
 - (NSUInteger)descendantsInSearchResults {
-    NSLog(@"%s", __PRETTY_FUNCTION__);
     
     return self.descendantSearchResultSet.count;
 }
 
 - (NSUInteger)displayedDescendantsCount {
-    NSLog(@"%s", __PRETTY_FUNCTION__);
     
     if (self.isExpanded) {
         return self.children.count;
@@ -102,8 +100,6 @@ typedef NSIndexPath * (^ObjectEnumeratorBlock)(STACellModel *cellModel, NSUInteg
                                          inTableModel:(STACollapsableTableModel *)tableModel
                                           isSearching:(BOOL)isSearching
 {
-    NSLog(@"%s", __PRETTY_FUNCTION__);
-    
     NSMutableArray *addedIndexPaths = [NSMutableArray array];
     NSUInteger offsetCount = 1;
     NSUInteger rowsCounter = indexPath.row;
@@ -132,8 +128,6 @@ typedef NSIndexPath * (^ObjectEnumeratorBlock)(STACellModel *cellModel, NSUInteg
                                        inTableModel:(STACollapsableTableModel *)tableModel
                                         isSearching:(BOOL)isSearching
 {
-    NSLog(@"%s", __PRETTY_FUNCTION__);
-    
     NSMutableArray *addedIndexPaths = [NSMutableArray array];
     NSUInteger offsetCount = 0;
     NSUInteger rowsCounter = 0;
@@ -162,8 +156,6 @@ typedef NSIndexPath * (^ObjectEnumeratorBlock)(STACellModel *cellModel, NSUInteg
                                            inTableModel:(STACollapsableTableModel *)tableModel
                                             isSearching:(BOOL)isSearching
 {
-    NSLog(@"%s", __PRETTY_FUNCTION__);
-    
     self.indexPath = indexPath;
     self.tableModel = tableModel;
     
@@ -184,8 +176,6 @@ typedef NSIndexPath * (^ObjectEnumeratorBlock)(STACellModel *cellModel, NSUInteg
                                          inTableModel:(STACollapsableTableModel *)tableModel
                                           isSearching:(BOOL)isSearching
 {
-    NSLog(@"%s", __PRETTY_FUNCTION__);
-    
     self.section = section;
     self.tableModel = tableModel;
     
@@ -203,7 +193,6 @@ typedef NSIndexPath * (^ObjectEnumeratorBlock)(STACellModel *cellModel, NSUInteg
 }
 
 - (NSArray *)filterContentsWithSearchString:(NSString *)searchString {
-    NSLog(@"%s", __PRETTY_FUNCTION__);
     
     NSPredicate *filterPredicate = [NSPredicate predicateWithBlock:^BOOL(STACellModel *object, NSDictionary *bindings) {
         if (searchString.length > 0 &&
@@ -240,7 +229,6 @@ typedef NSIndexPath * (^ObjectEnumeratorBlock)(STACellModel *cellModel, NSUInteg
 }
 
 - (void)descendant:(STACellModel *)cellModel isSearchResult:(BOOL)isSearchResult {
-//    NSLog(@"%s", __PRETTY_FUNCTION__);
     
     if (isSearchResult) {
         [self.descendantSearchResultSet addObject:cellModel];
@@ -250,13 +238,11 @@ typedef NSIndexPath * (^ObjectEnumeratorBlock)(STACellModel *cellModel, NSUInteg
     for (id parent in [self.parents allObjects]) {
         [parent descendant:self isSearchResult:isSearchResult];
     }
-//    [self.parent descendant:self isSearchResult:isSearchResult];
 }
 
 #pragma mark - Helper Methods
 
 - (BOOL)hasDescendant:(STACellModel *)cellModel {
-    NSLog(@"%s", __PRETTY_FUNCTION__);
     
     if (!cellModel.parents) {
         return NO;
@@ -278,7 +264,6 @@ typedef NSIndexPath * (^ObjectEnumeratorBlock)(STACellModel *cellModel, NSUInteg
  Enumerates through already displaying objects.
  */
 - (NSArray *)enumerateObjects:(ObjectEnumeratorBlock)block {
-    NSLog(@"%s", __PRETTY_FUNCTION__);
     
     NSUInteger displayedDescendantsCount = self.displayedDescendantsCount;
     NSMutableArray *indexPathsToRemoveArray = [NSMutableArray arrayWithCapacity:displayedDescendantsCount];

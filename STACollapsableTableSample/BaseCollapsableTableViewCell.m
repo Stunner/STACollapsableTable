@@ -114,7 +114,6 @@
 }
 
 - (void)updateRotatedImageViewStatus {
-    NSLog(@"%s", __PRETTY_FUNCTION__);
     
     if (self.cellModel.isExpanded) {
         self.collapsedStatusImageView.transform = CGAffineTransformMakeRotation(M_PI / 2);
@@ -126,7 +125,6 @@
 #pragma mark - Public
 
 - (void)cellTapped {
-    NSLog(@"%s", __PRETTY_FUNCTION__);
     
     [UIView animateWithDuration:0.33 animations:^{
         [self updateRotatedImageViewStatus];
