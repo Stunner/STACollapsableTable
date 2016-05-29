@@ -130,56 +130,19 @@ typedef NSIndexPath * (^ObjectEnumeratorBlock)(STACellModel *cellModel, NSUInteg
                                          inTableModel:(STACollapsableTableModel *)tableModel
                                           isSearching:(BOOL)isSearching
 {
-    NSMutableArray *addedIndexPaths = [NSMutableArray array];
+    
     NSUInteger offsetCount = 1;
     NSUInteger rowsCounter = indexPath.row;
-    for (STACellModel *cellModel in self.children) {
-        if (isSearching) {
-            if (!cellModel.isSearchResult && !cellModel.descendantsInSearchResults) {
-                [addedIndexPaths addObject:@{@"container" : cellModel,
-                                             @"index" : @(rowsCounter + offsetCount)}];
-            } else {
-                if (cellModel.isExpanded) {
-                    offsetCount += cellModel.children.count;
-                } else {
-                    offsetCount += cellModel.descendantsInSearchResults;
-                }
-            }
-        } else {
-            [addedIndexPaths addObject:@{@"container" : cellModel,
-                                         @"index" : @(rowsCounter + offsetCount)}];
-        }
-        offsetCount++;
-    }
-    return addedIndexPaths;
+    return [self indexPathsToAddFromOffset:offsetCount rowsCounter:rowsCounter whileSearching:isSearching];
 }
 
 - (NSArray *)indexPathsToAddForExpansionFromSection:(NSInteger)section
                                        inTableModel:(STACollapsableTableModel *)tableModel
                                         isSearching:(BOOL)isSearching
 {
-    NSMutableArray *addedIndexPaths = [NSMutableArray array];
     NSUInteger offsetCount = 0;
     NSUInteger rowsCounter = 0;
-    for (STACellModel *cellModel in self.children) {
-        if (isSearching) {
-            if (!cellModel.isSearchResult && !cellModel.descendantsInSearchResults) {
-                [addedIndexPaths addObject:@{@"container" : cellModel,
-                                             @"index" : @(rowsCounter + offsetCount)}];
-            } else {
-                if (cellModel.isExpanded) {
-                    offsetCount += cellModel.children.count;
-                } else {
-                    offsetCount += cellModel.descendantsInSearchResults;
-                }
-            }
-        } else {
-            [addedIndexPaths addObject:@{@"container" : cellModel,
-                                         @"index" : @(rowsCounter + offsetCount)}];
-        }
-        offsetCount++;
-    }
-    return addedIndexPaths;
+    return [self indexPathsToAddFromOffset:offsetCount rowsCounter:rowsCounter whileSearching:isSearching];
 }
 
 - (NSArray *)indexPathsToRemoveForCollapseFromIndexPath:(NSIndexPath *)indexPath
@@ -268,6 +231,29 @@ typedef NSIndexPath * (^ObjectEnumeratorBlock)(STACellModel *cellModel, NSUInteg
 }
 
 #pragma mark - Helper Methods
+
+- (NSArray *)indexPathsToAddFromOffset:(NSUInteger)offset rowsCounter:(NSUInteger)rowsCounter whileSearching:(BOOL)isSearching {
+    NSMutableArray *addedIndexPaths = [NSMutableArray array];
+    for (STACellModel *cellModel in self.children) {
+        if (isSearching) {
+            if (!cellModel.isSearchResult && !cellModel.descendantsInSearchResults) {
+                [addedIndexPaths addObject:@{@"container" : cellModel,
+                                             @"index" : @(rowsCounter + offset)}];
+            } else {
+                if (cellModel.isExpanded) {
+                    offset += cellModel.children.count;
+                } else {
+                    offset += cellModel.descendantsInSearchResults;
+                }
+            }
+        } else {
+            [addedIndexPaths addObject:@{@"container" : cellModel,
+                                         @"index" : @(rowsCounter + offset)}];
+        }
+        offset++;
+    }
+    return addedIndexPaths;
+}
 
 - (void)updateSelfBasedOnSearchStatusOfTableModel {
     if (!self.tableModel.isSearching) { // if not searching, we want all cells to have black text
