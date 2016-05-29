@@ -32,14 +32,8 @@
         cell = [tableView dequeueReusableCellWithIdentifier:reusableCellID];
     }
     
-    cell.cellModel = cellModel;
     cell.titleLabel.text = cellModel.title;
-    [cell updateRotatedImageViewStatus];
-    
-    [cell isSearchResultStateChanged:cellModel.isSearchResult];
-    if (![userInfo[@"isSearching"] boolValue]) {
-        cellModel.isSearchResult = YES;
-    }
+    [cell initConfigurationWithModel:cellModel userInfo:userInfo];
     
     return cell;
 }
@@ -56,16 +50,23 @@
                                                                                    reuseIdentifier:reusableCellID];
     }
     
-    cell.cellModel = cellModel;
     cell.textLabel.text = cellModel.title;
-    
-    [cell isSearchResultStateChanged:cellModel.isSearchResult];
-    if (![userInfo[@"isSearching"] boolValue]) {
-        cellModel.isSearchResult = YES;
-    }
+    [cell initConfigurationWithModel:cellModel userInfo:userInfo];
     
     return cell;
 }
+
+- (void)initConfigurationWithModel:(STACellModel *)cellModel userInfo:(NSDictionary *)userInfo {
+    self.cellModel = cellModel;
+    [self updateRotatedImageViewStatus];
+    
+    [self isSearchResultStateChanged:cellModel.isSearchResult];
+    if (![userInfo[@"isSearching"] boolValue]) {
+        cellModel.isSearchResult = YES;
+    }
+}
+
+#pragma mark - Setters
 
 - (void)setCellModel:(STACellModel *)cellModel {
     _cellModel = cellModel;
@@ -96,6 +97,8 @@
 }
 
 - (void)awakeFromNib {
+    [super awakeFromNib];
+    
     // Initialization code
 }
 
