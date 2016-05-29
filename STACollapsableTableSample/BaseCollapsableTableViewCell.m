@@ -61,9 +61,6 @@
     [self updateRotatedImageViewStatus];
     
     [self isSearchResultStateChanged:cellModel.isSearchResult];
-    if (![userInfo[@"isSearching"] boolValue]) {
-        cellModel.isSearchResult = YES;
-    }
 }
 
 #pragma mark - Setters

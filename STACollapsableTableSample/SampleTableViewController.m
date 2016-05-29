@@ -93,12 +93,12 @@
     UITableViewCell *cell;
     if (model.children.count) {
         if (model.depth == 0) {
-            cell = [CollapsableTableViewCell createFromModel:model inTableView:tableView userInfo:@{@"isSearching" : @(self.isSearching)}];
+            cell = [CollapsableTableViewCell createFromModel:model inTableView:tableView userInfo:nil];
         } else {
-            cell = [SubCollapsableTableViewCell createFromModel:model inTableView:tableView userInfo:@{@"isSearching" : @(self.isSearching)}];
+            cell = [SubCollapsableTableViewCell createFromModel:model inTableView:tableView userInfo:nil];
         }
     } else {
-        cell = [LeafNodeTableViewCell createFromModel:model inTableView:tableView userInfo:@{@"isSearching" : @(self.isSearching)}];
+        cell = [LeafNodeTableViewCell createFromModel:model inTableView:tableView userInfo:nil];
     }
     return cell;
 }
@@ -111,7 +111,7 @@
     HeaderView *headerView = [HeaderView createHeaderInSection:section
                                                      fromModel:model
                                                     tableModel:self.tableModel
-                                                      userInfo:@{@"isSearching" : @(self.isSearching)}];
+                                                      userInfo:nil];
     return headerView;
 }
 

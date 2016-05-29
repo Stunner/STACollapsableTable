@@ -159,6 +159,9 @@ typedef void (^ObjectEnumeratorBlock)(id object);
     [self collapse:container fromSection:section inTableView:self.tableView animated:YES];
 }
 
+/**
+ @returns Instance of STACellModel if it is a root model (depth of 0).
+ */
 - (STACellModel *)addCellModelToTableModel:(STACellModel *)cellModel {
     if (self.useTableSections) {
         if (cellModel.depth == 0) { // root

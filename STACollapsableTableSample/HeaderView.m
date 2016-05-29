@@ -31,12 +31,7 @@
     headerView.cellModel = cellModel;
     headerView.titleLabel.text = cellModel.title;
     headerView.tableModel = tableModel;
-    [headerView updateRotatedImageViewStatus];
     
-    [headerView isSearchResultStateChanged:cellModel.isSearchResult];
-    if (![userInfo[@"isSearching"] boolValue]) {
-        cellModel.isSearchResult = YES;
-    }
     return headerView;
 }
 
@@ -47,8 +42,6 @@
         singleTapRecognizer.numberOfTouchesRequired = 1;
         singleTapRecognizer.numberOfTapsRequired = 1;
         [self addGestureRecognizer:singleTapRecognizer];
-        
-        [self updateRotatedImageViewStatus];
     }
     return self;
 }
@@ -68,6 +61,8 @@
               [self isSearchResultStateChanged:cellModel.isSearchResult];
           }
       }];
+    [self updateRotatedImageViewStatus];
+    [self isSearchResultStateChanged:self.cellModel.isSearchResult];
 }
 
 - (void)tapGestureHandler:(UITapGestureRecognizer *)gesture {

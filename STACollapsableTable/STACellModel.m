@@ -10,6 +10,7 @@
 #import <UIKit/UIKit.h>
 #import "STACollapsableTableModel.h"
 #import "STACollapsableTableModel+Private.h"
+#import <ReactiveCocoa/ReactiveCocoa.h>
 
 typedef NSIndexPath * (^ObjectEnumeratorBlock)(STACellModel *cellModel, NSUInteger row);
 
@@ -33,6 +34,20 @@ typedef NSIndexPath * (^ObjectEnumeratorBlock)(STACellModel *cellModel, NSUInteg
         } else {
             _depth = 0; // no parent means this element is a root (depth of 0)
         }
+        
+        [self updateSelfBasedOnSearchStatusOfTableModel];
+        @weakify(self);
+        [[RACObserve(tableModel, isSearching)
+          combinePreviousWithStart:@(tableModel.isSearching)
+          reduce:^id(NSNumber *previousValue, NSNumber *currentValue)
+          {
+              return @(([previousValue boolValue] != [currentValue boolValue]));
+          }] subscribeNext:^(NSNumber *statusChanged) {
+              @strongify(self);
+              if ([statusChanged boolValue]) {
+                  [self updateSelfBasedOnSearchStatusOfTableModel];
+              }
+          }];
         
         NSMutableArray *childrenArray = [NSMutableArray arrayWithCapacity:modelSpecifier.children.count];
         for (STATableModelSpecifier *specifier in modelSpecifier.children) {
@@ -212,10 +227,7 @@ typedef NSIndexPath * (^ObjectEnumeratorBlock)(STACellModel *cellModel, NSUInteg
         NSArray *filteredArray = [container filterContentsWithSearchString:searchString];
         if (filteredArray.count > 0) {
             [allSearchResults addObject:container];
-            // if is not of Accessibility type
-//            if (!(container.locationsArray.count > 0 && ((Location *)[container.locationsArray firstObject]).locations)) {
-                [allSearchResults addObjectsFromArray:filteredArray]; // filteredArray
-//            }
+            [allSearchResults addObjectsFromArray:filteredArray]; // filteredArray
             continue;
         }
         
@@ -241,6 +253,12 @@ typedef NSIndexPath * (^ObjectEnumeratorBlock)(STACellModel *cellModel, NSUInteg
 }
 
 #pragma mark - Helper Methods
+
+- (void)updateSelfBasedOnSearchStatusOfTableModel {
+    if (!self.tableModel.isSearching) { // if not searching, we want all cells to have black text
+        self.isSearchResult = YES;
+    }
+}
 
 - (BOOL)hasDescendant:(STACellModel *)cellModel {
     
