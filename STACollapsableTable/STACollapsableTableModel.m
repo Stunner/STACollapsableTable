@@ -288,7 +288,6 @@ typedef void (^ObjectEnumeratorBlock)(id object);
     if (cellModel.isExpanded) return;
     
     NSArray<NSDictionary *> *indexPathsToAdd = [cellModel indexPathsToAddForExpansionFromIndexPath:indexPath
-                                                                                      inTableModel:self
                                                                                        isSearching:self.isSearching];
     NSMutableArray *addedIndexPaths = [NSMutableArray arrayWithCapacity:indexPathsToAdd.count];
     for (NSDictionary *dict in indexPathsToAdd) {
@@ -311,7 +310,6 @@ typedef void (^ObjectEnumeratorBlock)(id object);
     if (cellModel.isExpanded) return;
     
     NSArray<NSDictionary *> *indexPathsToAdd = [cellModel indexPathsToAddForExpansionFromSection:section
-                                                                                    inTableModel:self
                                                                                      isSearching:self.isSearching];
     
     NSMutableArray *addedIndexPaths = [NSMutableArray arrayWithCapacity:indexPathsToAdd.count];
@@ -334,7 +332,6 @@ typedef void (^ObjectEnumeratorBlock)(id object);
     
     NSMutableArray *removableIndexPaths = [NSMutableArray arrayWithCapacity:10];
     [removableIndexPaths addObjectsFromArray:[cellModel indexPathsToRemoveForCollapseFromIndexPath:indexPath
-                                                                                      inTableModel:self
                                                                                        isSearching:self.isSearching]];
     for (NSInteger i = removableIndexPaths.count - 1; i >= 0; i--) {
         NSIndexPath *removedIndexPath = removableIndexPaths[i];
@@ -352,7 +349,6 @@ typedef void (^ObjectEnumeratorBlock)(id object);
     
     NSMutableArray *removableIndexPaths = [NSMutableArray arrayWithCapacity:10];
     [removableIndexPaths addObjectsFromArray:[cellModel indexPathsToRemoveForCollapseFromSection:section
-                                                                                      inTableModel:self
                                                                                        isSearching:self.isSearching]];
     for (NSInteger i = removableIndexPaths.count - 1; i >= 0; i--) {
         NSIndexPath *removedIndexPath = removableIndexPaths[i];

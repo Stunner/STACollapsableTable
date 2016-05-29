@@ -47,7 +47,6 @@
 @property (nonatomic, assign, readonly) NSUInteger depth;
 
 
-- (instancetype)initWithModelSpecifier:(STATableModelSpecifier *)modelSpecifier parent:(STACellModel *)parent;
 - (instancetype)initWithModelSpecifier:(STATableModelSpecifier *)modelSpecifier
                                 parent:(STACellModel *)parent
                             tableModel:(STACollapsableTableModel *)tableModel;
@@ -58,19 +57,15 @@
 - (void)addParent:(STACellModel *)cellModel;
 
 - (NSArray *)indexPathsToAddForExpansionFromIndexPath:(NSIndexPath *)indexPath
-                                         inTableModel:(STACollapsableTableModel *)tableModel
                                           isSearching:(BOOL)isSearching;
 
 - (NSArray *)indexPathsToAddForExpansionFromSection:(NSInteger)section
-                                       inTableModel:(STACollapsableTableModel *)tableModel
                                         isSearching:(BOOL)isSearching;
 
 - (NSArray *)indexPathsToRemoveForCollapseFromIndexPath:(NSIndexPath *)indexPath
-                                           inTableModel:(STACollapsableTableModel *)tableModel
                                             isSearching:(BOOL)isSearching;
 
 - (NSArray *)indexPathsToRemoveForCollapseFromSection:(NSInteger)section
-                                         inTableModel:(STACollapsableTableModel *)tableModel
                                           isSearching:(BOOL)isSearching;
 
 - (NSArray *)filterContentsWithSearchString:(NSString *)searchString;

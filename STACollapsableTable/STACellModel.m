@@ -73,13 +73,6 @@ typedef NSIndexPath * (^ObjectEnumeratorBlock)(STACellModel *cellModel, NSUInteg
     return self;
 }
 
-- (instancetype)initWithModelSpecifier:(STATableModelSpecifier *)modelSpecifier parent:(STACellModel *)parent {
-    if (self = [self initWithModelSpecifier:modelSpecifier parent:parent tableModel:nil]) {
-        
-    }
-    return self;
-}
-
 #pragma mark - Getters
 
 - (NSUInteger)descendantsInSearchResults {
@@ -127,17 +120,14 @@ typedef NSIndexPath * (^ObjectEnumeratorBlock)(STACellModel *cellModel, NSUInteg
 }
 
 - (NSArray *)indexPathsToAddForExpansionFromIndexPath:(NSIndexPath *)indexPath
-                                         inTableModel:(STACollapsableTableModel *)tableModel
                                           isSearching:(BOOL)isSearching
 {
-    
     NSUInteger offsetCount = 1;
     NSUInteger rowsCounter = indexPath.row;
     return [self indexPathsToAddFromOffset:offsetCount rowsCounter:rowsCounter whileSearching:isSearching];
 }
 
 - (NSArray *)indexPathsToAddForExpansionFromSection:(NSInteger)section
-                                       inTableModel:(STACollapsableTableModel *)tableModel
                                         isSearching:(BOOL)isSearching
 {
     NSUInteger offsetCount = 0;
@@ -146,13 +136,11 @@ typedef NSIndexPath * (^ObjectEnumeratorBlock)(STACellModel *cellModel, NSUInteg
 }
 
 - (NSArray *)indexPathsToRemoveForCollapseFromIndexPath:(NSIndexPath *)indexPath
-                                           inTableModel:(STACollapsableTableModel *)tableModel
                                             isSearching:(BOOL)isSearching
 {
     self.indexPath = indexPath;
-    self.tableModel = tableModel;
     
-    return [self enumerateObjects:^NSIndexPath * (STACellModel *cellModel, NSUInteger row) {
+    return [self enumerateObjectsToBeRemoved:^NSIndexPath * (STACellModel *cellModel, NSUInteger row) {
         NSIndexPath *removableIndexPath = nil;
         if (isSearching) {
             if (!cellModel.isSearchResult && !cellModel.descendantsInSearchResults) {
@@ -166,13 +154,11 @@ typedef NSIndexPath * (^ObjectEnumeratorBlock)(STACellModel *cellModel, NSUInteg
 }
 
 - (NSArray *)indexPathsToRemoveForCollapseFromSection:(NSInteger)section
-                                         inTableModel:(STACollapsableTableModel *)tableModel
                                           isSearching:(BOOL)isSearching
 {
     self.section = section;
-    self.tableModel = tableModel;
     
-    return [self enumerateObjects:^NSIndexPath * (STACellModel *cellModel, NSUInteger row) {
+    return [self enumerateObjectsToBeRemoved:^NSIndexPath * (STACellModel *cellModel, NSUInteger row) {
         NSIndexPath *removableIndexPath = nil;
         if (isSearching) {
             if (!cellModel.isSearchResult && !cellModel.descendantsInSearchResults) {
@@ -281,18 +267,19 @@ typedef NSIndexPath * (^ObjectEnumeratorBlock)(STACellModel *cellModel, NSUInteg
 
 /**
  Enumerates through already displaying objects.
+ 
+ @retuns Array of index paths that should be removed.
  */
-- (NSArray *)enumerateObjects:(ObjectEnumeratorBlock)block {
+- (NSArray *)enumerateObjectsToBeRemoved:(ObjectEnumeratorBlock)block {
     
-    NSUInteger displayedDescendantsCount = self.displayedDescendantsCount;
-    NSMutableArray *indexPathsToRemoveArray = [NSMutableArray arrayWithCapacity:displayedDescendantsCount];
+    NSMutableArray *indexPathsToRemoveArray = [NSMutableArray arrayWithCapacity:self.displayedDescendantsCount];
     
     NSUInteger r = self.indexPath.row;
     NSInteger i = 1;
     STACellModel *cellModel = [self.tableModel cellModelAtIndexPath:[NSIndexPath indexPathForRow:r + i inSection:self.indexPath.section]];
     if (self.section != -1) {
         r = 0;
-        i = 0; // if cell model represends a header, there is no need to skip the first row
+        i = 0; // if cell model represents a header, there is no need to skip the first row
         cellModel = [self.tableModel cellModelAtIndexPath:[NSIndexPath indexPathForRow:r + i inSection:self.section]];
     }
     while (cellModel && [self hasDescendant:cellModel]) {
