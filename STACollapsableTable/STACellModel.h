@@ -13,34 +13,48 @@
 
 @interface STACellModel : NSObject
 
-//Public to subclasses
+/**
+ Title text that the cell displays.
+ */
 @property (nonatomic, strong) NSString *title;
+/**
+ Immediate descendants.
+ */
 @property (nonatomic, strong) NSArray *children;
+/**
+ Specifier object that was used to instantiate this object.
+ */
 @property (nonatomic, strong) STATableModelSpecifier *specifier;
-
+/**
+ Reflects cell expansion state.
+ */
 @property (nonatomic, assign) BOOL isExpanded;
+/**
+ Denotes if this cell is a search result of a search query.
+ */
 @property (nonatomic, assign) BOOL isSearchResult;
+/**
+ Number of descendants that satisfy the search criterea and should be shown in search results.
+ */
 @property (nonatomic, assign, readonly) NSUInteger descendantsInSearchResults;
-
+/**
+ Set of this cell model's parents. Can add parents via `-addParent:` method. Removing parents unsupported.
+ */
 @property (nonatomic, strong, readonly) NSMutableSet <STACellModel *> *parents;
 /**
  Distance from root node.
  */
 @property (nonatomic, assign, readonly) NSUInteger depth;
 
-@property (nonatomic, assign) NSInteger section;
-@property (nonatomic, weak) NSIndexPath *indexPath;
-@property (nonatomic, weak) STACollapsableTableModel *tableModel;
-
-//Private/Internal to subclasses
-@property (atomic, strong) NSCountedSet *descendantSearchResultSet;
-@property (nonatomic, assign, readonly) NSUInteger displayedDescendantsCount;
 
 - (instancetype)initWithModelSpecifier:(STATableModelSpecifier *)modelSpecifier parent:(STACellModel *)parent;
 - (instancetype)initWithModelSpecifier:(STATableModelSpecifier *)modelSpecifier
                                 parent:(STACellModel *)parent
                             tableModel:(STACollapsableTableModel *)tableModel;
 
+/**
+ Adds passed in cell model as parent, allowing for multple children to share the same parent/have multiple parents.
+ */
 - (void)addParent:(STACellModel *)cellModel;
 
 - (NSArray *)indexPathsToAddForExpansionFromIndexPath:(NSIndexPath *)indexPath

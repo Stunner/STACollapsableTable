@@ -14,6 +14,17 @@
 
 typedef NSIndexPath * (^ObjectEnumeratorBlock)(STACellModel *cellModel, NSUInteger row);
 
+@interface STACellModel ()
+
+@property (atomic, strong) NSCountedSet *descendantSearchResultSet;
+@property (nonatomic, assign, readonly) NSUInteger displayedDescendantsCount;
+
+@property (nonatomic, assign) NSInteger section;
+@property (nonatomic, weak) NSIndexPath *indexPath;
+@property (nonatomic, weak) STACollapsableTableModel *tableModel;
+
+@end
+
 @implementation STACellModel
 
 - (instancetype)initWithModelSpecifier:(STATableModelSpecifier *)modelSpecifier
@@ -69,6 +80,8 @@ typedef NSIndexPath * (^ObjectEnumeratorBlock)(STACellModel *cellModel, NSUInteg
     return self;
 }
 
+#pragma mark - Getters
+
 - (NSUInteger)descendantsInSearchResults {
     
     return self.descendantSearchResultSet.count;
@@ -81,6 +94,8 @@ typedef NSIndexPath * (^ObjectEnumeratorBlock)(STACellModel *cellModel, NSUInteg
     }
     return self.descendantsInSearchResults;
 }
+
+#pragma mark - Setters
 
 - (void)setIsExpanded:(BOOL)isExpanded {
     if (!isExpanded) {
