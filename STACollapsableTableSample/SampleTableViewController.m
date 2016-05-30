@@ -62,8 +62,8 @@
                                                            initiallyCollapsed:YES
                                                              useTableSections:YES
                                                                      delegate:self];
-    self.tableView.dataSource = [self.tableModel tableViewDataSource];
-    self.tableView.delegate = [self.tableModel tableViewDelegate];
+    self.tableView.dataSource = self.tableModel.tableViewDataSource;
+    self.tableView.delegate = self.tableModel.tableViewDelegate;
     
     self.searchController = [[UISearchController alloc] initWithSearchResultsController:nil];
     self.searchController.searchResultsUpdater = [self.tableModel tableViewDelegate];

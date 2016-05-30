@@ -21,7 +21,7 @@
 /**
  Use this method to provide a custom model object to correspond to your custom table view cells.
  
- @returns STACellModel instance that is to correspond to the passed in specifier and parent
+ @returns STACellModel instance that is to correspond to the passed in specifier and parent.
  */
 - (STACellModel *)cellModelForSpecifier:(STATableModelSpecifier *)specifier
                                  parent:(STACellModel *)parent
@@ -37,7 +37,7 @@
 /**
  @param filteredContents NSArray of STACellModels's that match search criteria
  
- @returns search contents to load table view with after performing search completes
+ @returns Contents to load table view with after performing search query.
  */
 - (NSArray *)searchOperationCompletedWithContents:(NSArray *)filteredContents;
 
@@ -55,9 +55,18 @@
 
 @interface STACollapsableTableModel : NSObject
 
-@property (nonatomic, weak) id<STACollapsableTableModelDelegate> delegate;
+@property (nonatomic, weak) id<STACollapsableTableModelDelegate, UITableViewDelegate> delegate;
+/**
+ The object that needs to be set as the table view's data source.
+ */
 @property (nonatomic, readonly) id tableViewDataSource;
+/**
+ The object that needs to be set as the table view's delegate.
+ */
 @property (nonatomic, readonly) id tableViewDelegate;
+/**
+ Reflects if the table model is set to display all root models (with depth of 0) as section headers.
+ */
 @property (nonatomic, assign, readonly) BOOL useTableSections;
 /**
  Array of all contents in the table view model.
@@ -68,10 +77,12 @@
 /**
  Array of all cell models with root depth (of 0).
  
- This is leveraged in order to reference the cell model of a section header.
- This updates during a search.
+ This is leveraged in order to reference the cell model of a section header. Updates during a search.
  */
 @property (nonatomic, strong, readonly) NSArray *topLevelObjects;
+/**
+ Denotes searching state of table view.
+ */
 @property (nonatomic, assign, readonly) BOOL isSearching;
 
 // designated initializer
@@ -95,9 +106,9 @@
 - (STACellModel *)cellModelAtIndexPath:(NSIndexPath *)indexPath;
 - (NSIndexPath *)indexPathForCellModel:(STACellModel *)cellModel;
 - (void)collapseExpandedCellState;
-- (void)expand:(STACellModel *)container fromRowFromIndexPath:(NSIndexPath *)indexPath;
-- (void)expand:(STACellModel *)container fromSection:(NSInteger)section;
-- (void)collapse:(STACellModel *)container fromSection:(NSInteger)section;
+- (void)expand:(STACellModel *)model fromRowFromIndexPath:(NSIndexPath *)indexPath;
+- (void)expand:(STACellModel *)model fromSection:(NSInteger)section;
+- (void)collapse:(STACellModel *)model fromSection:(NSInteger)section;
 - (void)performSearchWithQuery:(NSString *)searchQuery;
 
 @end

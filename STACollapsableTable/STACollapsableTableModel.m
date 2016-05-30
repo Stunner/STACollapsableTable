@@ -147,16 +147,16 @@ typedef void (^ObjectEnumeratorBlock)(id object);
     }
 }
 
-- (void)expand:(STACellModel *)container fromRowFromIndexPath:(NSIndexPath *)indexPath {
-    [self expand:container fromIndexPath:indexPath inTableView:self.tableView animated:YES];
+- (void)expand:(STACellModel *)model fromRowFromIndexPath:(NSIndexPath *)indexPath {
+    [self expand:model fromIndexPath:indexPath inTableView:self.tableView animated:YES];
 }
 
-- (void)expand:(STACellModel *)container fromSection:(NSInteger)section {
-    [self expand:container fromSection:section inTableView:self.tableView animated:YES];
+- (void)expand:(STACellModel *)model fromSection:(NSInteger)section {
+    [self expand:model fromSection:section inTableView:self.tableView animated:YES];
 }
 
-- (void)collapse:(STACellModel *)container fromSection:(NSInteger)section {
-    [self collapse:container fromSection:section inTableView:self.tableView animated:YES];
+- (void)collapse:(STACellModel *)model fromSection:(NSInteger)section {
+    [self collapse:model fromSection:section inTableView:self.tableView animated:YES];
 }
 
 /**
