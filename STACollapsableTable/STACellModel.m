@@ -60,7 +60,7 @@ typedef NSIndexPath * (^ObjectEnumeratorBlock)(STACellModel *cellModel, NSUInteg
               }
           }];
         
-        NSMutableArray *childrenArray = [NSMutableArray arrayWithCapacity:modelSpecifier.children.count];
+        NSMutableArray<STACellModel *> *childrenArray = [NSMutableArray arrayWithCapacity:modelSpecifier.children.count];
         for (STATableModelSpecifier *specifier in modelSpecifier.children) {
             STACellModel *cellModel = [tableModel cellModelForSpecifier:specifier parent:self tableModel:tableModel];
             if (cellModel) {
@@ -183,12 +183,12 @@ typedef NSIndexPath * (^ObjectEnumeratorBlock)(STACellModel *cellModel, NSUInteg
         object.isSearchResult = NO;
         return NO;
     }];
-    NSArray *searchResults = [NSMutableArray arrayWithArray:[self.children filteredArrayUsingPredicate:filterPredicate]];
+    NSArray<STACellModel *> *searchResults = [NSMutableArray arrayWithArray:[self.children filteredArrayUsingPredicate:filterPredicate]];
     
-    NSMutableArray *allSearchResults = [NSMutableArray array];
+    NSMutableArray<STACellModel *> *allSearchResults = [NSMutableArray array];
     for (NSUInteger i = 0; i < self.children.count; i++) {
         STACellModel *container = self.children[i];
-        NSArray *filteredArray = [container filterContentsWithSearchString:searchString];
+        NSArray<STACellModel *> *filteredArray = [container filterContentsWithSearchString:searchString];
         if (filteredArray.count > 0) {
             [allSearchResults addObject:container];
             [allSearchResults addObjectsFromArray:filteredArray]; // filteredArray

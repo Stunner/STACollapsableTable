@@ -20,7 +20,7 @@
 /**
  Immediate descendants.
  */
-@property (nonatomic, strong) NSArray *children;
+@property (nonatomic, strong) NSArray<STACellModel *> *children;
 /**
  Specifier object that was used to instantiate this object.
  */
@@ -40,7 +40,7 @@
 /**
  Set of this cell model's parents. Can add parents via `-addParent:` method. Removing parents unsupported.
  */
-@property (nonatomic, strong, readonly) NSMutableSet <STACellModel *> *parents;
+@property (nonatomic, strong, readonly) NSMutableSet<STACellModel *> *parents;
 /**
  Distance from root node.
  */

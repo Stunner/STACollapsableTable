@@ -25,8 +25,8 @@ typedef void (^ObjectEnumeratorBlock)(id object);
 
 @property (nonatomic, strong) NSMutableSet *expandedSectionsSet;
 @property (nonatomic, strong) UITableView *tableView;
-@property (nonatomic, strong, readwrite) NSArray *contentsArray;
-@property (nonatomic, strong, readwrite) NSArray *topLevelObjects;
+@property (nonatomic, strong, readwrite) NSArray<STACellModel *> *contentsArray;
+@property (nonatomic, strong, readwrite) NSArray<STACellModel *> *topLevelObjects;
 
 // Search
 @property (nonatomic, strong) NSString *prevSearchString;
@@ -35,21 +35,22 @@ typedef void (^ObjectEnumeratorBlock)(id object);
 @property (nonatomic, assign) NSUInteger searchOperationID;
 @property (atomic, assign) NSUInteger lastHighestSeenOperationID;
 @property (nonatomic, assign) BOOL stopSearching;
-@property (nonatomic, strong) NSArray *userProvidedContentArray;
+@property (nonatomic, strong) NSArray<STACellModel *> *userProvidedContentArray;
 
 @end
 
 @implementation STACollapsableTableModel
 
 // designated initializer
-- (instancetype)initWithContentsArray:(NSArray *)contentsArray
+- (instancetype)initWithContentsArray:(NSArray<STATableModelSpecifier *> *)contentsArray
                             tableView:(UITableView *)tableView
                    initiallyCollapsed:(BOOL)initiallyCollapsed
                      useTableSections:(BOOL)useTableSections
                              delegate:(id<STACollapsableTableModelDelegate, UITableViewDelegate>)delegate
 {
     if (self = [super init]) {
-        _tableViewDelegateArbiter = [[STATableViewDelegate alloc] initWithInternalDelegate:self externalDelegate:delegate];
+        _tableViewDelegateArbiter = [[STATableViewDelegate alloc] initWithInternalDelegate:self
+                                                                          externalDelegate:delegate];
         _initiallyCollapsed = initiallyCollapsed;
         _useTableSections = useTableSections;
         _delegate = delegate;
@@ -62,7 +63,7 @@ typedef void (^ObjectEnumeratorBlock)(id object);
     return self;
 }
 
-- (instancetype)initWithContentsArray:(NSArray *)contentsArray
+- (instancetype)initWithContentsArray:(NSArray<STATableModelSpecifier *> *)contentsArray
                             tableView:(UITableView *)tableView
                    initiallyCollapsed:(BOOL)initiallyCollapsed
                              delegate:(id<STACollapsableTableModelDelegate, UITableViewDelegate>)delegate
@@ -74,7 +75,7 @@ typedef void (^ObjectEnumeratorBlock)(id object);
                               delegate:delegate];
 }
 
-- (instancetype)initWithContentsArray:(NSArray *)contentsArray
+- (instancetype)initWithContentsArray:(NSArray<STATableModelSpecifier *> *)contentsArray
                             tableView:(UITableView *)tableView
                              delegate:(id<STACollapsableTableModelDelegate, UITableViewDelegate>)delegate
 {
@@ -98,7 +99,7 @@ typedef void (^ObjectEnumeratorBlock)(id object);
 
 - (void)setIsSearching:(BOOL)isSearching {
     if (isSearching != _isSearching) {
-        [self collapseExpandedCellState];
+        [self collapseExpandedCells];
     }
     _isSearching = isSearching;
 }
@@ -116,7 +117,7 @@ typedef void (^ObjectEnumeratorBlock)(id object);
 
 #pragma mark - Public Methods
 
-- (void)resetTableWithModelData:(NSArray *)contentsArray {
+- (void)resetTableWithModelData:(NSArray<STACellModel *> *)contentsArray {
     
     [self.tableModel removeAllSections];
     self.userProvidedContentArray = contentsArray;
@@ -139,7 +140,7 @@ typedef void (^ObjectEnumeratorBlock)(id object);
     return [self.tableModel indexPathForObject:cellModel];
 }
 
-- (void)collapseExpandedCellState {
+- (void)collapseExpandedCells {
     
     for (STACellModel *cellModel in [self.expandedSectionsSet allObjects]) {
         cellModel.isExpanded = NO;
@@ -176,7 +177,7 @@ typedef void (^ObjectEnumeratorBlock)(id object);
     return nil;
 }
 
-- (void)addObjectsFromArrayToTableModel:(NSArray *)array {
+- (void)addObjectsFromArrayToTableModel:(NSArray<STACellModel *> *)array {
     NSMutableArray *topLevelObjects = [NSMutableArray array];
     for (STACellModel *cellModel in array) {
         STACellModel *topLevelCellModel = [self addCellModelToTableModel:cellModel];
@@ -246,7 +247,7 @@ typedef void (^ObjectEnumeratorBlock)(id object);
     return cellModel;
 }
 
-- (void)parseContents:(NSArray <STATableModelSpecifier *>*)contentsArray {
+- (void)parseContents:(NSArray<STATableModelSpecifier *> *)contentsArray {
     NSMutableArray *mutableDataArray = [NSMutableArray arrayWithCapacity:contentsArray.count];
     for (STATableModelSpecifier *specifier in contentsArray) { // loop through root level objects
         STACellModel *cellModel = [self cellModelForSpecifier:specifier parent:nil tableModel:self];
@@ -267,13 +268,14 @@ typedef void (^ObjectEnumeratorBlock)(id object);
     self.topLevelObjects = topLevelObjects;
 }
 
-- (void)enumerateObjects:(NSArray *)contentsArray block:(ObjectEnumeratorBlock)block {
+- (void)enumerateObjects:(NSArray<STACellModel *> *)contentsArray block:(ObjectEnumeratorBlock)block {
     if (contentsArray == 0) {
         return;
     }
     for (id object in contentsArray) {
         if ([object isKindOfClass:[STACellModel class]]) {
             block(object);
+            // enumerate among descendants if table view is expanded
             if (!self.initiallyCollapsed) {
                 [self enumerateObjects:((STACellModel *)object).children block:block];
             }

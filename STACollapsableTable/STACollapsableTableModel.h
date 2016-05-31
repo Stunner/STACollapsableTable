@@ -32,14 +32,14 @@
  
  @returns STASearchOperation instance which should be used to perform search query with. Returning nil causes the default search operation to be run.
  */
-- (STASearchOperation *)searchOperationOnData:(NSArray *)data withSearchQuery:(NSString *)searchQuery;
+- (STASearchOperation *)searchOperationOnData:(NSArray<STACellModel *> *)data withSearchQuery:(NSString *)searchQuery;
 
 /**
  @param filteredContents NSArray of STACellModels's that match search criteria
  
  @returns Contents to load table view with after performing search query.
  */
-- (NSArray *)searchOperationCompletedWithContents:(NSArray *)filteredContents;
+- (NSArray<STACellModel *> *)searchOperationCompletedWithContents:(NSArray<STACellModel *> *)filteredContents;
 
 @required
 
@@ -73,39 +73,39 @@
  
  This does not update during a search.
  */
-@property (nonatomic, strong, readonly) NSArray *contentsArray;
+@property (nonatomic, strong, readonly) NSArray<STACellModel *> *contentsArray;
 /**
  Array of all cell models with root depth (of 0).
  
  This is leveraged in order to reference the cell model of a section header. Updates during a search.
  */
-@property (nonatomic, strong, readonly) NSArray *topLevelObjects;
+@property (nonatomic, strong, readonly) NSArray<STACellModel *> *topLevelObjects;
 /**
  Denotes searching state of table view.
  */
 @property (nonatomic, assign, readonly) BOOL isSearching;
 
 // designated initializer
-- (instancetype)initWithContentsArray:(NSArray *)contentsArray
+- (instancetype)initWithContentsArray:(NSArray<STATableModelSpecifier *> *)contentsArray
                             tableView:(UITableView *)tableView
                    initiallyCollapsed:(BOOL)initiallyCollapsed
                      useTableSections:(BOOL)useTableSections
                              delegate:(id<STACollapsableTableModelDelegate, UITableViewDelegate>)delegate;
 
-- (instancetype)initWithContentsArray:(NSArray *)contentsArray
+- (instancetype)initWithContentsArray:(NSArray<STATableModelSpecifier *> *)contentsArray
                             tableView:(UITableView *)tableView
                    initiallyCollapsed:(BOOL)initiallyCollapsed
                              delegate:(id<STACollapsableTableModelDelegate, UITableViewDelegate>)delegate;
 
-- (instancetype)initWithContentsArray:(NSArray *)contentsArray
+- (instancetype)initWithContentsArray:(NSArray<STATableModelSpecifier *> *)contentsArray
                             tableView:(UITableView *)tableView
                              delegate:(id<STACollapsableTableModelDelegate, UITableViewDelegate>)delegate;
 
-- (void)resetTableWithModelData:(NSArray *)contentsArray;
+- (void)resetTableWithModelData:(NSArray<STACellModel *> *)contentsArray;
 - (void)resetTableModelData;
 - (STACellModel *)cellModelAtIndexPath:(NSIndexPath *)indexPath;
 - (NSIndexPath *)indexPathForCellModel:(STACellModel *)cellModel;
-- (void)collapseExpandedCellState;
+- (void)collapseExpandedCells;
 - (void)expand:(STACellModel *)model fromRowFromIndexPath:(NSIndexPath *)indexPath;
 - (void)expand:(STACellModel *)model fromSection:(NSInteger)section;
 - (void)collapse:(STACellModel *)model fromSection:(NSInteger)section;
