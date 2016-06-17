@@ -14,6 +14,7 @@
 #import "STATableViewDelegate.h"
 #import <ReactiveCocoa/ReactiveCocoa.h>
 #import "STASearchOperation.h"
+#import "NIMutableTableViewModel+STAAdditions.h"
 
 typedef void (^ObjectEnumeratorBlock)(id object);
 
@@ -119,7 +120,7 @@ typedef void (^ObjectEnumeratorBlock)(id object);
 
 - (void)resetTableWithModelData:(NSArray<STACellModel *> *)contentsArray {
     
-    [self.tableModel removeAllSections];
+    [self.tableModel sta_removeAllSections];
     self.userProvidedContentArray = contentsArray;
     [self addObjectsFromArrayToTableModel:self.userProvidedContentArray];
     [self.tableView reloadData];
@@ -127,7 +128,7 @@ typedef void (^ObjectEnumeratorBlock)(id object);
 
 - (void)resetTableModelData {
     
-    [self.tableModel removeAllSections];
+    [self.tableModel sta_removeAllSections];
     [self addObjectsFromArrayToTableModel:self.contentsArray];
     [self.tableView reloadData];
 }
@@ -213,7 +214,7 @@ typedef void (^ObjectEnumeratorBlock)(id object);
             if (searchOperation.operationID > self.lastHighestSeenOperationID) {
                 dispatch_async(dispatch_get_main_queue(), ^{
                     self.lastHighestSeenOperationID = searchOperation.operationID;
-                    [self.tableModel removeAllSections];
+                    [self.tableModel sta_removeAllSections];
                     
                     if ([self.delegate respondsToSelector:@selector(searchOperationCompletedWithContents:)]) {
                         NSArray *overriddenContents = [self.delegate searchOperationCompletedWithContents:searchOperation.allSearchResults];

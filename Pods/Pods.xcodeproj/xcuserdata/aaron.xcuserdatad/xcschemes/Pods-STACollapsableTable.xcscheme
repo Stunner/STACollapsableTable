@@ -14,7 +14,7 @@
             buildForArchiving = "YES">
             <BuildableReference
                BuildableIdentifier = 'primary'
-               BlueprintIdentifier = '03EFA593C2ACBD12BC82CE11'
+               BlueprintIdentifier = '1243A3A6D31BC87608461D52E63B6727'
                BlueprintName = 'Pods-STACollapsableTable'
                ReferencedContainer = 'container:Pods.xcodeproj'
                BuildableName = 'libPods-STACollapsableTable.a'>

@@ -4,11 +4,11 @@ platform :ios, '8.0'
 # use_frameworks!
 
 target 'STACollapsableTable' do
-  pod 'Nimbus', '~> 1.3'
-  pod 'ReactiveCocoa', '~> 2.4'
+    pod 'Nimbus', '~> 1.3'
+    pod 'ReactiveCocoa', '~> 2.4'
 end
 
 target 'STACollapsableTableTests' do
-
+    pod 'KIF', '~> 3.4'
 end
 
