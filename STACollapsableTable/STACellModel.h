@@ -11,6 +11,9 @@
 
 @class STACollapsableTableModel;
 
+/**
+ Model object that represents a cell. May be subclassed.
+ */
 @interface STACellModel : NSObject
 
 /**

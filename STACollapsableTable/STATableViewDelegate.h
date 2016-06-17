@@ -11,6 +11,9 @@
 
 @interface STATableViewDelegate : NSObject
 
+/**
+ Intercepts & forwards delegate methods on behalf of STACollapsableTable.
+ */
 - (instancetype)initWithInternalDelegate:(id)internalDelegate
                         externalDelegate:(id<UITableViewDelegate>)externalDelegate;
 

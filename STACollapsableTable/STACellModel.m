@@ -140,17 +140,7 @@ typedef NSIndexPath * (^ObjectEnumeratorBlock)(STACellModel *cellModel, NSUInteg
 {
     self.indexPath = indexPath;
     
-    return [self enumerateObjectsToBeRemoved:^NSIndexPath * (STACellModel *cellModel, NSUInteger row) {
-        NSIndexPath *removableIndexPath = nil;
-        if (isSearching) {
-            if (!cellModel.isSearchResult && !cellModel.descendantsInSearchResults) {
-                removableIndexPath = [NSIndexPath indexPathForRow:row inSection:indexPath.section];
-            }
-        } else {
-            removableIndexPath = [NSIndexPath indexPathForRow:row inSection:indexPath.section];
-        }
-        return removableIndexPath;
-    }];
+    return [self indexPathsToBeRemovedFromSection:indexPath.section isSearching:isSearching];
 }
 
 - (NSArray *)indexPathsToRemoveForCollapseFromSection:(NSInteger)section
@@ -158,17 +148,7 @@ typedef NSIndexPath * (^ObjectEnumeratorBlock)(STACellModel *cellModel, NSUInteg
 {
     self.section = section;
     
-    return [self enumerateObjectsToBeRemoved:^NSIndexPath * (STACellModel *cellModel, NSUInteger row) {
-        NSIndexPath *removableIndexPath = nil;
-        if (isSearching) {
-            if (!cellModel.isSearchResult && !cellModel.descendantsInSearchResults) {
-                removableIndexPath = [NSIndexPath indexPathForRow:row inSection:section];
-            }
-        } else {
-            removableIndexPath = [NSIndexPath indexPathForRow:row inSection:section];
-        }
-        return removableIndexPath;
-    }];
+    return [self indexPathsToBeRemovedFromSection:section isSearching:isSearching];
 }
 
 - (NSArray *)filterContentsWithSearchString:(NSString *)searchString {
@@ -239,6 +219,22 @@ typedef NSIndexPath * (^ObjectEnumeratorBlock)(STACellModel *cellModel, NSUInteg
         offset++;
     }
     return addedIndexPaths;
+}
+
+- (NSArray *)indexPathsToBeRemovedFromSection:(NSInteger)section
+                                  isSearching:(BOOL)isSearching
+{
+    return [self enumerateObjectsToBeRemoved:^NSIndexPath * (STACellModel *cellModel, NSUInteger row) {
+        NSIndexPath *removableIndexPath = nil;
+        if (isSearching) {
+            if (!cellModel.isSearchResult && !cellModel.descendantsInSearchResults) {
+                removableIndexPath = [NSIndexPath indexPathForRow:row inSection:section];
+            }
+        } else {
+            removableIndexPath = [NSIndexPath indexPathForRow:row inSection:section];
+        }
+        return removableIndexPath;
+    }];
 }
 
 - (void)updateSelfBasedOnSearchStatusOfTableModel {
