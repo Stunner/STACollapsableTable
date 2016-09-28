@@ -103,9 +103,9 @@ typedef void (^ObjectEnumeratorBlock)(id object);
 
 - (void)setIsSearching:(BOOL)isSearching {
     if (isSearching != _isSearching) {
+        _isSearching = isSearching;
         [self collapseExpandedCellAppearance];
     }
-    _isSearching = isSearching;
 }
 
 - (void)setStopSearching:(BOOL)stopSearching {
