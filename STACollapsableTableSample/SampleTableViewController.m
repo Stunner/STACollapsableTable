@@ -35,27 +35,46 @@
     
     NSArray *children1 = @[[STATableModelSpecifier createWithTitle:@"sr 3" children:nil userInfo:nil],
                            [STATableModelSpecifier createWithTitle:@"sr 4" children:nil userInfo:nil]];
-    NSArray *children2 = @[[STATableModelSpecifier createWithTitle:@"sr 1" children:nil userInfo:nil],
-                           [STATableModelSpecifier createWithTitle:@"sr 2" children:nil userInfo:nil],
-                           [STATableModelSpecifier createWithTitle:@"sr 20" children:nil userInfo:nil],
-                           [STATableModelSpecifier createWithTitle:@"sr 21" children:nil userInfo:nil],
-                           [STATableModelSpecifier createWithTitle:@"sr 22" children:nil userInfo:nil],
-                           [STATableModelSpecifier createWithTitle:@"sr 23" children:nil userInfo:nil],
-                          [STATableModelSpecifier createWithTitle:@"SubCategory" children:children1 userInfo:nil]];
-    NSArray *children3 = @[[STATableModelSpecifier createWithTitle:@"sr 5" children:nil userInfo:nil],
-                           [STATableModelSpecifier createWithTitle:@"sr 6" children:nil userInfo:nil],
-                           [STATableModelSpecifier createWithTitle:@"sr 7" children:nil userInfo:nil],
-                           [STATableModelSpecifier createWithTitle:@"sr 8" children:nil userInfo:nil],
-                           [STATableModelSpecifier createWithTitle:@"sr 9" children:nil userInfo:nil],
-                           [STATableModelSpecifier createWithTitle:@"sr 10" children:nil userInfo:nil],
-                           [STATableModelSpecifier createWithTitle:@"sr 11" children:nil userInfo:nil],
-                           [STATableModelSpecifier createWithTitle:@"sr 12" children:nil userInfo:nil],
-                           [STATableModelSpecifier createWithTitle:@"sr 13" children:nil userInfo:nil],
-                           [STATableModelSpecifier createWithTitle:@"sr 14" children:nil userInfo:nil],
-                           [STATableModelSpecifier createWithTitle:@"sr 15" children:nil userInfo:nil]];
-    NSArray *sectionedArray = @[[STATableModelSpecifier createWithTitle:@"Category" children:children2 userInfo:nil],
-                                [STATableModelSpecifier createWithTitle:@"Empty Category" children:@[] userInfo:nil],
-                                [STATableModelSpecifier createWithTitle:@"Category 2" children:children3 userInfo:nil]];
+    NSArray *ones = @[[STATableModelSpecifier createWithTitle:@"one" children:nil userInfo:nil],
+                      [STATableModelSpecifier createWithTitle:@"two" children:nil userInfo:nil],
+                      [STATableModelSpecifier createWithTitle:@"three" children:nil userInfo:nil],
+                      [STATableModelSpecifier createWithTitle:@"four" children:nil userInfo:nil],
+                      [STATableModelSpecifier createWithTitle:@"five" children:nil userInfo:nil],
+                      [STATableModelSpecifier createWithTitle:@"six" children:nil userInfo:nil],
+                      [STATableModelSpecifier createWithTitle:@"seven" children:nil userInfo:nil],
+                      [STATableModelSpecifier createWithTitle:@"eight" children:nil userInfo:nil],
+                      [STATableModelSpecifier createWithTitle:@"nine" children:nil userInfo:nil]];
+    NSArray *fifties = @[[STATableModelSpecifier createWithTitle:@"fifty-one" children:nil userInfo:nil],
+                         [STATableModelSpecifier createWithTitle:@"fifty-two" children:nil userInfo:nil],
+                         [STATableModelSpecifier createWithTitle:@"fifty-three" children:nil userInfo:nil],
+                         [STATableModelSpecifier createWithTitle:@"fifty-four" children:nil userInfo:nil],
+                         [STATableModelSpecifier createWithTitle:@"fifty-five" children:nil userInfo:nil],
+                         [STATableModelSpecifier createWithTitle:@"fifty-six" children:nil userInfo:nil],
+                         [STATableModelSpecifier createWithTitle:@"fifty-seven" children:nil userInfo:nil],
+                         [STATableModelSpecifier createWithTitle:@"fifty-eight" children:nil userInfo:nil],
+                         [STATableModelSpecifier createWithTitle:@"fifty-nine" children:nil userInfo:nil]];
+    NSArray *tens = @[[STATableModelSpecifier createWithTitle:@"ten" children:nil userInfo:nil],
+                      [STATableModelSpecifier createWithTitle:@"twenty" children:nil userInfo:nil],
+                      [STATableModelSpecifier createWithTitle:@"thirty" children:nil userInfo:nil],
+                      [STATableModelSpecifier createWithTitle:@"fourty" children:nil userInfo:nil],
+                      [STATableModelSpecifier createWithTitle:@"fifty" children:fifties userInfo:nil],
+                      [STATableModelSpecifier createWithTitle:@"sixty" children:nil userInfo:nil],
+                      [STATableModelSpecifier createWithTitle:@"seventy" children:nil userInfo:nil],
+                      [STATableModelSpecifier createWithTitle:@"eighty" children:nil userInfo:nil],
+                      [STATableModelSpecifier createWithTitle:@"ninety" children:nil userInfo:nil]];
+    NSArray *hundreds = @[[STATableModelSpecifier createWithTitle:@"one-hundred" children:nil userInfo:nil],
+                          [STATableModelSpecifier createWithTitle:@"two-hundred" children:nil userInfo:nil],
+                          [STATableModelSpecifier createWithTitle:@"three-hundred" children:nil userInfo:nil],
+                          [STATableModelSpecifier createWithTitle:@"four-hundred" children:nil userInfo:nil],
+                          [STATableModelSpecifier createWithTitle:@"five-hundred" children:nil userInfo:nil],
+                          [STATableModelSpecifier createWithTitle:@"six-hundred" children:nil userInfo:nil],
+                          [STATableModelSpecifier createWithTitle:@"seven-hundred" children:nil userInfo:nil],
+                          [STATableModelSpecifier createWithTitle:@"eight-hundred" children:nil userInfo:nil],
+                          [STATableModelSpecifier createWithTitle:@"nine-hundred" children:nil userInfo:nil]];
+    NSArray *sectionedArray = @[[STATableModelSpecifier createWithTitle:@"Ones" children:ones userInfo:nil],
+                                [STATableModelSpecifier createWithTitle:@"Tens" children:tens userInfo:nil],
+                                [STATableModelSpecifier createWithTitle:@"Hundreds" children:hundreds userInfo:nil],
+                                [STATableModelSpecifier createWithTitle:@"Empty Category" children:@[] userInfo:nil]];
     
     self.tableModel = [[STACollapsableTableModel alloc] initWithContentsArray:sectionedArray
                                                                     tableView:self.tableView
