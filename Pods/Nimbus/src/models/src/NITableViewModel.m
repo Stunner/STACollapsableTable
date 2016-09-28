@@ -328,7 +328,6 @@
   if ((NSUInteger)section < self.sections.count) {
     NSArray* rows = [[self.sections objectAtIndex:section] rows];
 
-    NIDASSERT((NSUInteger)row < rows.count);
     if ((NSUInteger)row < rows.count) {
       object = [rows objectAtIndex:row];
     }

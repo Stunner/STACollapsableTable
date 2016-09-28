@@ -278,6 +278,7 @@
 				TargetAttributes = {
 					9376D21D1C64683F00FC2782 = {
 						CreatedOnToolsVersion = 7.2;
+						DevelopmentTeam = TXV64D6H4A;
 					};
 					9376D2361C64684000FC2782 = {
 						CreatedOnToolsVersion = 7.2;
@@ -571,6 +572,7 @@
 			baseConfigurationReference = DF3635460DA1C82943CC2178 /* Pods-STACollapsableTable.debug.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				DEVELOPMENT_TEAM = TXV64D6H4A;
 				INFOPLIST_FILE = STACollapsableTableSample/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 8.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
@@ -584,6 +586,7 @@
 			baseConfigurationReference = 6D68CED336167B77FBC5E3E1 /* Pods-STACollapsableTable.release.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				DEVELOPMENT_TEAM = TXV64D6H4A;
 				INFOPLIST_FILE = STACollapsableTableSample/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 8.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";

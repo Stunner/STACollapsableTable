@@ -4,7 +4,7 @@ platform :ios, '8.0'
 # use_frameworks!
 
 target 'STACollapsableTable' do
-    pod 'Nimbus', '~> 1.3'
+    pod 'Nimbus', :git => 'https://github.com/Stunner/nimbus.git'
     pod 'ReactiveCocoa', '~> 2.4'
 end
 

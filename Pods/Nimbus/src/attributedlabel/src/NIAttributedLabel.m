@@ -28,6 +28,23 @@
 #error "NIAttributedLabel requires iOS 6 or higher."
 #endif
 
+#define _NI_PUSH_SCOPED_DIAGNOSTICS_COMMAND(cmd) \
+  _Pragma ("clang diagnostic push") \
+  _Pragma (cmd)
+
+#define _NI_POP_DIAGNOSTICS() \
+  _Pragma ("clang diagnostic pop")
+
+#if defined(__IPHONE_8_3) && (__IPHONE_OS_VERSION_MIN_REQUIRED >= __IPHONE_8_3)
+#define _NI_UIACTIONSHEET_DEPRECATION_SUPPRESSION_PUSH() \
+  _NI_PUSH_SCOPED_DIAGNOSTICS_COMMAND("clang diagnostic ignored \"-Wdeprecated-declarations\"")
+#define _NI_UIACTIONSHEET_DEPRECATION_SUPPRESSION_POP() \
+  _NI_POP_DIAGNOSTICS()
+#else
+#define _NI_UIACTIONSHEET_DEPRECATION_SUPPRESSION_PUSH()
+#define _NI_UIACTIONSHEET_DEPRECATION_SUPPRESSION_POP()
+#endif // defined(__IPHONE_8_3) && (__IPHONE_OS_VERSION_MIN_REQUIRED > __IPHONE_8_3)
+
 // The number of seconds to wait before executing a long press action on the tapped link.
 static const NSTimeInterval kLongPressTimeInterval = 0.5;
 
@@ -44,6 +61,10 @@ static const CGFloat kVMargin = 5.0f;
 static NSString* const kEllipsesCharacter = @"\u2026";
 
 NSString* const NIAttributedLabelLinkAttributeName = @"NIAttributedLabel:Link";
+
+static const void *kFontAttributeKey = @"NSFont";
+static const void *kStrikethroughAttributeKey = @"NSStrikethrough";
+static const void *kStrikethroughColorAttributeKey = @"NSStrikethroughColorAttributeName";
 
 // For supporting images.
 CGFloat NIImageDelegateGetAscentCallback(void* refCon);
@@ -193,7 +214,7 @@ CGSize NISizeOfAttributedStringConstrainedToSize(NSAttributedString* attributedS
 
 @property (nonatomic) CTFrameRef textFrame; // CFType, manually managed lifetime, see setter.
 
-@property (assign)            BOOL detectingLinks; // Atomic.
+@property (nonatomic, assign) NSInteger linkDetectionRequestID;
 @property (nonatomic)         BOOL linksHaveBeenDetected;
 @property (nonatomic, copy)   NSArray*        detectedlinkLocations;
 @property (nonatomic, strong) NSMutableArray* explicitLinkLocations;  // Of NSTextCheckingResult.
@@ -369,6 +390,7 @@ CGSize NISizeOfAttributedStringConstrainedToSize(NSAttributedString* attributedS
     // Clear the link caches.
     self.detectedlinkLocations = nil;
     self.linksHaveBeenDetected = NO;
+    self.linkDetectionRequestID++;
     [self removeAllExplicitLinks];
 
     // Remove all images.
@@ -552,6 +574,14 @@ CGSize NISizeOfAttributedStringConstrainedToSize(NSAttributedString* attributedS
   }
 }
 
+- (void)setStrikethroughColor:(UIColor *)strikethroughColor {
+  if (_strikethroughColor != strikethroughColor) {
+    _strikethroughColor = strikethroughColor;
+
+    [self attributedTextDidChange];
+  }
+}
+
 - (void)setLineHeight:(CGFloat)lineHeight {
   _lineHeight = lineHeight;
 
@@ -638,22 +668,22 @@ CGSize NISizeOfAttributedStringConstrainedToSize(NSAttributedString* attributedS
 }
 
 - (void)_deferLinkDetection {
-  if (!self.detectingLinks) {
-    self.detectingLinks = YES;
+  self.linkDetectionRequestID++;
+  const NSInteger linkDetectionRequestID = self.linkDetectionRequestID;
+  NSString* string = [self.mutableAttributedString.string copy];
+  dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
+    NSArray* matches = [self _matchesFromAttributedString:string];
 
-    NSString* string = [self.mutableAttributedString.string copy];
-    dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
-      NSArray* matches = [self _matchesFromAttributedString:string];
-      self.detectingLinks = NO;
+    dispatch_async(dispatch_get_main_queue(), ^{
+      if (self.linkDetectionRequestID != linkDetectionRequestID) {
+        return;
+      }
+      self.detectedlinkLocations = matches;
+      self.linksHaveBeenDetected = YES;
 
-      dispatch_async(dispatch_get_main_queue(), ^{
-        self.detectedlinkLocations = matches;
-        self.linksHaveBeenDetected = YES;
-
-        [self attributedTextDidChange];
-      });
+      [self attributedTextDidChange];
     });
-  }
+  });
 }
 
 // Use an NSDataDetector to find any implicit links in the text. The results are cached until
@@ -1020,6 +1050,7 @@ CGSize NISizeOfAttributedStringConstrainedToSize(NSAttributedString* attributedS
   [self setNeedsDisplay];
 }
 
+_NI_UIACTIONSHEET_DEPRECATION_SUPPRESSION_PUSH()
 - (UIActionSheet *)actionSheetForResult:(NSTextCheckingResult *)result {
   UIActionSheet* actionSheet =
   [[UIActionSheet alloc] initWithTitle:nil
@@ -1064,6 +1095,7 @@ CGSize NISizeOfAttributedStringConstrainedToSize(NSAttributedString* attributedS
 
   return actionSheet;
 }
+_NI_UIACTIONSHEET_DEPRECATION_SUPPRESSION_POP()
 
 - (void)_longPressTimerDidFire:(NSTimer *)timer {
   self.longPressTimer = nil;
@@ -1071,12 +1103,16 @@ CGSize NISizeOfAttributedStringConstrainedToSize(NSAttributedString* attributedS
   if (nil != self.touchedLink) {
     self.actionSheetLink = self.touchedLink;
 
+    _NI_UIACTIONSHEET_DEPRECATION_SUPPRESSION_PUSH()
     UIActionSheet* actionSheet = [self actionSheetForResult:self.actionSheetLink];
+    _NI_UIACTIONSHEET_DEPRECATION_SUPPRESSION_POP()
 
     BOOL shouldPresent = YES;
     if ([self.delegate respondsToSelector:@selector(attributedLabel:shouldPresentActionSheet:withTextCheckingResult:atPoint:)]) {
       // Give the delegate the opportunity to not show the action sheet or to present their own.
+      _NI_UIACTIONSHEET_DEPRECATION_SUPPRESSION_PUSH()
       shouldPresent = [self.delegate attributedLabel:self shouldPresentActionSheet:actionSheet withTextCheckingResult:self.touchedLink atPoint:self.touchPoint];
+      _NI_UIACTIONSHEET_DEPRECATION_SUPPRESSION_POP()
     }
 
     if (shouldPresent) {
@@ -1157,17 +1193,16 @@ CGSize NISizeOfAttributedStringConstrainedToSize(NSAttributedString* attributedS
       callbacks.getDescent = NIImageDelegateGetDescentCallback;
       callbacks.getWidth = NIImageDelegateGetWidthCallback;
 
-      NSUInteger index = labelImage.index;
-      if (index >= attributedString.length) {
-        index = attributedString.length - 1;
+      NSDictionary *attributes = nil;
+      if (attributedString.length) {
+        NSInteger index = MAX((NSInteger)0, MIN((NSInteger)(attributedString.length - 1), labelImage.index));
+        attributes = [attributedString attributesAtIndex:index effectiveRange:NULL];
       }
-
-      NSDictionary *attributes = [attributedString attributesAtIndex:index effectiveRange:NULL];
-      CTFontRef font = (__bridge CTFontRef)[attributes valueForKey:(__bridge id)kCTFontAttributeName];
-
-      if (font != NULL) {
-        labelImage.fontAscent = CTFontGetAscent(font);
-        labelImage.fontDescent = CTFontGetDescent(font);
+      
+      UIFont *font = attributes[NSFontAttributeName];
+      if (font) {
+        labelImage.fontAscent = font.ascender;
+        labelImage.fontDescent = -font.descender;
       }
 
       CTRunDelegateRef delegate = CTRunDelegateCreate(&callbacks, (__bridge void *)labelImage);
@@ -1179,7 +1214,10 @@ CGSize NISizeOfAttributedStringConstrainedToSize(NSAttributedString* attributedS
         unichar objectReplacementChar = 0xFFFC;
         NSString *objectReplacementString = [NSString stringWithCharacters:&objectReplacementChar length:1];
         NSMutableAttributedString* space = [[NSMutableAttributedString alloc] initWithString:objectReplacementString];
-
+        if (font) {
+          [space addAttribute:NSFontAttributeName value:font range:NSMakeRange(0, space.length)];
+        }
+        
         CFRange range = CFRangeMake(0, 1);
         CFMutableAttributedStringRef spaceString = (__bridge_retained CFMutableAttributedStringRef)space;
         CFAttributedStringSetAttribute(spaceString, range, kCTRunDelegateAttributeName, delegate);
@@ -1393,7 +1431,7 @@ CGSize NISizeOfAttributedStringConstrainedToSize(NSAttributedString* attributedS
         CFRelease(truncationLine);
         CFRelease(truncationToken);
 
-        CTLineDraw(truncatedLine, ctx);
+        [self drawLine:truncatedLine context:ctx];
         CFRelease(truncatedLine);
 
         shouldDrawLine = NO;
@@ -1401,8 +1439,89 @@ CGSize NISizeOfAttributedStringConstrainedToSize(NSAttributedString* attributedS
     }
 
     if (shouldDrawLine) {
-      CTLineDraw(line, ctx);
+      [self drawLine:line context:ctx];
     }
+  }
+}
+
+- (void)drawLine:(CTLineRef)line context:(CGContextRef)ctx {
+  // Process additional NSAttributes that are not supported by CT library such as strikethrough.
+  CFArrayRef runs = CTLineGetGlyphRuns(line);
+  for (NSInteger index = 0; index < CFArrayGetCount(runs); index++) {
+    CTRunRef run = CFArrayGetValueAtIndex(runs, index);
+    CTRunDraw(run, ctx, CFRangeMake(0, 0));
+    CFDictionaryRef attributes = CTRunGetAttributes(run);
+    if (attributes) {
+      if (CFDictionaryContainsKey(attributes, kStrikethroughAttributeKey)) {
+        [self drawStrikethroughOverGlyphRun:run attributes:attributes ctx:ctx];
+      }
+    }
+  }
+}
+
+/**
+ * Draws the strikethrough over the already drawn CTRunRef text. The strikethrough height is half
+ * of the x-height of the current font. This means that the line is drawn in the middle of the lower
+ * case 'x' char.
+ */
+- (void)drawStrikethroughOverGlyphRun:(CTRunRef)run
+                           attributes:(CFDictionaryRef)attributes
+                                  ctx:(CGContextRef)ctx {
+  CFNumberRef styleRef = CFDictionaryGetValue(attributes, kStrikethroughAttributeKey);
+  NSUnderlineStyle style = 0;
+  CFNumberGetValue(styleRef, kCFNumberSInt64Type, &style);
+  if (style == NSUnderlineStyleNone) {
+    return;
+  }
+  const CGPoint *firstGlyphPosition = NULL;
+  firstGlyphPosition = CTRunGetPositionsPtr(run);
+  CGPoint *positions = NULL;
+  if (firstGlyphPosition == NULL) {
+    CFIndex glyphCount = CTRunGetGlyphCount(run);
+    positions = calloc(glyphCount, sizeof(CGPoint));
+    CTRunGetPositions(run, CFRangeMake(0, 0), positions);
+    firstGlyphPosition = positions;
+  }
+
+  CGFloat descent = 0;
+  CGFloat typographicWidth =
+      (CGFloat)CTRunGetTypographicBounds(run, CFRangeMake(0,0), NULL, &descent, NULL);
+
+  CGFloat lineWidth = 1;
+  if ((style & NSUnderlineStyleThick) == NSUnderlineStyleThick) {
+    // NSUnderlineStyleThick is 0x09 and NSUnderlineStyleSingle is 0x01. According to the Apple
+    // documentation, they are supposed to be masks...but they are not acting like masks...
+    lineWidth *= 2;
+  }
+
+  CGContextSetLineWidth(ctx, lineWidth);
+
+  CGContextBeginPath(ctx);
+
+  UIColor *strikethroughColor = CFDictionaryGetValue(attributes, kStrikethroughColorAttributeKey);
+  if (strikethroughColor) {
+    CGContextSetStrokeColorWithColor(ctx, strikethroughColor.CGColor);
+  } else if (_strikethroughColor) {
+    CGContextSetStrokeColorWithColor(ctx, _strikethroughColor.CGColor);
+  }
+
+  UIFont *font = CFDictionaryGetValue(attributes, kFontAttributeKey);
+  font = font ?: self.font;
+  CGFloat strikeHeight = font.xHeight / 2.f + (*firstGlyphPosition).y;
+  
+  // Adjustment for multiline elements.
+  CGPoint pt = CGContextGetTextPosition(ctx);
+  strikeHeight += pt.y;
+
+  // For lines composed of multiple runs, (*firstGlyphPosition).x identifies the start of the run
+  // within the line.
+  CGContextMoveToPoint(ctx, pt.x + (*firstGlyphPosition).x, strikeHeight);
+  CGContextAddLineToPoint(ctx,
+                          pt.x + (*firstGlyphPosition).x + typographicWidth,
+                          strikeHeight);
+  CGContextStrokePath(ctx);
+  if (positions != NULL) {
+    free(positions);
   }
 }
 
@@ -1515,6 +1634,7 @@ CGSize NISizeOfAttributedStringConstrainedToSize(NSAttributedString* attributedS
 
 #pragma mark - UIActionSheetDelegate
 
+_NI_UIACTIONSHEET_DEPRECATION_SUPPRESSION_PUSH()
 - (void)actionSheet:(UIActionSheet*)actionSheet clickedButtonAtIndex:(NSInteger)buttonIndex {
   if (NSTextCheckingTypeLink == self.actionSheetLink.resultType) {
     if (buttonIndex == 0) {
@@ -1540,7 +1660,12 @@ CGSize NISizeOfAttributedStringConstrainedToSize(NSAttributedString* attributedS
   } else if (NSTextCheckingTypeAddress == self.actionSheetLink.resultType) {
     NSString* address = [self.mutableAttributedString.string substringWithRange:self.actionSheetLink.range];
     if (buttonIndex == 0) {
-      [[UIApplication sharedApplication] openURL:[NSURL URLWithString:[[@"http://maps.google.com/maps?q=" stringByAppendingString:address] stringByAddingPercentEscapesUsingEncoding:NSUTF8StringEncoding]]];
+      NSString *escapedAddress =
+          NIStringByAddingPercentEscapesForURLParameterString(address);
+      NSString *URLString =
+          [NSString stringWithFormat:@"https://maps.google.com/maps?q=%@", escapedAddress];
+      NSURL *URL = [NSURL URLWithString:URLString];
+      [[UIApplication sharedApplication] openURL:URL];
 
     } else if (buttonIndex == 1) {
       [[UIPasteboard generalPasteboard] setString:address];
@@ -1557,11 +1682,14 @@ CGSize NISizeOfAttributedStringConstrainedToSize(NSAttributedString* attributedS
   self.actionSheetLink = nil;
   [self setNeedsDisplay];
 }
+_NI_UIACTIONSHEET_DEPRECATION_SUPPRESSION_POP()
 
+_NI_UIACTIONSHEET_DEPRECATION_SUPPRESSION_PUSH()
 - (void)actionSheetCancel:(UIActionSheet *)actionSheet {
   self.actionSheetLink = nil;
   [self setNeedsDisplay];
 }
+_NI_UIACTIONSHEET_DEPRECATION_SUPPRESSION_POP()
 
 #pragma mark - Inline Image Support
 
@@ -1636,11 +1764,11 @@ CGFloat NIImageDelegateGetWidthCallback(void* refCon) {
 
 + (CTTextAlignment)alignmentFromUITextAlignment:(NSTextAlignment)alignment {
   switch (alignment) {
-    case NSTextAlignmentLeft: return kCTLeftTextAlignment;
-    case NSTextAlignmentCenter: return kCTCenterTextAlignment;
-    case NSTextAlignmentRight: return kCTRightTextAlignment;
-    case NSTextAlignmentJustified: return kCTJustifiedTextAlignment;
-    default: return kCTNaturalTextAlignment;
+    case NSTextAlignmentLeft: return kCTTextAlignmentLeft;
+    case NSTextAlignmentCenter: return kCTTextAlignmentCenter;
+    case NSTextAlignmentRight: return kCTTextAlignmentRight;
+    case NSTextAlignmentJustified: return kCTTextAlignmentJustified;
+    default: return kCTTextAlignmentNatural;
   }
 }
 

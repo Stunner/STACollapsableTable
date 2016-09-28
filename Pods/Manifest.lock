@@ -84,15 +84,24 @@ PODS:
 
 DEPENDENCIES:
   - KIF (~> 3.4)
-  - Nimbus (~> 1.3)
+  - Nimbus (from `https://github.com/Stunner/nimbus.git`)
   - ReactiveCocoa (~> 2.4)
+
+EXTERNAL SOURCES:
+  Nimbus:
+    :git: https://github.com/Stunner/nimbus.git
+
+CHECKOUT OPTIONS:
+  Nimbus:
+    :commit: a9853399071f86e94a9a1cc340f493e73a2f5b58
+    :git: https://github.com/Stunner/nimbus.git
 
 SPEC CHECKSUMS:
   AFNetworking: cb8d14a848e831097108418f5d49217339d4eb60
   KIF: b518c9831453abea5afdbbde3908ec47832d6d56
-  Nimbus: e7f33bc6d6cb4fe5ea0aee0c7e0883696123422c
+  Nimbus: 0cf223fb60d06167db03e8ac533fb7a573963e73
   ReactiveCocoa: e2db045570aa97c695e7aa97c2bcab222ae51f4a
 
-PODFILE CHECKSUM: 52b752049e027c7ae46efe362fa09e2714ede6de
+PODFILE CHECKSUM: 167c1cf309d8b5839f2678f55433608fd23856ca
 
 COCOAPODS: 1.0.1
