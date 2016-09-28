@@ -93,8 +93,10 @@ typedef NSIndexPath * (^ObjectEnumeratorBlock)(STACellModel *cellModel, NSUInteg
 - (void)setIsExpanded:(BOOL)isExpanded {
     if (!isExpanded) {
         // collapsing the parent collapses all of its children
-        for (STACellModel *cellModel in self.children) {
-            cellModel.isExpanded = NO;
+        if (!self.tableModel.isSearching) {
+            for (STACellModel *cellModel in self.children) {
+                cellModel.isExpanded = NO;
+            }
         }
     } else {
         if (self.children.count == 0) { // a cell with no children can't be expanded!
@@ -181,6 +183,14 @@ typedef NSIndexPath * (^ObjectEnumeratorBlock)(STACellModel *cellModel, NSUInteg
             [allSearchResults addObject:matchingContainer];
         }
     }
+    
+    // Update collapse/expand triangles according with how many children are displaying
+    if (self.descendantsInSearchResults == self.children.count) {
+        self.isExpanded = YES;
+    } else {
+        self.isExpanded = NO;
+    }
+    
     return allSearchResults;
 }
 
