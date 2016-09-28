@@ -75,6 +75,10 @@
  */
 @property (nonatomic, strong, readonly) NSArray<STACellModel *> *contentsArray;
 /**
+ Contains filtered contentsArray which was the result in most recent search.
+ */
+@property (nonatomic, strong, readonly) NSArray<STACellModel *> *searchContents;
+/**
  Array of all cell models with root depth (of 0).
  
  This is leveraged in order to reference the cell model of a section header. Updates during a search.
@@ -110,5 +114,6 @@
 - (void)expand:(STACellModel *)model fromSection:(NSInteger)section;
 - (void)collapse:(STACellModel *)model fromSection:(NSInteger)section;
 - (void)performSearchWithQuery:(NSString *)searchQuery;
+- (NSArray<STACellModel *> *)parseModelSpecifiers:(NSArray <STATableModelSpecifier *>*)modelSpecifiers;
 
 @end

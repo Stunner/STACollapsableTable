@@ -49,6 +49,8 @@
  */
 @property (nonatomic, assign, readonly) NSUInteger depth;
 
+@property (nonatomic, weak, readonly) STACollapsableTableModel *tableModel;
+
 
 - (instancetype)initWithModelSpecifier:(STATableModelSpecifier *)modelSpecifier
                                 parent:(STACellModel *)parent
@@ -72,5 +74,8 @@
                                           isSearching:(BOOL)isSearching;
 
 - (NSArray *)filterContentsWithSearchString:(NSString *)searchString;
+
+- (BOOL)shouldExpandAndIncludeCellModel:(STACellModel *)cellModel isSearching:(BOOL)isSearching;
+- (BOOL)shouldCollapseAndRemoveCellModel:(STACellModel *)cellModel isSearching:(BOOL)isSearching;
 
 @end

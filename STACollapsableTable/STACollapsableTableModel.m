@@ -27,6 +27,7 @@ typedef void (^ObjectEnumeratorBlock)(id object);
 @property (nonatomic, strong) NSMutableSet *expandedSectionsSet;
 @property (nonatomic, strong) UITableView *tableView;
 @property (nonatomic, strong, readwrite) NSArray<STACellModel *> *contentsArray;
+@property (nonatomic, strong, readwrite) NSArray<STACellModel *> *searchContents;
 @property (nonatomic, strong, readwrite) NSArray<STACellModel *> *topLevelObjects;
 
 // Search
@@ -56,6 +57,8 @@ typedef void (^ObjectEnumeratorBlock)(id object);
         _useTableSections = useTableSections;
         _delegate = delegate;
         _tableView = tableView;
+        _tableModel = [[NIMutableTableViewModel alloc] initWithSectionedArray:nil
+                                                                     delegate:self];
         [self parseContents:contentsArray];
         _expandedSectionsSet = [NSMutableSet set];
         _operationQueue = [[NSOperationQueue alloc] init];
@@ -161,32 +164,6 @@ typedef void (^ObjectEnumeratorBlock)(id object);
     [self collapse:model fromSection:section inTableView:self.tableView animated:YES];
 }
 
-/**
- @returns Instance of STACellModel if it is a root model (depth of 0).
- */
-- (STACellModel *)addCellModelToTableModel:(STACellModel *)cellModel {
-    if (self.useTableSections) {
-        if (cellModel.depth == 0) { // root
-            [self.tableModel addSectionWithTitle:cellModel.title];
-            return cellModel;
-        } else {
-            [self.tableModel addObject:cellModel];
-        }
-    } else {
-        [self.tableModel addObject:cellModel];
-    }
-    return nil;
-}
-
-- (void)addObjectsFromArrayToTableModel:(NSArray<STACellModel *> *)array {
-    NSMutableArray *topLevelObjects = [NSMutableArray array];
-    for (STACellModel *cellModel in array) {
-        STACellModel *topLevelCellModel = [self addCellModelToTableModel:cellModel];
-        if (topLevelCellModel) [topLevelObjects addObject:topLevelCellModel];
-    }
-    self.topLevelObjects = topLevelObjects;
-}
-
 - (void)performSearchWithQuery:(NSString *)searchQuery {
     
     STASearchOperation *searchOperation = nil;
@@ -218,8 +195,10 @@ typedef void (^ObjectEnumeratorBlock)(id object);
                     
                     if ([self.delegate respondsToSelector:@selector(searchOperationCompletedWithContents:)]) {
                         NSArray *overriddenContents = [self.delegate searchOperationCompletedWithContents:searchOperation.allSearchResults];
+                        self.searchContents = overriddenContents;
                         [self addObjectsFromArrayToTableModel:overriddenContents];
                     } else {
+                        self.searchContents = searchOperation.allSearchResults;
                         [self addObjectsFromArrayToTableModel:searchOperation.allSearchResults];
                     }
                     [self.tableView reloadData];
@@ -232,7 +211,44 @@ typedef void (^ObjectEnumeratorBlock)(id object);
     self.prevSearchString = searchQuery;
 }
 
+- (NSArray<STACellModel *> *)parseModelSpecifiers:(NSArray <STATableModelSpecifier *>*)modelSpecifiers {
+    NSMutableArray<STACellModel *> *mutableDataArray = [NSMutableArray arrayWithCapacity:modelSpecifiers.count];
+    @weakify(self);
+    [self enumerateObjects:modelSpecifiers block:^(STATableModelSpecifier *cellSpecifier) {
+        @strongify(self);
+        STACellModel *cellModel = [self cellModelForSpecifier:cellSpecifier parent:nil tableModel:self];
+        [mutableDataArray addObject:cellModel];
+    }];
+    return mutableDataArray;
+}
+
 #pragma mark - Private Methods
+
+/**
+ @returns Instance of STACellModel if it is a root model (depth of 0).
+ */
+- (STACellModel *)addCellModelToTableModel:(STACellModel *)cellModel {
+    if (self.useTableSections) {
+        if (cellModel.depth == 0) { // root
+            [self.tableModel addSectionWithTitle:cellModel.title];
+            return cellModel;
+        } else {
+            [self.tableModel addObject:cellModel];
+        }
+    } else {
+        [self.tableModel addObject:cellModel];
+    }
+    return nil;
+}
+
+- (void)addObjectsFromArrayToTableModel:(NSArray<STACellModel *> *)array {
+    NSMutableArray *topLevelObjects = [NSMutableArray array];
+    for (STACellModel *cellModel in array) {
+        STACellModel *topLevelCellModel = [self addCellModelToTableModel:cellModel];
+        if (topLevelCellModel) [topLevelObjects addObject:topLevelCellModel];
+    }
+    self.topLevelObjects = topLevelObjects;
+}
 
 - (STACellModel *)cellModelForSpecifier:(STATableModelSpecifier *)specifier
                                  parent:(STACellModel *)parent
@@ -245,45 +261,36 @@ typedef void (^ObjectEnumeratorBlock)(id object);
     if (!cellModel) {
         cellModel = [[STACellModel alloc] initWithModelSpecifier:specifier parent:parent tableModel:tableModel];
     }
+    cellModel.isExpanded = !self.initiallyCollapsed;
     return cellModel;
 }
 
-- (void)parseContents:(NSArray<STATableModelSpecifier *> *)contentsArray {
-    NSMutableArray *mutableDataArray = [NSMutableArray arrayWithCapacity:contentsArray.count];
-    for (STATableModelSpecifier *specifier in contentsArray) { // loop through root level objects
-        STACellModel *cellModel = [self cellModelForSpecifier:specifier parent:nil tableModel:self];
-        [mutableDataArray addObject:cellModel];
-    }
-    self.contentsArray = mutableDataArray;
-    
-    NSMutableArray *topLevelObjects = [NSMutableArray array];
-    self.tableModel = [[NIMutableTableViewModel alloc] initWithSectionedArray:nil
-                                                                     delegate:self];
-    @weakify(self);
-    [self enumerateObjects:self.contentsArray block:^(STACellModel *cellModel) {
-        @strongify(self);
-        cellModel.isExpanded = !self.initiallyCollapsed;
-        STACellModel *topLevelCellModel = [self addCellModelToTableModel:cellModel];
-        if (topLevelCellModel) [topLevelObjects addObject:topLevelCellModel];
-    }];
-    self.topLevelObjects = topLevelObjects;
+- (void)parseContents:(NSArray<STATableModelSpecifier *> *)parsableContents {
+    self.contentsArray = [self parseModelSpecifiers:parsableContents];
+    [self addObjectsFromArrayToTableModel:self.contentsArray];
 }
 
-- (void)enumerateObjects:(NSArray<STACellModel *> *)contentsArray block:(ObjectEnumeratorBlock)block {
+- (void)enumerateObjects:(NSArray<STATableModelSpecifier *> *)contentsArray block:(ObjectEnumeratorBlock)block {
     if (contentsArray == 0) {
         return;
     }
     for (id object in contentsArray) {
-        if ([object isKindOfClass:[STACellModel class]]) {
+        if ([object isKindOfClass:[STATableModelSpecifier class]]) {
             block(object);
             // enumerate among descendants if table view is expanded
             if (!self.initiallyCollapsed) {
-                [self enumerateObjects:((STACellModel *)object).children block:block];
+                [self enumerateObjects:((STATableModelSpecifier *)object).children block:block];
             }
         } else {
             block(object);
         }
     }
+}
+
+- (void)scrollToExpandedIndexPath:(NSIndexPath *)indexPath {
+    [self.tableView scrollToRowAtIndexPath:indexPath
+                          atScrollPosition:UITableViewScrollPositionTop
+                                  animated:YES];
 }
 
 - (void)expand:(STACellModel *)cellModel fromIndexPath:(NSIndexPath *)indexPath inTableView:(UITableView *)tableView animated:(BOOL)animated {
@@ -300,9 +307,19 @@ typedef void (^ObjectEnumeratorBlock)(id object);
         NSIndexPath *newIndexPath = [NSIndexPath indexPathForRow:index inSection:indexPath.section];
         [addedIndexPaths addObject:newIndexPath];
     }
+    
+    [CATransaction begin];
+    
+    [CATransaction setCompletionBlock:^{
+        // animation has finished
+        [self scrollToExpandedIndexPath:indexPath];
+    }];
+    
     [tableView beginUpdates];
     [tableView insertRowsAtIndexPaths:addedIndexPaths withRowAnimation:UITableViewRowAnimationNone];
     [tableView endUpdates];
+    
+    [CATransaction commit];
     
     cellModel.isExpanded = YES;
     [self.expandedSectionsSet addObject:cellModel];
@@ -323,9 +340,19 @@ typedef void (^ObjectEnumeratorBlock)(id object);
         NSIndexPath *newIndexPath = [NSIndexPath indexPathForRow:index inSection:section];
         [addedIndexPaths addObject:newIndexPath];
     }
+    
+    [CATransaction begin];
+    
+    [CATransaction setCompletionBlock:^{
+        // animation has finished
+        [self scrollToExpandedIndexPath:[NSIndexPath indexPathForRow:NSNotFound inSection:section]];
+    }];
+    
     [tableView beginUpdates];
     [tableView insertRowsAtIndexPaths:addedIndexPaths withRowAnimation:UITableViewRowAnimationNone];
     [tableView endUpdates];
+    
+    [CATransaction commit];
     
     cellModel.isExpanded = YES;
     [self.expandedSectionsSet addObject:cellModel];

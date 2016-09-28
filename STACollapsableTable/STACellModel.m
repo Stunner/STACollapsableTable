@@ -21,7 +21,7 @@ typedef NSIndexPath * (^ObjectEnumeratorBlock)(STACellModel *cellModel, NSUInteg
 
 @property (nonatomic, assign) NSInteger section;
 @property (nonatomic, weak) NSIndexPath *indexPath;
-@property (nonatomic, weak) STACollapsableTableModel *tableModel;
+@property (nonatomic, weak, readwrite) STACollapsableTableModel *tableModel;
 
 @end
 
@@ -196,25 +196,44 @@ typedef NSIndexPath * (^ObjectEnumeratorBlock)(STACellModel *cellModel, NSUInteg
     }
 }
 
+- (BOOL)shouldExpandAndIncludeCellModel:(STACellModel *)cellModel isSearching:(BOOL)isSearching {
+    if (isSearching) {
+        if (!cellModel.isSearchResult && !cellModel.descendantsInSearchResults) {
+            return YES;
+        } else {
+            return NO;
+        }
+    } else {
+        return YES;
+    }
+    return NO;
+}
+
+- (BOOL)shouldCollapseAndRemoveCellModel:(STACellModel *)cellModel isSearching:(BOOL)isSearching {
+    if (isSearching) {
+        if (!cellModel.isSearchResult && !cellModel.descendantsInSearchResults) {
+            return YES;
+        }
+    } else {
+        return YES;
+    }
+    return NO;
+}
+
 #pragma mark - Helper Methods
 
 - (NSArray *)indexPathsToAddFromOffset:(NSUInteger)offset rowsCounter:(NSUInteger)rowsCounter whileSearching:(BOOL)isSearching {
     NSMutableArray *addedIndexPaths = [NSMutableArray array];
     for (STACellModel *cellModel in self.children) {
-        if (isSearching) {
-            if (!cellModel.isSearchResult && !cellModel.descendantsInSearchResults) {
-                [addedIndexPaths addObject:@{@"container" : cellModel,
-                                             @"index" : @(rowsCounter + offset)}];
-            } else {
-                if (cellModel.isExpanded) {
-                    offset += cellModel.children.count;
-                } else {
-                    offset += cellModel.descendantsInSearchResults;
-                }
-            }
-        } else {
+        if ([self shouldExpandAndIncludeCellModel:cellModel isSearching:isSearching]) {
             [addedIndexPaths addObject:@{@"container" : cellModel,
                                          @"index" : @(rowsCounter + offset)}];
+        } else {
+            if (cellModel.isExpanded) {
+                offset += cellModel.children.count;
+            } else {
+                offset += cellModel.descendantsInSearchResults;
+            }
         }
         offset++;
     }
@@ -226,11 +245,7 @@ typedef NSIndexPath * (^ObjectEnumeratorBlock)(STACellModel *cellModel, NSUInteg
 {
     return [self enumerateObjectsToBeRemoved:^NSIndexPath * (STACellModel *cellModel, NSUInteger row) {
         NSIndexPath *removableIndexPath = nil;
-        if (isSearching) {
-            if (!cellModel.isSearchResult && !cellModel.descendantsInSearchResults) {
-                removableIndexPath = [NSIndexPath indexPathForRow:row inSection:section];
-            }
-        } else {
+        if ([self shouldCollapseAndRemoveCellModel:cellModel isSearching:isSearching]) {
             removableIndexPath = [NSIndexPath indexPathForRow:row inSection:section];
         }
         return removableIndexPath;
