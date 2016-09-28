@@ -109,7 +109,10 @@
 - (void)resetTableModelData;
 - (STACellModel *)cellModelAtIndexPath:(NSIndexPath *)indexPath;
 - (NSIndexPath *)indexPathForCellModel:(STACellModel *)cellModel;
-- (void)collapseExpandedCells;
+/**
+ Updates all cell collapse/expand triangles to their collapsed state.
+ */
+- (void)collapseExpandedCellAppearance;
 - (void)expand:(STACellModel *)model fromRowFromIndexPath:(NSIndexPath *)indexPath;
 - (void)expand:(STACellModel *)model fromSection:(NSInteger)section;
 - (void)collapse:(STACellModel *)model fromSection:(NSInteger)section;

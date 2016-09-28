@@ -103,7 +103,7 @@ typedef void (^ObjectEnumeratorBlock)(id object);
 
 - (void)setIsSearching:(BOOL)isSearching {
     if (isSearching != _isSearching) {
-        [self collapseExpandedCells];
+        [self collapseExpandedCellAppearance];
     }
     _isSearching = isSearching;
 }
@@ -144,7 +144,7 @@ typedef void (^ObjectEnumeratorBlock)(id object);
     return [self.tableModel indexPathForObject:cellModel];
 }
 
-- (void)collapseExpandedCells {
+- (void)collapseExpandedCellAppearance {
     
     for (STACellModel *cellModel in [self.expandedSectionsSet allObjects]) {
         cellModel.isExpanded = NO;
@@ -165,8 +165,6 @@ typedef void (^ObjectEnumeratorBlock)(id object);
 }
 
 - (void)performSearchWithQuery:(NSString *)searchQuery {
-    
-    [self collapseExpandedCells];
     
     STASearchOperation *searchOperation = nil;
     if ([self.delegate respondsToSelector:@selector(searchOperationOnData:withSearchQuery:)]) {
@@ -450,6 +448,7 @@ typedef void (^ObjectEnumeratorBlock)(id object);
         }
     }
     
+    [self collapseExpandedCellAppearance];
     [self performSearchWithQuery:searchString];
 }
 
