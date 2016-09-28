@@ -71,7 +71,13 @@
         return; // collapsing/expansion can't be done on a cell without children
     }
     if (self.cellModel.isExpanded) { // collapse
-        [self.tableModel collapse:self.cellModel fromSection:self.section];
+        if (self.cellModel.tableModel.isSearching) {
+            if (self.cellModel.descendantsInSearchResults < self.cellModel.children.count) {
+                [self.tableModel collapse:self.cellModel fromSection:self.section];
+            }
+        } else {
+            [self.tableModel collapse:self.cellModel fromSection:self.section];
+        }
     } else { // expand
         [self.tableModel expand:self.cellModel fromSection:self.section];
     }

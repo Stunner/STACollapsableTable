@@ -414,7 +414,13 @@ typedef void (^ObjectEnumeratorBlock)(id object);
         return; // collapsing/expansion can't be done on a cell without children
     }
     if (cellModel.isExpanded) { // collapse
-        [self collapse:cellModel fromIndexPath:indexPath inTableView:tableView animated:YES];
+        if (self.isSearching) {
+            if (cellModel.descendantsInSearchResults < cellModel.children.count) {
+                [self collapse:cellModel fromIndexPath:indexPath inTableView:tableView animated:YES];
+            }
+        } else {
+            [self collapse:cellModel fromIndexPath:indexPath inTableView:tableView animated:YES];
+        }
     } else { // expand
         [self expand:cellModel fromIndexPath:indexPath inTableView:tableView animated:YES];
     }
