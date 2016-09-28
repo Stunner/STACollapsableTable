@@ -33,8 +33,6 @@
     
     self.title = @"STACollapsableTable";
     
-    NSArray *children1 = @[[STATableModelSpecifier createWithTitle:@"sr 3" children:nil userInfo:nil],
-                           [STATableModelSpecifier createWithTitle:@"sr 4" children:nil userInfo:nil]];
     NSArray *ones = @[[STATableModelSpecifier createWithTitle:@"one" children:nil userInfo:nil],
                       [STATableModelSpecifier createWithTitle:@"two" children:nil userInfo:nil],
                       [STATableModelSpecifier createWithTitle:@"three" children:nil userInfo:nil],
@@ -44,6 +42,7 @@
                       [STATableModelSpecifier createWithTitle:@"seven" children:nil userInfo:nil],
                       [STATableModelSpecifier createWithTitle:@"eight" children:nil userInfo:nil],
                       [STATableModelSpecifier createWithTitle:@"nine" children:nil userInfo:nil]];
+    
     NSArray *fifties = @[[STATableModelSpecifier createWithTitle:@"fifty-one" children:nil userInfo:nil],
                          [STATableModelSpecifier createWithTitle:@"fifty-two" children:nil userInfo:nil],
                          [STATableModelSpecifier createWithTitle:@"fifty-three" children:nil userInfo:nil],
@@ -62,6 +61,7 @@
                       [STATableModelSpecifier createWithTitle:@"seventy" children:nil userInfo:nil],
                       [STATableModelSpecifier createWithTitle:@"eighty" children:nil userInfo:nil],
                       [STATableModelSpecifier createWithTitle:@"ninety" children:nil userInfo:nil]];
+    
     NSArray *hundreds = @[[STATableModelSpecifier createWithTitle:@"one-hundred" children:nil userInfo:nil],
                           [STATableModelSpecifier createWithTitle:@"two-hundred" children:nil userInfo:nil],
                           [STATableModelSpecifier createWithTitle:@"three-hundred" children:nil userInfo:nil],
