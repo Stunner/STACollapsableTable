@@ -166,6 +166,8 @@ typedef void (^ObjectEnumeratorBlock)(id object);
 
 - (void)performSearchWithQuery:(NSString *)searchQuery {
     
+    [self collapseExpandedCells];
+    
     STASearchOperation *searchOperation = nil;
     if ([self.delegate respondsToSelector:@selector(searchOperationOnData:withSearchQuery:)]) {
         searchOperation = [self.delegate searchOperationOnData:self.contentsArray withSearchQuery:searchQuery];
