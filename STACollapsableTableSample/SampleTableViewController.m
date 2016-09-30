@@ -75,11 +75,12 @@
                                 [STATableModelSpecifier createWithTitle:@"Tens" children:tens userInfo:nil],
                                 [STATableModelSpecifier createWithTitle:@"Hundreds" children:hundreds userInfo:nil],
                                 [STATableModelSpecifier createWithTitle:@"Empty Category" children:@[] userInfo:nil]];
-    
+    STACollapsableTableModelOptions *options = [STACollapsableTableModelOptions new];
+    options.initiallyCollapsed = YES;
+    options.useTableSections = YES;
     self.tableModel = [[STACollapsableTableModel alloc] initWithContentsArray:sectionedArray
                                                                     tableView:self.tableView
-                                                           initiallyCollapsed:YES
-                                                             useTableSections:YES
+                                                                      options:options
                                                                      delegate:self];
     self.tableView.dataSource = self.tableModel.tableViewDataSource;
     self.tableView.delegate = self.tableModel.tableViewDelegate;

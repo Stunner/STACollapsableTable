@@ -20,12 +20,15 @@ typedef void (^ObjectEnumeratorBlock)(id object);
 
 @interface STACollapsableTableModel () <NITableViewModelDelegate>
 
-@property (nonatomic, assign) BOOL initiallyCollapsed;
+// User specified
+@property (nonatomic, strong, readwrite) STACollapsableTableModelOptions *options;
+@property (nonatomic, strong) UITableView *tableView;
+
 @property (nonatomic, strong) NIMutableTableViewModel *tableModel;
 @property (nonatomic, strong) STATableViewDelegate *tableViewDelegateArbiter;
 
+// Content
 @property (nonatomic, strong) NSMutableSet *expandedSectionsSet;
-@property (nonatomic, strong) UITableView *tableView;
 @property (nonatomic, strong, readwrite) NSArray<STACellModel *> *contentsArray;
 @property (nonatomic, strong, readwrite) NSArray<STACellModel *> *searchContents;
 @property (nonatomic, strong, readwrite) NSArray<STACellModel *> *topLevelObjects;
@@ -46,15 +49,13 @@ typedef void (^ObjectEnumeratorBlock)(id object);
 // designated initializer
 - (instancetype)initWithContentsArray:(NSArray<STATableModelSpecifier *> *)contentsArray
                             tableView:(UITableView *)tableView
-                   initiallyCollapsed:(BOOL)initiallyCollapsed
-                     useTableSections:(BOOL)useTableSections
+                              options:(STACollapsableTableModelOptions *)options
                              delegate:(id<STACollapsableTableModelDelegate, UITableViewDelegate>)delegate
 {
     if (self = [super init]) {
         _tableViewDelegateArbiter = [[STATableViewDelegate alloc] initWithInternalDelegate:self
                                                                           externalDelegate:delegate];
-        _initiallyCollapsed = initiallyCollapsed;
-        _useTableSections = useTableSections;
+        _options = options;
         _delegate = delegate;
         _tableView = tableView;
         _tableModel = [[NIMutableTableViewModel alloc] initWithSectionedArray:nil
@@ -65,28 +66,6 @@ typedef void (^ObjectEnumeratorBlock)(id object);
         _processingOperationsDictionary = [NSMutableDictionary dictionary];
     }
     return self;
-}
-
-- (instancetype)initWithContentsArray:(NSArray<STATableModelSpecifier *> *)contentsArray
-                            tableView:(UITableView *)tableView
-                   initiallyCollapsed:(BOOL)initiallyCollapsed
-                             delegate:(id<STACollapsableTableModelDelegate, UITableViewDelegate>)delegate
-{
-    return [self initWithContentsArray:contentsArray
-                             tableView:tableView
-                    initiallyCollapsed:NO
-                      useTableSections:NO
-                              delegate:delegate];
-}
-
-- (instancetype)initWithContentsArray:(NSArray<STATableModelSpecifier *> *)contentsArray
-                            tableView:(UITableView *)tableView
-                             delegate:(id<STACollapsableTableModelDelegate, UITableViewDelegate>)delegate
-{
-    return [self initWithContentsArray:contentsArray
-                             tableView:tableView
-                    initiallyCollapsed:NO
-                              delegate:delegate];
 }
 
 #pragma mark - Getters
@@ -228,7 +207,7 @@ typedef void (^ObjectEnumeratorBlock)(id object);
  @returns Instance of STACellModel if it is a root model (depth of 0).
  */
 - (STACellModel *)addCellModelToTableModel:(STACellModel *)cellModel {
-    if (self.useTableSections) {
+    if (self.options.useTableSections) {
         if (cellModel.depth == 0) { // root
             [self.tableModel addSectionWithTitle:cellModel.title];
             return cellModel;
@@ -261,7 +240,7 @@ typedef void (^ObjectEnumeratorBlock)(id object);
     if (!cellModel) {
         cellModel = [[STACellModel alloc] initWithModelSpecifier:specifier parent:parent tableModel:tableModel];
     }
-    cellModel.isExpanded = !self.initiallyCollapsed;
+    cellModel.isExpanded = !self.options.initiallyCollapsed;
     return cellModel;
 }
 
@@ -278,7 +257,7 @@ typedef void (^ObjectEnumeratorBlock)(id object);
         if ([object isKindOfClass:[STATableModelSpecifier class]]) {
             block(object);
             // enumerate among descendants if table view is expanded
-            if (!self.initiallyCollapsed) {
+            if (!self.options.initiallyCollapsed) {
                 [self enumerateObjects:((STATableModelSpecifier *)object).children block:block];
             }
         } else {

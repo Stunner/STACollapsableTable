@@ -8,6 +8,7 @@
 
 #import <Foundation/Foundation.h>
 #import <UIKit/UIKit.h>
+#import "STACollapsableTableModelOptions.h"
 
 @class STACellModel;
 @class STACollapsableTableModel;
@@ -65,9 +66,9 @@
  */
 @property (nonatomic, readonly) id tableViewDelegate;
 /**
- Reflects if the table model is set to display all root models (with depth of 0) as section headers.
+ The options object passed in upon initialization, or the one created if no options were specified.
  */
-@property (nonatomic, assign, readonly) BOOL useTableSections;
+@property (nonatomic, strong, readonly) STACollapsableTableModelOptions *options;
 /**
  Array of all contents in the table view model.
  
@@ -92,17 +93,7 @@
 // designated initializer
 - (instancetype)initWithContentsArray:(NSArray<STATableModelSpecifier *> *)contentsArray
                             tableView:(UITableView *)tableView
-                   initiallyCollapsed:(BOOL)initiallyCollapsed
-                     useTableSections:(BOOL)useTableSections
-                             delegate:(id<STACollapsableTableModelDelegate, UITableViewDelegate>)delegate;
-
-- (instancetype)initWithContentsArray:(NSArray<STATableModelSpecifier *> *)contentsArray
-                            tableView:(UITableView *)tableView
-                   initiallyCollapsed:(BOOL)initiallyCollapsed
-                             delegate:(id<STACollapsableTableModelDelegate, UITableViewDelegate>)delegate;
-
-- (instancetype)initWithContentsArray:(NSArray<STATableModelSpecifier *> *)contentsArray
-                            tableView:(UITableView *)tableView
+                              options:(STACollapsableTableModelOptions *)options
                              delegate:(id<STACollapsableTableModelDelegate, UITableViewDelegate>)delegate;
 
 - (void)resetTableWithModelData:(NSArray<STACellModel *> *)contentsArray;

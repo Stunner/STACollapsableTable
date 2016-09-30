@@ -84,7 +84,7 @@
     if ([self.externalDelegate respondsToSelector:@selector(tableView:heightForHeaderInSection:)]) {
         return [self.externalDelegate tableView:tableView heightForHeaderInSection:section];
     }
-    if (self.internalDelegate.useTableSections) {
+    if (self.internalDelegate.options.useTableSections) {
         return 44.0;
     }
     return 0.0;
@@ -111,7 +111,7 @@
     if ([self.externalDelegate respondsToSelector:@selector(tableView:estimatedHeightForHeaderInSection:)]) {
         return [self.externalDelegate tableView:tableView estimatedHeightForHeaderInSection:section];
     }
-    if (self.internalDelegate.useTableSections) {
+    if (self.internalDelegate.options.useTableSections) {
         return 44.0;
     }
     return 0.0;

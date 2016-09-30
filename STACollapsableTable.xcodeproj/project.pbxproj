@@ -31,6 +31,7 @@
 		9376D2911C6C988500FC2782 /* LeafNodeTableViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 9376D2901C6C988500FC2782 /* LeafNodeTableViewCell.m */; };
 		9376D2A41C6F3E2400FC2782 /* STASearchOperation.m in Sources */ = {isa = PBXBuildFile; fileRef = 9376D2A31C6F3E2400FC2782 /* STASearchOperation.m */; };
 		9376D2C61C76F81A00FC2782 /* CustomCellModel.m in Sources */ = {isa = PBXBuildFile; fileRef = 9376D2C51C76F81A00FC2782 /* CustomCellModel.m */; };
+		93A7802F1D9E0D0900FF2776 /* STACollapsableTableModelOptions.m in Sources */ = {isa = PBXBuildFile; fileRef = 93A7802E1D9E0D0900FF2776 /* STACollapsableTableModelOptions.m */; };
 		93D10EA81CF83264005C8676 /* STACollapsableTableModel+Private.m in Sources */ = {isa = PBXBuildFile; fileRef = 93D10EA71CF83264005C8676 /* STACollapsableTableModel+Private.m */; };
 		93F879371CE9025500DEB426 /* CoreFoundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 93F879361CE9025500DEB426 /* CoreFoundation.framework */; };
 /* End PBXBuildFile section */
@@ -89,6 +90,8 @@
 		9376D2A31C6F3E2400FC2782 /* STASearchOperation.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = STASearchOperation.m; sourceTree = "<group>"; };
 		9376D2C41C76F81A00FC2782 /* CustomCellModel.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CustomCellModel.h; sourceTree = "<group>"; };
 		9376D2C51C76F81A00FC2782 /* CustomCellModel.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CustomCellModel.m; sourceTree = "<group>"; };
+		93A7802D1D9E0D0900FF2776 /* STACollapsableTableModelOptions.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = STACollapsableTableModelOptions.h; sourceTree = "<group>"; };
+		93A7802E1D9E0D0900FF2776 /* STACollapsableTableModelOptions.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = STACollapsableTableModelOptions.m; sourceTree = "<group>"; };
 		93D10EA61CF83264005C8676 /* STACollapsableTableModel+Private.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "STACollapsableTableModel+Private.h"; sourceTree = "<group>"; };
 		93D10EA71CF83264005C8676 /* STACollapsableTableModel+Private.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "STACollapsableTableModel+Private.m"; sourceTree = "<group>"; };
 		93F879361CE9025500DEB426 /* CoreFoundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreFoundation.framework; path = System/Library/Frameworks/CoreFoundation.framework; sourceTree = SDKROOT; };
@@ -209,6 +212,8 @@
 				93D10EA71CF83264005C8676 /* STACollapsableTableModel+Private.m */,
 				936CE2831D140C57005FE266 /* NIMutableTableViewModel+STAAdditions.h */,
 				936CE2841D140C57005FE266 /* NIMutableTableViewModel+STAAdditions.m */,
+				93A7802D1D9E0D0900FF2776 /* STACollapsableTableModelOptions.h */,
+				93A7802E1D9E0D0900FF2776 /* STACollapsableTableModelOptions.m */,
 			);
 			path = STACollapsableTable;
 			sourceTree = "<group>";
@@ -441,6 +446,7 @@
 				9376D2871C6A8C3700FC2782 /* SubCollapsableTableViewCell.m in Sources */,
 				9376D2761C65E80000FC2782 /* STATableModelSpecifier.m in Sources */,
 				9376D2911C6C988500FC2782 /* LeafNodeTableViewCell.m in Sources */,
+				93A7802F1D9E0D0900FF2776 /* STACollapsableTableModelOptions.m in Sources */,
 				93D10EA81CF83264005C8676 /* STACollapsableTableModel+Private.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
