@@ -6,10 +6,10 @@
 //  Copyright © 2016 Aaron Jubbal. All rights reserved.
 //
 
-#import "HeaderView.h"
+#import "STAHeaderView.h"
 #import <ReactiveCocoa/ReactiveCocoa.h>
 
-@interface HeaderView ()
+@interface STAHeaderView ()
 
 @property (nonatomic, strong) IBOutlet UIImageView *collapsedStatusImageView;
 @property (nonatomic, strong) IBOutlet UILabel *titleLabel;
@@ -18,15 +18,15 @@
 
 @end
 
-@implementation HeaderView
+@implementation STAHeaderView
 
-+ (HeaderView *)createHeaderInSection:(NSInteger)section
-                            fromModel:(STACellModel *)cellModel
-                           tableModel:(STACollapsableTableModel *)tableModel
-                             userInfo:(NSDictionary *)userInfo
++ (STAHeaderView *)createHeaderInSection:(NSInteger)section
+                               fromModel:(STACellModel *)cellModel
+                              tableModel:(STACollapsableTableModel *)tableModel
+                                userInfo:(NSDictionary *)userInfo
 {
-    NSArray *topLevelObjects = [[NSBundle mainBundle] loadNibNamed:@"HeaderView" owner:self options:nil];
-    HeaderView *headerView = [topLevelObjects objectAtIndex:0];
+    NSArray *topLevelObjects = [[NSBundle mainBundle] loadNibNamed:@"STAHeaderView" owner:self options:nil];
+    STAHeaderView *headerView = [topLevelObjects objectAtIndex:0];
     headerView.section = section;
     headerView.cellModel = cellModel;
     headerView.titleLabel.text = cellModel.title;
