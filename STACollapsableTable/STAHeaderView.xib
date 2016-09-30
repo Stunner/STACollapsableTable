@@ -37,8 +37,8 @@
             <nil key="simulatedStatusBarMetrics"/>
             <freeformSimulatedSizeMetrics key="simulatedDestinationMetrics"/>
             <connections>
-                <outlet property="collapsedStatusImageView" destination="wPa-AW-bLA" id="NuM-oF-bgj"/>
-                <outlet property="titleLabel" destination="2SY-f3-mTU" id="dAg-0J-NHv"/>
+                <outlet property="collapsedStatusImageView" destination="wPa-AW-bLA" id="ynu-6R-OET"/>
+                <outlet property="titleLabel" destination="2SY-f3-mTU" id="Eg9-yG-flL"/>
             </connections>
             <point key="canvasLocation" x="468" y="117.5"/>
         </view>

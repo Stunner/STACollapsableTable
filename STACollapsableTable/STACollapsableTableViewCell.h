@@ -12,9 +12,9 @@
 /**
  Meant to be subclassed and not instantiated directly.
  
- IMPORTANT: Subclass must instantiate instance variables
- `collapsedStatusImageView` and `titleLabel`. Otherwise 
- unexpected behavior will occur.
+ IMPORTANT: Subclass that care to provide a collapsable image view and contain a custom
+ label to hold the title must instantiate and leverage instance variables 
+ `collapsedStatusImageView` and `titleLabel`. Otherwise unexpected behavior will occur.
  */
 @interface STACollapsableTableViewCell : UITableViewCell
 

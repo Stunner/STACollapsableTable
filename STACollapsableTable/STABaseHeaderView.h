@@ -1,15 +1,19 @@
 //
-//  STAHeaderView.h
+//  HeaderView.h
 //  STACollapsableTable
 //
-//  Created by Aaron Jubbal on 9/30/16.
+//  Created by Aaron Jubbal on 5/17/16.
 //  Copyright © 2016 Aaron Jubbal. All rights reserved.
 //
 
 #import <UIKit/UIKit.h>
-#import "STABaseHeaderView.h"
+#import "STACellModel.h"
+#import "STACollapsableTableModel.h"
 
-@interface STAHeaderView : STABaseHeaderView
+@interface STABaseHeaderView : UIView
+
+@property (nonatomic, strong) STACellModel *cellModel;
+@property (nonatomic, assign, readonly) NSInteger section;
 
 + (STABaseHeaderView *)createHeaderInSection:(NSInteger)section
                                    fromModel:(STACellModel *)cellModel
