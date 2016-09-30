@@ -133,6 +133,9 @@
     if ([self.externalDelegate respondsToSelector:@selector(tableView:viewForHeaderInSection:)]) {
         return [self.externalDelegate tableView:tableView viewForHeaderInSection:section];
     }
+    if (self.internalDelegate.options.useTableSections) {
+        return [(id)self.internalDelegate tableView:tableView viewForHeaderInSection:section];
+    }
     return nil;
 }
 
@@ -147,6 +150,7 @@
 // Accessories (disclosures).
 #pragma mark Accessories
 
+// Commented out because this method is deprecated since iOS 3.0
 //- (UITableViewCellAccessoryType)tableView:(UITableView *)tableView accessoryTypeForRowWithIndexPath:(NSIndexPath *)indexPath {
 //    if ([self.externalDelegate respondsToSelector:@selector(tableView:accessoryTypeForRowWithIndexPath:)]) {
 //        return [self.externalDelegate tableView:tableView accessoryTypeForRowWithIndexPath:indexPath];

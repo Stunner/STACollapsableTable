@@ -15,6 +15,7 @@
 #import <ReactiveCocoa/ReactiveCocoa.h>
 #import "STASearchOperation.h"
 #import "NIMutableTableViewModel+STAAdditions.h"
+#import "STAHeaderView.h"
 
 typedef void (^ObjectEnumeratorBlock)(id object);
 
@@ -385,6 +386,16 @@ typedef void (^ObjectEnumeratorBlock)(id object);
 }
 
 #pragma mark - UITableViewDelegate Methods
+
+- (nullable UIView *)tableView:(UITableView *)tableView viewForHeaderInSection:(NSInteger)section {
+    
+    STACellModel *model = [self.topLevelObjects objectAtIndex:section];
+    STAHeaderView *headerView = [STAHeaderView createHeaderInSection:section
+                                                           fromModel:model
+                                                          tableModel:self
+                                                            userInfo:nil];
+    return headerView;
+}
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
     

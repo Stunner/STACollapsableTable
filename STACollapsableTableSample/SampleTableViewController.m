@@ -16,7 +16,6 @@
 #import "SubCollapsableTableViewCell.h"
 #import "LeafNodeTableViewCell.h"
 #import "CustomCellModel.h"
-#import "STAHeaderView.h"
 
 @interface SampleTableViewController () <STACollapsableTableModelDelegate>
 
@@ -124,16 +123,6 @@
 }
 
 #pragma mark - Table View Delegate
-
-- (nullable UIView *)tableView:(UITableView *)tableView viewForHeaderInSection:(NSInteger)section {
-    
-    STACellModel *model = [self.tableModel.topLevelObjects objectAtIndex:section];
-    STAHeaderView *headerView = [STAHeaderView createHeaderInSection:section
-                                                           fromModel:model
-                                                          tableModel:self.tableModel
-                                                            userInfo:nil];
-    return headerView;
-}
 
 - (BOOL)tableView:(UITableView *)tableView shouldHighlightRowAtIndexPath:(NSIndexPath *)indexPath {
     
