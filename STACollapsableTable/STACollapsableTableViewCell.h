@@ -1,5 +1,5 @@
 //
-//  BaseCollapsableTableViewCell.h
+//  STACollapsableTableViewCell.h
 //  STACollapsableTable
 //
 //  Created by Aaron Jubbal on 2/10/16.
@@ -9,7 +9,14 @@
 #import <UIKit/UIKit.h>
 #import "STACellModel.h"
 
-@interface BaseCollapsableTableViewCell : UITableViewCell
+/**
+ Meant to be subclassed and not instantiated directly.
+ 
+ IMPORTANT: Subclass must instantiate instance variables
+ `collapsedStatusImageView` and `titleLabel`. Otherwise 
+ unexpected behavior will occur.
+ */
+@interface STACollapsableTableViewCell : UITableViewCell
 
 @property (nonatomic, strong) STACellModel *cellModel;
 

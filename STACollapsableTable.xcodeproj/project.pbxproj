@@ -27,12 +27,12 @@
 		9376D2831C6A7D6500FC2782 /* CollapsableTableViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 9376D2811C6A7D6500FC2782 /* CollapsableTableViewCell.xib */; };
 		9376D2871C6A8C3700FC2782 /* SubCollapsableTableViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 9376D2851C6A8C3700FC2782 /* SubCollapsableTableViewCell.m */; };
 		9376D2881C6A8C3700FC2782 /* SubCollapsableTableViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 9376D2861C6A8C3700FC2782 /* SubCollapsableTableViewCell.xib */; };
-		9376D28E1C6C513A00FC2782 /* BaseCollapsableTableViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 9376D28D1C6C513A00FC2782 /* BaseCollapsableTableViewCell.m */; };
 		9376D2911C6C988500FC2782 /* LeafNodeTableViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 9376D2901C6C988500FC2782 /* LeafNodeTableViewCell.m */; };
 		9376D2A41C6F3E2400FC2782 /* STASearchOperation.m in Sources */ = {isa = PBXBuildFile; fileRef = 9376D2A31C6F3E2400FC2782 /* STASearchOperation.m */; };
 		9376D2C61C76F81A00FC2782 /* CustomCellModel.m in Sources */ = {isa = PBXBuildFile; fileRef = 9376D2C51C76F81A00FC2782 /* CustomCellModel.m */; };
 		93A7802F1D9E0D0900FF2776 /* STACollapsableTableModelOptions.m in Sources */ = {isa = PBXBuildFile; fileRef = 93A7802E1D9E0D0900FF2776 /* STACollapsableTableModelOptions.m */; };
 		93D10EA81CF83264005C8676 /* STACollapsableTableModel+Private.m in Sources */ = {isa = PBXBuildFile; fileRef = 93D10EA71CF83264005C8676 /* STACollapsableTableModel+Private.m */; };
+		93E699D81D9E6508005D7984 /* STACollapsableTableViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 93E699D71D9E6508005D7984 /* STACollapsableTableViewCell.m */; };
 		93F879371CE9025500DEB426 /* CoreFoundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 93F879361CE9025500DEB426 /* CoreFoundation.framework */; };
 /* End PBXBuildFile section */
 
@@ -81,8 +81,6 @@
 		9376D2841C6A8C3700FC2782 /* SubCollapsableTableViewCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SubCollapsableTableViewCell.h; sourceTree = "<group>"; };
 		9376D2851C6A8C3700FC2782 /* SubCollapsableTableViewCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SubCollapsableTableViewCell.m; sourceTree = "<group>"; };
 		9376D2861C6A8C3700FC2782 /* SubCollapsableTableViewCell.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = SubCollapsableTableViewCell.xib; sourceTree = "<group>"; };
-		9376D28C1C6C513A00FC2782 /* BaseCollapsableTableViewCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = BaseCollapsableTableViewCell.h; sourceTree = "<group>"; };
-		9376D28D1C6C513A00FC2782 /* BaseCollapsableTableViewCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = BaseCollapsableTableViewCell.m; sourceTree = "<group>"; };
 		9376D28F1C6C988500FC2782 /* LeafNodeTableViewCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LeafNodeTableViewCell.h; sourceTree = "<group>"; };
 		9376D2901C6C988500FC2782 /* LeafNodeTableViewCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LeafNodeTableViewCell.m; sourceTree = "<group>"; };
 		9376D29F1C6F3CD300FC2782 /* STACollapsableTable.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = STACollapsableTable.h; sourceTree = "<group>"; };
@@ -94,6 +92,8 @@
 		93A7802E1D9E0D0900FF2776 /* STACollapsableTableModelOptions.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = STACollapsableTableModelOptions.m; sourceTree = "<group>"; };
 		93D10EA61CF83264005C8676 /* STACollapsableTableModel+Private.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "STACollapsableTableModel+Private.h"; sourceTree = "<group>"; };
 		93D10EA71CF83264005C8676 /* STACollapsableTableModel+Private.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "STACollapsableTableModel+Private.m"; sourceTree = "<group>"; };
+		93E699D61D9E6508005D7984 /* STACollapsableTableViewCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = STACollapsableTableViewCell.h; sourceTree = "<group>"; };
+		93E699D71D9E6508005D7984 /* STACollapsableTableViewCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = STACollapsableTableViewCell.m; sourceTree = "<group>"; };
 		93F879361CE9025500DEB426 /* CoreFoundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreFoundation.framework; path = System/Library/Frameworks/CoreFoundation.framework; sourceTree = SDKROOT; };
 		B2040277D4AE0B5E334AF8D1 /* libPods-STACollapsableTable.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-STACollapsableTable.a"; sourceTree = BUILT_PRODUCTS_DIR; };
 		DF3635460DA1C82943CC2178 /* Pods-STACollapsableTable.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-STACollapsableTable.debug.xcconfig"; path = "Pods/Target Support Files/Pods-STACollapsableTable/Pods-STACollapsableTable.debug.xcconfig"; sourceTree = "<group>"; };
@@ -181,8 +181,6 @@
 				9376D2841C6A8C3700FC2782 /* SubCollapsableTableViewCell.h */,
 				9376D2851C6A8C3700FC2782 /* SubCollapsableTableViewCell.m */,
 				9376D2861C6A8C3700FC2782 /* SubCollapsableTableViewCell.xib */,
-				9376D28C1C6C513A00FC2782 /* BaseCollapsableTableViewCell.h */,
-				9376D28D1C6C513A00FC2782 /* BaseCollapsableTableViewCell.m */,
 				9376D28F1C6C988500FC2782 /* LeafNodeTableViewCell.h */,
 				9376D2901C6C988500FC2782 /* LeafNodeTableViewCell.m */,
 				9376D2C41C76F81A00FC2782 /* CustomCellModel.h */,
@@ -194,6 +192,8 @@
 		9376D25F1C64A05800FC2782 /* STACollapsableTable */ = {
 			isa = PBXGroup;
 			children = (
+				93E699D61D9E6508005D7984 /* STACollapsableTableViewCell.h */,
+				93E699D71D9E6508005D7984 /* STACollapsableTableViewCell.m */,
 				935412311D9E4931001BE37C /* STAHeaderView.h */,
 				935412321D9E4931001BE37C /* STAHeaderView.m */,
 				935412331D9E4931001BE37C /* STAHeaderView.xib */,
@@ -436,7 +436,6 @@
 				9376D2821C6A7D6500FC2782 /* CollapsableTableViewCell.m in Sources */,
 				9376D26B1C64AD8900FC2782 /* STACollapsableTableModel.m in Sources */,
 				9376D2C61C76F81A00FC2782 /* CustomCellModel.m in Sources */,
-				9376D28E1C6C513A00FC2782 /* BaseCollapsableTableViewCell.m in Sources */,
 				9376D25C1C649FB500FC2782 /* main.m in Sources */,
 				936CE2851D140C57005FE266 /* NIMutableTableViewModel+STAAdditions.m in Sources */,
 				9376D25D1C649FB500FC2782 /* SampleTableViewController.m in Sources */,
@@ -444,6 +443,7 @@
 				9376D2571C649FB500FC2782 /* AppDelegate.m in Sources */,
 				9376D2871C6A8C3700FC2782 /* SubCollapsableTableViewCell.m in Sources */,
 				935412341D9E4931001BE37C /* STAHeaderView.m in Sources */,
+				93E699D81D9E6508005D7984 /* STACollapsableTableViewCell.m in Sources */,
 				9376D2761C65E80000FC2782 /* STATableModelSpecifier.m in Sources */,
 				9376D2911C6C988500FC2782 /* LeafNodeTableViewCell.m in Sources */,
 				93A7802F1D9E0D0900FF2776 /* STACollapsableTableModelOptions.m in Sources */,

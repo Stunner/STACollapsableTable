@@ -1,23 +1,23 @@
 //
-//  BaseCollapsableTableViewCell.m
+//  STACollapsableTableViewCell.m
 //  STACollapsableTable
 //
 //  Created by Aaron Jubbal on 2/10/16.
 //  Copyright © 2016 Aaron Jubbal. All rights reserved.
 //
 
-#import "BaseCollapsableTableViewCell.h"
+#import "STACollapsableTableViewCell.h"
 #import "STACellModel.h"
 #import <ReactiveCocoa/ReactiveCocoa.h>
 
-@interface BaseCollapsableTableViewCell ()
+@interface STACollapsableTableViewCell ()
 
 @property (nonatomic, strong) UIImageView *collapsedStatusImageView;
 @property (nonatomic, strong) UILabel *titleLabel;
 
 @end
 
-@implementation BaseCollapsableTableViewCell
+@implementation STACollapsableTableViewCell
 
 + (UITableViewCell *)createFromModel:(STACellModel *)cellModel
                       reusableCellID:(NSString *)reusableCellID
@@ -25,7 +25,7 @@
                          inTableView:(UITableView *)tableView
                             userInfo:(NSDictionary *)userInfo
 {
-    BaseCollapsableTableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:reusableCellID];
+    STACollapsableTableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:reusableCellID];
     if (nil == cell) {
         [tableView registerNib:[UINib nibWithNibName:nibName bundle:nil]
         forCellReuseIdentifier:reusableCellID];
@@ -44,9 +44,9 @@
                          inTableView:(UITableView *)tableView
                             userInfo:(NSDictionary *)userInfo
 {
-    BaseCollapsableTableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:reusableCellID];
+    STACollapsableTableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:reusableCellID];
     if (nil == cell) {
-        cell = [(BaseCollapsableTableViewCell *)[NSClassFromString(className) alloc] initWithStyle:UITableViewCellStyleDefault
+        cell = [(STACollapsableTableViewCell *)[NSClassFromString(className) alloc] initWithStyle:UITableViewCellStyleDefault
                                                                                    reuseIdentifier:reusableCellID];
     }
     
@@ -91,18 +91,6 @@
               [self cellTapped];
           }
       }];
-}
-
-- (void)awakeFromNib {
-    [super awakeFromNib];
-    
-    // Initialization code
-}
-
-- (void)setSelected:(BOOL)selected animated:(BOOL)animated {
-    [super setSelected:selected animated:animated];
-
-    // Configure the view for the selected state
 }
 
 - (void)isSearchResultStateChanged:(BOOL)isSearchResult {

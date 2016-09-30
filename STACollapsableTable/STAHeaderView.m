@@ -46,6 +46,8 @@
     return self;
 }
 
+#pragma mark - Setters
+
 - (void)setCellModel:(STACellModel *)cellModel {
     _cellModel = cellModel;
     
@@ -104,13 +106,5 @@
         self.collapsedStatusImageView.transform = CGAffineTransformMakeRotation(0);
     }
 }
-
-/*
-// Only override drawRect: if you perform custom drawing.
-// An empty implementation adversely affects performance during animation.
-- (void)drawRect:(CGRect)rect {
-    // Drawing code
-}
-*/
 
 @end
