@@ -33,6 +33,10 @@
     headerView.titleLabel.text = cellModel.title;
     headerView.tableModel = tableModel;
     
+    [headerView isSearchResultStateChanged:cellModel.isSearchResult];
+    if (!tableModel.isSearching) {
+        cellModel.isSearchResult = YES;
+    }
     return headerView;
 }
 
@@ -68,6 +72,30 @@
     [self isSearchResultStateChanged:self.cellModel.isSearchResult];
 }
 
+#pragma mark - Public Methods
+
+- (void)headerTapped {
+    
+    [UIView animateWithDuration:0.33 animations:^{
+        [self updateRotatedImageViewStatus];
+    } completion:^(BOOL finished) {
+        if (finished) {
+            [self updateRotatedImageViewStatus];
+        }
+    }];
+}
+
+- (void)updateRotatedImageViewStatus {
+    
+    if (self.cellModel.isExpanded) {
+        self.collapsedStatusImageView.transform = CGAffineTransformMakeRotation(M_PI / 2);
+    } else {
+        self.collapsedStatusImageView.transform = CGAffineTransformMakeRotation(0);
+    }
+}
+
+#pragma mark - Private Methods
+
 - (void)tapGestureHandler:(UITapGestureRecognizer *)gesture {
     
     if (!self.cellModel.children.count) {
@@ -84,27 +112,13 @@
     } else { // expand
         [self.tableModel expand:self.cellModel fromSection:self.section];
     }
-    [UIView animateWithDuration:0.33 animations:^{
-        [self updateRotatedImageViewStatus];
-    } completion:^(BOOL finished) {
-        if (finished) {
-            [self updateRotatedImageViewStatus];
-        }
-    }];
+    
+    [self headerTapped];
 }
 
 - (void)isSearchResultStateChanged:(BOOL)isSearchResult {
     if (self.titleLabel) {
         self.titleLabel.alpha = isSearchResult ? 1.0 : 0.5;
-    }
-}
-
-- (void)updateRotatedImageViewStatus {
-    
-    if (self.cellModel.isExpanded) {
-        self.collapsedStatusImageView.transform = CGAffineTransformMakeRotation(M_PI / 2);
-    } else {
-        self.collapsedStatusImageView.transform = CGAffineTransformMakeRotation(0);
     }
 }
 

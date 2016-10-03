@@ -21,4 +21,8 @@
                                      nibName:(NSString *)nibName
                                     userInfo:(NSDictionary *)userInfo;
 
+- (void)headerTapped;
+
+- (void)updateRotatedImageViewStatus;
+
 @end
