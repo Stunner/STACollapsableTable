@@ -17,6 +17,9 @@
 
 @implementation STAHeaderView
 
+@dynamic collapsedStatusImageView;
+@dynamic titleLabel;
+
 + (STAHeaderView *)createHeaderInSection:(NSInteger)section
                                    fromModel:(STACellModel *)cellModel
                                   tableModel:(STACollapsableTableModel *)tableModel

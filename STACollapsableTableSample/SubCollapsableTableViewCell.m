@@ -17,6 +17,9 @@
 
 @implementation SubCollapsableTableViewCell
 
+@dynamic collapsedStatusImageView;
+@dynamic titleLabel;
+
 + (SubCollapsableTableViewCell *)createFromModel:(STACellModel *)cellModel
                                      inTableView:(UITableView *)tableView
                                         userInfo:(NSDictionary *)userInfo
