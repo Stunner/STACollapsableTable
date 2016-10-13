@@ -245,6 +245,14 @@ typedef void (^ObjectEnumeratorBlock)(id object);
     return cellModel;
 }
 
+- (void)cellModelExpanded:(STACellModel *)cellModel {
+    [self.expandedSectionsSet addObject:cellModel];
+}
+
+- (void)cellModelCollapsed:(STACellModel *)cellModel {
+    [self.expandedSectionsSet removeObject:cellModel];
+}
+
 - (void)parseContents:(NSArray<STATableModelSpecifier *> *)parsableContents {
     self.contentsArray = [self parseModelSpecifiers:parsableContents];
     [self addObjectsFromArrayToTableModel:self.contentsArray];

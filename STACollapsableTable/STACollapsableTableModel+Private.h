@@ -16,5 +16,7 @@
 - (STACellModel *)cellModelForSpecifier:(STATableModelSpecifier *)specifier
                                  parent:(STACellModel *)parent
                              tableModel:(STACollapsableTableModel *)tableModel;
+- (void)cellModelExpanded:(STACellModel *)cellModel;
+- (void)cellModelCollapsed:(STACellModel *)cellModel;
 
 @end

@@ -187,8 +187,10 @@ typedef NSIndexPath * (^ObjectEnumeratorBlock)(STACellModel *cellModel, NSUInteg
     // Update collapse/expand triangles according with how many children are displaying
     if (self.descendantsInSearchResults == self.children.count) {
         self.isExpanded = YES;
+        [self.tableModel cellModelExpanded:self];
     } else {
         self.isExpanded = NO;
+        [self.tableModel cellModelCollapsed:self];
     }
     
     return allSearchResults;
