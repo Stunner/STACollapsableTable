@@ -20,17 +20,17 @@
 
 @property (nonatomic, strong) STACellModel *cellModel;
 
-+ (UITableViewCell *)createFromModel:(STACellModel *)cellModel
-                      reusableCellID:(NSString *)reusableCellID
-                             nibName:(NSString *)nibName
-                         inTableView:(UITableView *)tableView
-                            userInfo:(NSDictionary *)userInfo;
++ (instancetype)createFromModel:(STACellModel *)cellModel
+                 reusableCellID:(NSString *)reusableCellID
+                        nibName:(NSString *)nibName
+                    inTableView:(UITableView *)tableView
+                       userInfo:(NSDictionary *)userInfo;
 
-+ (UITableViewCell *)createFromModel:(STACellModel *)cellModel
-                      reusableCellID:(NSString *)reusableCellID
-                           className:(NSString *)className
-                         inTableView:(UITableView *)tableView
-                            userInfo:(NSDictionary *)userInfo;
++ (instancetype)createFromModel:(STACellModel *)cellModel
+                 reusableCellID:(NSString *)reusableCellID
+                      className:(NSString *)className
+                    inTableView:(UITableView *)tableView
+                       userInfo:(NSDictionary *)userInfo;
 
 - (void)cellTapped;
 

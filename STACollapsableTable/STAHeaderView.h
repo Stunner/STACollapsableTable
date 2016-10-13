@@ -11,10 +11,10 @@
 
 @interface STAHeaderView : STABaseHeaderView
 
-+ (STABaseHeaderView *)createHeaderInSection:(NSInteger)section
-                                   fromModel:(STACellModel *)cellModel
-                                  tableModel:(STACollapsableTableModel *)tableModel
-                                     nibName:(NSString *)nibName
-                                    userInfo:(NSDictionary *)userInfo;
++ (instancetype)createHeaderInSection:(NSInteger)section
+                            fromModel:(STACellModel *)cellModel
+                           tableModel:(STACollapsableTableModel *)tableModel
+                              nibName:(NSString *)nibName
+                             userInfo:(NSDictionary *)userInfo;
 
 @end

@@ -20,11 +20,11 @@
 @dynamic collapsedStatusImageView;
 @dynamic titleLabel;
 
-+ (STAHeaderView *)createHeaderInSection:(NSInteger)section
-                                   fromModel:(STACellModel *)cellModel
-                                  tableModel:(STACollapsableTableModel *)tableModel
-                                     nibName:(NSString *)nibName
-                                    userInfo:(NSDictionary *)userInfo
++ (instancetype)createHeaderInSection:(NSInteger)section
+                            fromModel:(STACellModel *)cellModel
+                           tableModel:(STACollapsableTableModel *)tableModel
+                              nibName:(NSString *)nibName
+                             userInfo:(NSDictionary *)userInfo
 {
     STAHeaderView *view = (STAHeaderView *)[super createHeaderInSection:section
                                                               fromModel:cellModel

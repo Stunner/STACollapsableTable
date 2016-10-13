@@ -15,11 +15,11 @@
 @property (nonatomic, strong) STACellModel *cellModel;
 @property (nonatomic, assign, readonly) NSInteger section;
 
-+ (STABaseHeaderView *)createHeaderInSection:(NSInteger)section
-                                   fromModel:(STACellModel *)cellModel
-                                  tableModel:(STACollapsableTableModel *)tableModel
-                                     nibName:(NSString *)nibName
-                                    userInfo:(NSDictionary *)userInfo;
++ (instancetype)createHeaderInSection:(NSInteger)section
+                            fromModel:(STACellModel *)cellModel
+                           tableModel:(STACollapsableTableModel *)tableModel
+                              nibName:(NSString *)nibName
+                             userInfo:(NSDictionary *)userInfo;
 
 - (void)headerTapped;
 

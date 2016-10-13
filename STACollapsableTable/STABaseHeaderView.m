@@ -20,11 +20,11 @@
 
 @implementation STABaseHeaderView
 
-+ (STABaseHeaderView *)createHeaderInSection:(NSInteger)section
-                                   fromModel:(STACellModel *)cellModel
-                                  tableModel:(STACollapsableTableModel *)tableModel
-                                     nibName:(NSString *)nibName
-                                    userInfo:(NSDictionary *)userInfo
++ (instancetype)createHeaderInSection:(NSInteger)section
+                            fromModel:(STACellModel *)cellModel
+                           tableModel:(STACollapsableTableModel *)tableModel
+                              nibName:(NSString *)nibName
+                             userInfo:(NSDictionary *)userInfo
 {
     NSArray *topLevelObjects = [[NSBundle mainBundle] loadNibNamed:nibName owner:self options:nil];
     STABaseHeaderView *headerView = [topLevelObjects objectAtIndex:0];
