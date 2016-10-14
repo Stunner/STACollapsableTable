@@ -61,21 +61,17 @@
  */
 - (void)addParent:(STACellModel *)cellModel;
 
-- (NSArray *)indexPathsToAddForExpansionFromIndexPath:(NSIndexPath *)indexPath
-                                          isSearching:(BOOL)isSearching;
+- (NSArray *)indexPathsToAddForExpansionFromIndexPath:(NSIndexPath *)indexPath;
 
-- (NSArray *)indexPathsToAddForExpansionFromSection:(NSInteger)section
-                                        isSearching:(BOOL)isSearching;
+- (NSArray *)indexPathsToAddForExpansionFromSection:(NSInteger)section;
 
-- (NSArray *)indexPathsToRemoveForCollapseFromIndexPath:(NSIndexPath *)indexPath
-                                            isSearching:(BOOL)isSearching;
+- (NSArray *)indexPathsToRemoveForCollapseFromIndexPath:(NSIndexPath *)indexPath;
 
-- (NSArray *)indexPathsToRemoveForCollapseFromSection:(NSInteger)section
-                                          isSearching:(BOOL)isSearching;
+- (NSArray *)indexPathsToRemoveForCollapseFromSection:(NSInteger)section;
 
 - (NSArray *)filterContentsWithSearchString:(NSString *)searchString;
 
-- (BOOL)shouldExpandAndIncludeCellModel:(STACellModel *)cellModel isSearching:(BOOL)isSearching;
-- (BOOL)shouldCollapseAndRemoveCellModel:(STACellModel *)cellModel isSearching:(BOOL)isSearching;
+- (BOOL)shouldExpandAndIncludeCellModel:(STACellModel *)cellModel;
+- (BOOL)shouldCollapseAndRemoveCellModel:(STACellModel *)cellModel;
 
 @end

@@ -121,36 +121,28 @@ typedef NSIndexPath * (^ObjectEnumeratorBlock)(STACellModel *cellModel, NSUInteg
     [self.parents addObject:cellModel];
 }
 
-- (NSArray *)indexPathsToAddForExpansionFromIndexPath:(NSIndexPath *)indexPath
-                                          isSearching:(BOOL)isSearching
-{
+- (NSArray *)indexPathsToAddForExpansionFromIndexPath:(NSIndexPath *)indexPath {
     NSUInteger offsetCount = 1;
     NSUInteger rowsCounter = indexPath.row;
-    return [self indexPathsToAddFromOffset:offsetCount rowsCounter:rowsCounter whileSearching:isSearching];
+    return [self indexPathsToAddFromOffset:offsetCount rowsCounter:rowsCounter];
 }
 
-- (NSArray *)indexPathsToAddForExpansionFromSection:(NSInteger)section
-                                        isSearching:(BOOL)isSearching
-{
+- (NSArray *)indexPathsToAddForExpansionFromSection:(NSInteger)section {
     NSUInteger offsetCount = 0;
     NSUInteger rowsCounter = 0;
-    return [self indexPathsToAddFromOffset:offsetCount rowsCounter:rowsCounter whileSearching:isSearching];
+    return [self indexPathsToAddFromOffset:offsetCount rowsCounter:rowsCounter];
 }
 
-- (NSArray *)indexPathsToRemoveForCollapseFromIndexPath:(NSIndexPath *)indexPath
-                                            isSearching:(BOOL)isSearching
-{
+- (NSArray *)indexPathsToRemoveForCollapseFromIndexPath:(NSIndexPath *)indexPath {
     self.indexPath = indexPath;
     
-    return [self indexPathsToBeRemovedFromSection:indexPath.section isSearching:isSearching];
+    return [self indexPathsToBeRemovedFromSection:indexPath.section];
 }
 
-- (NSArray *)indexPathsToRemoveForCollapseFromSection:(NSInteger)section
-                                          isSearching:(BOOL)isSearching
-{
+- (NSArray *)indexPathsToRemoveForCollapseFromSection:(NSInteger)section {
     self.section = section;
     
-    return [self indexPathsToBeRemovedFromSection:section isSearching:isSearching];
+    return [self indexPathsToBeRemovedFromSection:section];
 }
 
 - (NSArray *)filterContentsWithSearchString:(NSString *)searchString {
@@ -208,8 +200,8 @@ typedef NSIndexPath * (^ObjectEnumeratorBlock)(STACellModel *cellModel, NSUInteg
     }
 }
 
-- (BOOL)shouldExpandAndIncludeCellModel:(STACellModel *)cellModel isSearching:(BOOL)isSearching {
-    if (isSearching) {
+- (BOOL)shouldExpandAndIncludeCellModel:(STACellModel *)cellModel {
+    if (self.tableModel.isSearching) {
         if (!cellModel.isSearchResult && !cellModel.descendantsInSearchResults) {
             return YES;
         } else {
@@ -221,8 +213,8 @@ typedef NSIndexPath * (^ObjectEnumeratorBlock)(STACellModel *cellModel, NSUInteg
     return NO;
 }
 
-- (BOOL)shouldCollapseAndRemoveCellModel:(STACellModel *)cellModel isSearching:(BOOL)isSearching {
-    if (isSearching) {
+- (BOOL)shouldCollapseAndRemoveCellModel:(STACellModel *)cellModel {
+    if (self.tableModel.isSearching) {
         if (!cellModel.isSearchResult && !cellModel.descendantsInSearchResults) {
             return YES;
         }
@@ -234,10 +226,10 @@ typedef NSIndexPath * (^ObjectEnumeratorBlock)(STACellModel *cellModel, NSUInteg
 
 #pragma mark - Helper Methods
 
-- (NSArray *)indexPathsToAddFromOffset:(NSUInteger)offset rowsCounter:(NSUInteger)rowsCounter whileSearching:(BOOL)isSearching {
+- (NSArray *)indexPathsToAddFromOffset:(NSUInteger)offset rowsCounter:(NSUInteger)rowsCounter {
     NSMutableArray *addedIndexPaths = [NSMutableArray array];
     for (STACellModel *cellModel in self.children) {
-        if ([self shouldExpandAndIncludeCellModel:cellModel isSearching:isSearching]) {
+        if ([self shouldExpandAndIncludeCellModel:cellModel]) {
             [addedIndexPaths addObject:@{@"container" : cellModel,
                                          @"index" : @(rowsCounter + offset)}];
         } else {
@@ -252,12 +244,10 @@ typedef NSIndexPath * (^ObjectEnumeratorBlock)(STACellModel *cellModel, NSUInteg
     return addedIndexPaths;
 }
 
-- (NSArray *)indexPathsToBeRemovedFromSection:(NSInteger)section
-                                  isSearching:(BOOL)isSearching
-{
+- (NSArray *)indexPathsToBeRemovedFromSection:(NSInteger)section {
     return [self enumerateObjectsToBeRemoved:^NSIndexPath * (STACellModel *cellModel, NSUInteger row) {
         NSIndexPath *removableIndexPath = nil;
-        if ([self shouldCollapseAndRemoveCellModel:cellModel isSearching:isSearching]) {
+        if ([self shouldCollapseAndRemoveCellModel:cellModel]) {
             removableIndexPath = [NSIndexPath indexPathForRow:row inSection:section];
         }
         return removableIndexPath;

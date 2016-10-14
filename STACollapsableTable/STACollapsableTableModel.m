@@ -285,8 +285,7 @@ typedef void (^ObjectEnumeratorBlock)(id object);
     
     if (cellModel.isExpanded) return;
     
-    NSArray<NSDictionary *> *indexPathsToAdd = [cellModel indexPathsToAddForExpansionFromIndexPath:indexPath
-                                                                                       isSearching:self.isSearching];
+    NSArray<NSDictionary *> *indexPathsToAdd = [cellModel indexPathsToAddForExpansionFromIndexPath:indexPath];
     NSMutableArray *addedIndexPaths = [NSMutableArray arrayWithCapacity:indexPathsToAdd.count];
     for (NSDictionary *dict in indexPathsToAdd) {
         NSUInteger index = [dict[@"index"] integerValue];
@@ -317,8 +316,7 @@ typedef void (^ObjectEnumeratorBlock)(id object);
     
     if (cellModel.isExpanded) return;
     
-    NSArray<NSDictionary *> *indexPathsToAdd = [cellModel indexPathsToAddForExpansionFromSection:section
-                                                                                     isSearching:self.isSearching];
+    NSArray<NSDictionary *> *indexPathsToAdd = [cellModel indexPathsToAddForExpansionFromSection:section];
     
     NSMutableArray *addedIndexPaths = [NSMutableArray arrayWithCapacity:indexPathsToAdd.count];
     for (NSDictionary *dict in indexPathsToAdd) {
@@ -349,8 +347,7 @@ typedef void (^ObjectEnumeratorBlock)(id object);
 - (void)collapse:(STACellModel *)cellModel fromIndexPath:(NSIndexPath *)indexPath inTableView:(UITableView *)tableView animated:(BOOL)animated {
     
     NSMutableArray *removableIndexPaths = [NSMutableArray arrayWithCapacity:10];
-    [removableIndexPaths addObjectsFromArray:[cellModel indexPathsToRemoveForCollapseFromIndexPath:indexPath
-                                                                                       isSearching:self.isSearching]];
+    [removableIndexPaths addObjectsFromArray:[cellModel indexPathsToRemoveForCollapseFromIndexPath:indexPath]];
     for (NSInteger i = removableIndexPaths.count - 1; i >= 0; i--) {
         NSIndexPath *removedIndexPath = removableIndexPaths[i];
         [self.tableModel removeObjectAtIndexPath:removedIndexPath];
@@ -366,8 +363,7 @@ typedef void (^ObjectEnumeratorBlock)(id object);
 - (void)collapse:(STACellModel *)cellModel fromSection:(NSInteger)section inTableView:(UITableView *)tableView animated:(BOOL)animated {
     
     NSMutableArray *removableIndexPaths = [NSMutableArray arrayWithCapacity:10];
-    [removableIndexPaths addObjectsFromArray:[cellModel indexPathsToRemoveForCollapseFromSection:section
-                                                                                       isSearching:self.isSearching]];
+    [removableIndexPaths addObjectsFromArray:[cellModel indexPathsToRemoveForCollapseFromSection:section]];
     for (NSInteger i = removableIndexPaths.count - 1; i >= 0; i--) {
         NSIndexPath *removedIndexPath = removableIndexPaths[i];
         [self.tableModel removeObjectAtIndexPath:removedIndexPath];
