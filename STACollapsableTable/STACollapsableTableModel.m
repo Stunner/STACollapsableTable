@@ -140,6 +140,10 @@ typedef void (^ObjectEnumeratorBlock)(id object);
     [self expand:model fromSection:section inTableView:self.tableView animated:YES];
 }
 
+- (void)collapse:(STACellModel *)model fromRowFromIndexPath:(NSIndexPath *)indexPath {
+    [self collapse:model fromIndexPath:indexPath inTableView:self.tableView animated:YES];
+}
+
 - (void)collapse:(STACellModel *)model fromSection:(NSInteger)section {
     [self collapse:model fromSection:section inTableView:self.tableView animated:YES];
 }
@@ -448,7 +452,6 @@ typedef void (^ObjectEnumeratorBlock)(id object);
             return;
         }
     }
-    
     [self collapseExpandedCellAppearance];
     [self performSearchWithQuery:searchString];
 }

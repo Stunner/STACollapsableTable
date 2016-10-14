@@ -101,16 +101,17 @@
     if (!self.cellModel.children.count) {
         return; // collapsing/expansion can't be done on a cell without children
     }
+    NSIndexPath *indexPath = [NSIndexPath indexPathForRow:NSNotFound inSection:self.section];
     if (self.cellModel.isExpanded) { // collapse
         if (self.cellModel.tableModel.isSearching) {
             if (self.cellModel.descendantsInSearchResults < self.cellModel.children.count) {
-                [self.tableModel collapse:self.cellModel fromSection:self.section];
+                [self.tableModel collapse:self.cellModel fromRowFromIndexPath:indexPath];
             }
         } else {
-            [self.tableModel collapse:self.cellModel fromSection:self.section];
+            [self.tableModel collapse:self.cellModel fromRowFromIndexPath:indexPath];
         }
     } else { // expand
-        [self.tableModel expand:self.cellModel fromSection:self.section];
+        [self.tableModel expand:self.cellModel fromRowFromIndexPath:indexPath];
     }
     
     [self headerTapped];

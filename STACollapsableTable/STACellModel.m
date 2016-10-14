@@ -122,8 +122,13 @@ typedef NSIndexPath * (^ObjectEnumeratorBlock)(STACellModel *cellModel, NSUInteg
 }
 
 - (NSArray *)indexPathsToAddForExpansionFromIndexPath:(NSIndexPath *)indexPath {
+    // indexPath specifies row
     NSUInteger offsetCount = 1;
     NSUInteger rowsCounter = indexPath.row;
+    if (indexPath.row == NSNotFound) { // indexPath specifies section
+        offsetCount = 0;
+        rowsCounter = 0;
+    }
     return [self indexPathsToAddFromOffset:offsetCount rowsCounter:rowsCounter];
 }
 
@@ -287,13 +292,13 @@ typedef NSIndexPath * (^ObjectEnumeratorBlock)(STACellModel *cellModel, NSUInteg
     
     NSMutableArray *indexPathsToRemoveArray = [NSMutableArray arrayWithCapacity:self.displayedDescendantsCount];
     
-    NSUInteger r = self.indexPath.row;
+    NSUInteger r = (self.indexPath.row != NSNotFound) ? self.indexPath.row : 0;
     NSInteger i = 1;
     STACellModel *cellModel = [self.tableModel cellModelAtIndexPath:[NSIndexPath indexPathForRow:r + i inSection:self.indexPath.section]];
-    if (self.section != -1) {
+    if (self.indexPath.row == NSNotFound) {
         r = 0;
         i = 0; // if cell model represents a header, there is no need to skip the first row
-        cellModel = [self.tableModel cellModelAtIndexPath:[NSIndexPath indexPathForRow:r + i inSection:self.section]];
+        cellModel = [self.tableModel cellModelAtIndexPath:[NSIndexPath indexPathForRow:r + i inSection:self.indexPath.section]];
     }
     while (cellModel && [self hasDescendant:cellModel]) {
         NSIndexPath *removableIndexPath = block(cellModel, r + i);
@@ -302,7 +307,7 @@ typedef NSIndexPath * (^ObjectEnumeratorBlock)(STACellModel *cellModel, NSUInteg
         }
         i++;
         if (self.section != -1) {
-            cellModel = [self.tableModel cellModelAtIndexPath:[NSIndexPath indexPathForRow:r + i inSection:self.section]];
+            cellModel = [self.tableModel cellModelAtIndexPath:[NSIndexPath indexPathForRow:r + i inSection:self.indexPath.section]];
         } else {
             cellModel = [self.tableModel cellModelAtIndexPath:[NSIndexPath indexPathForRow:r + i inSection:self.indexPath.section]];
         }
