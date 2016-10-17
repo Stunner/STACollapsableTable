@@ -105,9 +105,7 @@
  */
 - (void)collapseExpandedCellAppearance;
 - (void)expand:(STACellModel *)model fromRowFromIndexPath:(NSIndexPath *)indexPath;
-- (void)expand:(STACellModel *)model fromSection:(NSInteger)section;
 - (void)collapse:(STACellModel *)model fromRowFromIndexPath:(NSIndexPath *)indexPath;
-- (void)collapse:(STACellModel *)model fromSection:(NSInteger)section;
 - (void)performSearchWithQuery:(NSString *)searchQuery;
 - (NSArray<STACellModel *> *)parseModelSpecifiers:(NSArray <STATableModelSpecifier *>*)modelSpecifiers;
 

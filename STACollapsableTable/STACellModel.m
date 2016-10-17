@@ -19,7 +19,6 @@ typedef NSIndexPath * (^ObjectEnumeratorBlock)(STACellModel *cellModel, NSUInteg
 @property (atomic, strong) NSCountedSet *descendantSearchResultSet;
 @property (nonatomic, assign, readonly) NSUInteger displayedDescendantsCount;
 
-@property (nonatomic, assign) NSInteger section;
 @property (nonatomic, weak) NSIndexPath *indexPath;
 @property (nonatomic, weak, readwrite) STACollapsableTableModel *tableModel;
 
@@ -37,7 +36,6 @@ typedef NSIndexPath * (^ObjectEnumeratorBlock)(STACellModel *cellModel, NSUInteg
         _isExpanded = NO;
         _isSearchResult = YES; // make cells show up as black instead of gray initially
         _tableModel = tableModel;
-        _section = -1;
         
         if (parent) {
             _parents = [NSMutableSet setWithObject:parent];
@@ -132,22 +130,10 @@ typedef NSIndexPath * (^ObjectEnumeratorBlock)(STACellModel *cellModel, NSUInteg
     return [self indexPathsToAddFromOffset:offsetCount rowsCounter:rowsCounter];
 }
 
-- (NSArray *)indexPathsToAddForExpansionFromSection:(NSInteger)section {
-    NSUInteger offsetCount = 0;
-    NSUInteger rowsCounter = 0;
-    return [self indexPathsToAddFromOffset:offsetCount rowsCounter:rowsCounter];
-}
-
 - (NSArray *)indexPathsToRemoveForCollapseFromIndexPath:(NSIndexPath *)indexPath {
     self.indexPath = indexPath;
     
     return [self indexPathsToBeRemovedFromSection:indexPath.section];
-}
-
-- (NSArray *)indexPathsToRemoveForCollapseFromSection:(NSInteger)section {
-    self.section = section;
-    
-    return [self indexPathsToBeRemovedFromSection:section];
 }
 
 - (NSArray *)filterContentsWithSearchString:(NSString *)searchString {
@@ -306,11 +292,7 @@ typedef NSIndexPath * (^ObjectEnumeratorBlock)(STACellModel *cellModel, NSUInteg
             [indexPathsToRemoveArray addObject:removableIndexPath];
         }
         i++;
-        if (self.section != -1) {
-            cellModel = [self.tableModel cellModelAtIndexPath:[NSIndexPath indexPathForRow:r + i inSection:self.indexPath.section]];
-        } else {
-            cellModel = [self.tableModel cellModelAtIndexPath:[NSIndexPath indexPathForRow:r + i inSection:self.indexPath.section]];
-        }
+        cellModel = [self.tableModel cellModelAtIndexPath:[NSIndexPath indexPathForRow:r + i inSection:self.indexPath.section]];
     }
     return indexPathsToRemoveArray;
 }

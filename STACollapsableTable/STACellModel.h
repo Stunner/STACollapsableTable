@@ -63,11 +63,7 @@
 
 - (NSArray *)indexPathsToAddForExpansionFromIndexPath:(NSIndexPath *)indexPath;
 
-- (NSArray *)indexPathsToAddForExpansionFromSection:(NSInteger)section;
-
 - (NSArray *)indexPathsToRemoveForCollapseFromIndexPath:(NSIndexPath *)indexPath;
-
-- (NSArray *)indexPathsToRemoveForCollapseFromSection:(NSInteger)section;
 
 - (NSArray *)filterContentsWithSearchString:(NSString *)searchString;
 
