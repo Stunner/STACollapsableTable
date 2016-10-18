@@ -20,9 +20,9 @@ PODS:
   - AFNetworking/UIKit (2.6.3):
     - AFNetworking/NSURLConnection
     - AFNetworking/NSURLSession
-  - KIF (3.4.2):
-    - KIF/Core (= 3.4.2)
-  - KIF/Core (3.4.2)
+  - KIF (3.5.1):
+    - KIF/Core (= 3.5.1)
+  - KIF/Core (3.5.1)
   - Nimbus (1.3.0):
     - Nimbus/AttributedLabel (= 1.3.0)
     - Nimbus/Badge (= 1.3.0)
@@ -83,7 +83,7 @@ PODS:
     - ReactiveCocoa/Core
 
 DEPENDENCIES:
-  - KIF (~> 3.4)
+  - KIF (~> 3.5)
   - Nimbus (from `https://github.com/Stunner/nimbus.git`)
   - ReactiveCocoa (~> 2.4)
 
@@ -98,10 +98,10 @@ CHECKOUT OPTIONS:
 
 SPEC CHECKSUMS:
   AFNetworking: cb8d14a848e831097108418f5d49217339d4eb60
-  KIF: b518c9831453abea5afdbbde3908ec47832d6d56
+  KIF: 082eb65279e51c3092923802849eb796a04982ab
   Nimbus: 0cf223fb60d06167db03e8ac533fb7a573963e73
   ReactiveCocoa: e2db045570aa97c695e7aa97c2bcab222ae51f4a
 
-PODFILE CHECKSUM: 167c1cf309d8b5839f2678f55433608fd23856ca
+PODFILE CHECKSUM: 4ed32d9b83bf7e12234c28fbf1cd9c25a088b3ad
 
 COCOAPODS: 1.0.1

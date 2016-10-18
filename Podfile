@@ -9,6 +9,6 @@ target 'STACollapsableTable' do
 end
 
 target 'STACollapsableTableTests' do
-    pod 'KIF', '~> 3.4'
+    pod 'KIF', '~> 3.5'
 end
 
