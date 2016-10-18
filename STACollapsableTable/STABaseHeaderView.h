@@ -22,7 +22,7 @@
                              userInfo:(NSDictionary *)userInfo;
 
 - (void)headerTapped;
-
-- (void)updateRotatedImageViewStatus;
+- (void)updateImageView;
+- (void)isSearchResultStateChanged:(BOOL)isSearchResult;
 
 @end

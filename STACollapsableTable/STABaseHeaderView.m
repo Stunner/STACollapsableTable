@@ -33,7 +33,6 @@
     headerView.titleLabel.text = cellModel.title;
     headerView.tableModel = tableModel;
     
-    [headerView isSearchResultStateChanged:cellModel.isSearchResult];
     if (!tableModel.isSearching) {
         cellModel.isSearchResult = YES;
     }
@@ -68,7 +67,7 @@
               [self isSearchResultStateChanged:cellModel.isSearchResult];
           }
       }];
-    [self updateRotatedImageViewStatus];
+    [self updateImageView];
     [self isSearchResultStateChanged:self.cellModel.isSearchResult];
 }
 
@@ -77,20 +76,26 @@
 - (void)headerTapped {
     
     [UIView animateWithDuration:0.33 animations:^{
-        [self updateRotatedImageViewStatus];
+        [self updateImageView];
     } completion:^(BOOL finished) {
         if (finished) {
-            [self updateRotatedImageViewStatus];
+            [self updateImageView];
         }
     }];
 }
 
-- (void)updateRotatedImageViewStatus {
+- (void)updateImageView {
     
     if (self.cellModel.isExpanded) {
         self.collapsedStatusImageView.transform = CGAffineTransformMakeRotation(M_PI / 2);
     } else {
         self.collapsedStatusImageView.transform = CGAffineTransformMakeRotation(0);
+    }
+}
+
+- (void)isSearchResultStateChanged:(BOOL)isSearchResult {
+    if (self.titleLabel) {
+        self.titleLabel.alpha = isSearchResult ? 1.0 : 0.5;
     }
 }
 
@@ -115,12 +120,6 @@
     }
     
     [self headerTapped];
-}
-
-- (void)isSearchResultStateChanged:(BOOL)isSearchResult {
-    if (self.titleLabel) {
-        self.titleLabel.alpha = isSearchResult ? 1.0 : 0.5;
-    }
 }
 
 @end

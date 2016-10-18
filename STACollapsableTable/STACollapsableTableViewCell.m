@@ -31,8 +31,6 @@
         forCellReuseIdentifier:reusableCellID];
         cell = [tableView dequeueReusableCellWithIdentifier:reusableCellID];
     }
-    
-    cell.titleLabel.text = cellModel.title;
     [cell initConfigurationWithModel:cellModel userInfo:userInfo];
     
     return cell;
@@ -49,18 +47,9 @@
         cell = [(STACollapsableTableViewCell *)[NSClassFromString(className) alloc] initWithStyle:UITableViewCellStyleDefault
                                                                                    reuseIdentifier:reusableCellID];
     }
-    
-    cell.textLabel.text = cellModel.title;
     [cell initConfigurationWithModel:cellModel userInfo:userInfo];
     
     return cell;
-}
-
-- (void)initConfigurationWithModel:(STACellModel *)cellModel userInfo:(NSDictionary *)userInfo {
-    self.cellModel = cellModel;
-    [self updateRotatedImageViewStatus];
-    
-    [self isSearchResultStateChanged:cellModel.isSearchResult];
 }
 
 #pragma mark - Setters
@@ -93,15 +82,31 @@
       }];
 }
 
+#pragma mark - Public
+
+- (void)initConfigurationWithModel:(STACellModel *)cellModel userInfo:(NSDictionary *)userInfo {
+    self.cellModel = cellModel;
+    
+    if (self.titleLabel) {
+        self.titleLabel.text = cellModel.title;
+    }
+    
+    [self updateImageView];
+    
+    [self isSearchResultStateChanged:cellModel.isSearchResult];
+}
+
 - (void)isSearchResultStateChanged:(BOOL)isSearchResult {
     if (self.titleLabel) {
         self.titleLabel.alpha = isSearchResult ? 1.0 : 0.5;
     } else {
-        self.textLabel.alpha = isSearchResult ? 1.0 : 0.5;
+        if (self.textLabel.text) {
+            self.textLabel.alpha = isSearchResult ? 1.0 : 0.5;
+        }
     }
 }
 
-- (void)updateRotatedImageViewStatus {
+- (void)updateImageView {
     
     if (self.cellModel.isExpanded) {
         self.collapsedStatusImageView.transform = CGAffineTransformMakeRotation(M_PI / 2);
@@ -110,15 +115,13 @@
     }
 }
 
-#pragma mark - Public
-
 - (void)cellTapped {
     
     [UIView animateWithDuration:0.33 animations:^{
-        [self updateRotatedImageViewStatus];
+        [self updateImageView];
     } completion:^(BOOL finished) {
         if (finished) {
-            [self updateRotatedImageViewStatus];
+            [self updateImageView];
         }
     }];
 }

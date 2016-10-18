@@ -22,6 +22,12 @@
     return cell;
 }
 
+- (void)initConfigurationWithModel:(STACellModel *)cellModel userInfo:(NSDictionary *)userInfo {
+    [super initConfigurationWithModel:cellModel userInfo:userInfo];
+    
+    self.textLabel.text = cellModel.title;
+}
+
 - (void)awakeFromNib {
     [super awakeFromNib];
     
