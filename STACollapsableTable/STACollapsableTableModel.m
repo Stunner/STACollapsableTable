@@ -253,6 +253,11 @@ typedef STACellModel *(^ObjectEnumeratorBlock)(STATableModelSpecifier *specifier
 - (void)parseContents:(NSArray<STATableModelSpecifier *> *)parsableContents {
     self.contentsArray = [self parseModelSpecifiers:parsableContents];
     [self addObjectsFromArrayToTableModel:self.contentsArray];
+    // store completely collapsed version of contents for search
+    if (!self.options.initiallyCollapsed) {
+        self.options.initiallyCollapsed = YES;
+        self.contentsArray = [self parseModelSpecifiers:parsableContents];
+    }
 }
 
 - (void)enumerateObjects:(NSArray<STATableModelSpecifier *> *)contentsArray parent:(STACellModel *)parent block:(ObjectEnumeratorBlock)block {
