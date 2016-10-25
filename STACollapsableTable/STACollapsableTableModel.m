@@ -17,7 +17,7 @@
 #import "NIMutableTableViewModel+STAAdditions.h"
 #import "STABaseHeaderView.h"
 
-typedef void (^ObjectEnumeratorBlock)(id object);
+typedef STACellModel *(^ObjectEnumeratorBlock)(STATableModelSpecifier *specifier, STACellModel *parent);
 
 @interface STACollapsableTableModel () <NITableViewModelDelegate>
 
@@ -190,10 +190,11 @@ typedef void (^ObjectEnumeratorBlock)(id object);
 - (NSArray<STACellModel *> *)parseModelSpecifiers:(NSArray <STATableModelSpecifier *>*)modelSpecifiers {
     NSMutableArray<STACellModel *> *mutableDataArray = [NSMutableArray arrayWithCapacity:modelSpecifiers.count];
     @weakify(self);
-    [self enumerateObjects:modelSpecifiers block:^(STATableModelSpecifier *cellSpecifier) {
+    [self enumerateObjects:modelSpecifiers parent:nil block:^STACellModel *(STATableModelSpecifier *cellSpecifier, STACellModel *parent) {
         @strongify(self);
-        STACellModel *cellModel = [self cellModelForSpecifier:cellSpecifier parent:nil tableModel:self];
+        STACellModel *cellModel = [self cellModelForSpecifier:cellSpecifier parent:parent tableModel:self];
         [mutableDataArray addObject:cellModel];
+        return cellModel;
     }];
     return mutableDataArray;
 }
@@ -254,19 +255,19 @@ typedef void (^ObjectEnumeratorBlock)(id object);
     [self addObjectsFromArrayToTableModel:self.contentsArray];
 }
 
-- (void)enumerateObjects:(NSArray<STATableModelSpecifier *> *)contentsArray block:(ObjectEnumeratorBlock)block {
+- (void)enumerateObjects:(NSArray<STATableModelSpecifier *> *)contentsArray parent:(STACellModel *)parent block:(ObjectEnumeratorBlock)block {
     if (contentsArray == 0) {
         return;
     }
-    for (id object in contentsArray) {
+    for (STATableModelSpecifier *object in contentsArray) {
         if ([object isKindOfClass:[STATableModelSpecifier class]]) {
-            block(object);
+            STACellModel *parentModel = block(object, parent);
             // enumerate among descendants if table view is expanded
             if (!self.options.initiallyCollapsed) {
-                [self enumerateObjects:((STATableModelSpecifier *)object).children block:block];
+                [self enumerateObjects:object.children parent:parentModel block:block];
             }
         } else {
-            block(object);
+            block(object, nil);
         }
     }
 }
