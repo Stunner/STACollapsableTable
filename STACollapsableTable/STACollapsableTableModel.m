@@ -30,7 +30,9 @@ typedef STACellModel *(^ObjectEnumeratorBlock)(STATableModelSpecifier *specifier
 
 // Content
 @property (nonatomic, strong) NSMutableSet *expandedSectionsSet;
-@property (nonatomic, strong, readwrite) NSArray<STACellModel *> *contentsArray;
+@property (nonatomic, strong) NSMutableSet<STACellModel *> *expandableCellModelsSet;
+@property (nonatomic, strong, readwrite) NSArray<STACellModel *> *expandedContentsArray;
+@property (nonatomic, strong, readwrite) NSArray<STACellModel *> *collapsedContentsArray;
 @property (nonatomic, strong, readwrite) NSArray<STACellModel *> *searchContents;
 @property (nonatomic, strong, readwrite) NSArray<STACellModel *> *topLevelObjects;
 
@@ -84,7 +86,7 @@ typedef STACellModel *(^ObjectEnumeratorBlock)(STATableModelSpecifier *specifier
 - (void)setIsSearching:(BOOL)isSearching {
     if (isSearching != _isSearching) {
         _isSearching = isSearching;
-        [self collapseExpandedCellAppearance];
+        [self updateAppearanceOfCellsToCollapsed];
     }
 }
 
@@ -112,7 +114,21 @@ typedef STACellModel *(^ObjectEnumeratorBlock)(STATableModelSpecifier *specifier
 - (void)resetTableModelData {
     
     [self.tableModel sta_removeAllSections];
-    [self addObjectsFromArrayToTableModel:self.contentsArray];
+    
+    NSArray *contentsArray = nil;
+    BOOL toExpand = (!self.isSearching && !self.options.initiallyCollapsed);
+    if (toExpand) {
+        contentsArray = self.expandedContentsArray;
+    } else {
+        contentsArray = self.collapsedContentsArray;
+    }
+    [self addObjectsFromArrayToTableModel:contentsArray];
+    if (toExpand) {
+        [self updateAppearanceOfCellsToExpanded];
+    } else {
+        [self updateAppearanceOfCellsToCollapsed];
+    }
+    
     [self.tableView reloadData];
 }
 
@@ -124,11 +140,19 @@ typedef STACellModel *(^ObjectEnumeratorBlock)(STATableModelSpecifier *specifier
     return [self.tableModel indexPathForObject:cellModel];
 }
 
-- (void)collapseExpandedCellAppearance {
+- (void)updateAppearanceOfCellsToCollapsed {
     
     for (STACellModel *cellModel in [self.expandedSectionsSet allObjects]) {
         cellModel.isExpanded = NO;
         [self.expandedSectionsSet removeObject:cellModel];
+    }
+}
+
+- (void)updateAppearanceOfCellsToExpanded {
+    
+    for (STACellModel *cellModel in [self.expandableCellModelsSet allObjects]) {
+        cellModel.isExpanded = YES;
+        [self.expandedSectionsSet addObject:cellModel];
     }
 }
 
@@ -144,10 +168,10 @@ typedef STACellModel *(^ObjectEnumeratorBlock)(STATableModelSpecifier *specifier
     
     STASearchOperation *searchOperation = nil;
     if ([self.delegate respondsToSelector:@selector(searchOperationOnData:withSearchQuery:)]) {
-        searchOperation = [self.delegate searchOperationOnData:self.contentsArray withSearchQuery:searchQuery];
+        searchOperation = [self.delegate searchOperationOnData:self.collapsedContentsArray withSearchQuery:searchQuery];
     }
     if (!searchOperation) {
-        searchOperation = [[STASearchOperation alloc] initWithDataArray:self.contentsArray
+        searchOperation = [[STASearchOperation alloc] initWithDataArray:self.collapsedContentsArray
                                                        withSearchString:searchQuery];
     }
     searchOperation.operationID = ++self.searchOperationID;
@@ -189,11 +213,17 @@ typedef STACellModel *(^ObjectEnumeratorBlock)(STATableModelSpecifier *specifier
 
 - (NSArray<STACellModel *> *)parseModelSpecifiers:(NSArray <STATableModelSpecifier *>*)modelSpecifiers {
     NSMutableArray<STACellModel *> *mutableDataArray = [NSMutableArray arrayWithCapacity:modelSpecifiers.count];
+    if (!self.expandableCellModelsSet) {
+        self.expandableCellModelsSet = [NSMutableSet set];
+    }
     @weakify(self);
     [self enumerateObjects:modelSpecifiers parent:nil block:^STACellModel *(STATableModelSpecifier *cellSpecifier, STACellModel *parent) {
         @strongify(self);
         STACellModel *cellModel = [self cellModelForSpecifier:cellSpecifier parent:parent tableModel:self];
         [mutableDataArray addObject:cellModel];
+        if (cellModel.children.count) {
+            [self.expandableCellModelsSet addObject:cellModel];
+        }
         return cellModel;
     }];
     return mutableDataArray;
@@ -214,6 +244,7 @@ typedef STACellModel *(^ObjectEnumeratorBlock)(STATableModelSpecifier *specifier
         }
     } else {
         [self.tableModel addObject:cellModel];
+        if (cellModel.depth == 0) return cellModel;
     }
     return nil;
 }
@@ -251,12 +282,18 @@ typedef STACellModel *(^ObjectEnumeratorBlock)(STATableModelSpecifier *specifier
 }
 
 - (void)parseContents:(NSArray<STATableModelSpecifier *> *)parsableContents {
-    self.contentsArray = [self parseModelSpecifiers:parsableContents];
-    [self addObjectsFromArrayToTableModel:self.contentsArray];
-    // store completely collapsed version of contents for search
-    if (!self.options.initiallyCollapsed) {
-        self.options.initiallyCollapsed = YES;
-        self.contentsArray = [self parseModelSpecifiers:parsableContents];
+    if (self.options.initiallyCollapsed) {
+        self.collapsedContentsArray = [self parseModelSpecifiers:parsableContents];
+        [self addObjectsFromArrayToTableModel:self.collapsedContentsArray];
+    } else {
+        self.expandedContentsArray = [self parseModelSpecifiers:parsableContents];
+        [self addObjectsFromArrayToTableModel:self.expandedContentsArray];
+        // store completely collapsed version of contents for search
+        if (!self.options.initiallyCollapsed) {
+            self.options.initiallyCollapsed = YES;
+            self.collapsedContentsArray = [self parseModelSpecifiers:parsableContents];
+            self.options.initiallyCollapsed = NO;
+        }
     }
 }
 
@@ -402,7 +439,6 @@ typedef STACellModel *(^ObjectEnumeratorBlock)(STATableModelSpecifier *specifier
             return;
         }
     }
-    [self collapseExpandedCellAppearance];
     [self performSearchWithQuery:searchString];
 }
 
