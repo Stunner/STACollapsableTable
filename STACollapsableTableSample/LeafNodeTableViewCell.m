@@ -23,9 +23,13 @@
 }
 
 - (void)initConfigurationWithModel:(STACellModel *)cellModel userInfo:(NSDictionary *)userInfo {
-    [super initConfigurationWithModel:cellModel userInfo:userInfo];
     
     self.textLabel.text = cellModel.title;
+    
+    // IMPORTANT: Notice how call to super is called after setting textLabel's text property, this is
+    // important in order to ensure text darkens/fades appropriately to display relevance within search,
+    // as super's implementation checks for existance of textLabel's text property before performing fading.
+    [super initConfigurationWithModel:cellModel userInfo:userInfo];
 }
 
 - (void)awakeFromNib {
