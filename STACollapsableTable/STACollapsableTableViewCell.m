@@ -52,6 +52,16 @@
     return cell;
 }
 
+- (void)awakeFromNib {
+    [super awakeFromNib];
+    
+}
+
+- (void)prepareForReuse {
+    [super prepareForReuse];
+    
+}
+
 #pragma mark - Setters
 
 - (void)setCellModel:(STACellModel *)cellModel {
