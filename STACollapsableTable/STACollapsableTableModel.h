@@ -103,7 +103,7 @@
 /**
  Updates all cell collapse/expand triangles to their collapsed state.
  */
-- (void)collapseExpandedCellAppearance;
+- (void)updateAppearanceOfCellsToCollapsed;
 - (void)expand:(STACellModel *)model fromRowFromIndexPath:(NSIndexPath *)indexPath;
 - (void)collapse:(STACellModel *)model fromRowFromIndexPath:(NSIndexPath *)indexPath;
 - (void)performSearchWithQuery:(NSString *)searchQuery;

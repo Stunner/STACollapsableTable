@@ -195,12 +195,11 @@ typedef STACellModel *(^ObjectEnumeratorBlock)(STATableModelSpecifier *specifier
                     
                     if ([self.delegate respondsToSelector:@selector(searchOperationCompletedWithContents:)]) {
                         NSArray *overriddenContents = [self.delegate searchOperationCompletedWithContents:searchOperation.allSearchResults];
-                        self.searchContents = overriddenContents;
                         [self addObjectsFromArrayToTableModel:overriddenContents];
                     } else {
-                        self.searchContents = searchOperation.allSearchResults;
                         [self addObjectsFromArrayToTableModel:searchOperation.allSearchResults];
                     }
+                    self.searchContents = searchOperation.allSearchResults;
                     [self.tableView reloadData];
                 });
             }
@@ -367,6 +366,22 @@ typedef STACellModel *(^ObjectEnumeratorBlock)(STATableModelSpecifier *specifier
     [self.expandedSectionsSet removeObject:cellModel];
 }
 
+- (void)updateSearchResultsForText:(NSString *)searchText {
+    if ([searchText isEqualToString:@""]) {
+        self.stopSearching = YES;
+        
+        if (!self.userProvidedContentArray) {
+            // reset table model data
+            [self resetTableModelData];
+        }
+        if (!self.isSearching) {
+            return;
+        }
+    }
+    [self updateAppearanceOfCellsToCollapsed];
+    [self performSearchWithQuery:searchText];
+}
+
 #pragma mark - NITableViewModelDelegate Methods
 
 - (UITableViewCell *)tableViewModel:(NITableViewModel *)tableViewModel
@@ -416,6 +431,7 @@ typedef STACellModel *(^ObjectEnumeratorBlock)(STATableModelSpecifier *specifier
 
 - (void)searchBarTextDidBeginEditing:(UISearchBar *)searchBar {
     self.isSearching = YES;
+    [self updateSearchResultsForText:searchBar.text];
 }
 
 - (void)searchBarTextDidEndEditing:(UISearchBar *)searchBar {
@@ -423,23 +439,17 @@ typedef STACellModel *(^ObjectEnumeratorBlock)(STATableModelSpecifier *specifier
     self.userProvidedContentArray = nil;
 }
 
+- (void)searchBarCancelButtonClicked:(UISearchBar *)searchBar {
+    self.stopSearching = YES;
+    [self resetTableModelData];
+}
+
 #pragma mark - UISearchResultsUpdating Delegate Method
 
 - (void)updateSearchResultsForSearchController:(UISearchController *)searchController {
     
     NSString *searchString = searchController.searchBar.text;
-    if ([searchString isEqualToString:@""]) {
-        self.stopSearching = YES;
-        
-        if (!self.userProvidedContentArray) {
-            // reset table model data
-            [self resetTableModelData];
-        }
-        if (!self.isSearching) {
-            return;
-        }
-    }
-    [self performSearchWithQuery:searchString];
+    [self updateSearchResultsForText:searchString];
 }
 
 @end

@@ -8,6 +8,8 @@
 
 #import <Foundation/Foundation.h>
 
+@class STACellModel;
+
 /**
  @class STASearchOperation object that handles performing a search query while maintaining 
  the heirarchy of the collapsable table view. May be subclassed.
@@ -17,7 +19,7 @@
 /**
  The starting set of data to be searched.
  */
-@property (atomic, strong) NSArray *allSearchResults;
+@property (atomic, strong) NSArray<STACellModel *> *allSearchResults;
 /**
  Unique search operation ID used for bookeeping purposes.
  */
@@ -30,8 +32,8 @@
  The contents to be searched. This is set to what is passed in the 
  `initWithDataArray:withSearchString:` method.
  */
-@property (nonatomic, strong, readonly) NSArray *dataArray;
+@property (nonatomic, strong, readonly) NSArray<STACellModel *> *dataArray;
 
-- (instancetype)initWithDataArray:(NSArray *)dataArray withSearchString:(NSString *)searchString;
+- (instancetype)initWithDataArray:(NSArray<STACellModel *> *)dataArray withSearchString:(NSString *)searchString;
 
 @end

@@ -193,10 +193,9 @@ typedef NSIndexPath * (^ObjectEnumeratorBlock)(STACellModel *cellModel, NSUInteg
 
 - (BOOL)shouldExpandAndIncludeCellModel:(STACellModel *)cellModel {
     if (self.tableModel.isSearching) {
+        // Only include cell models that aren't being shown
         if (!cellModel.isSearchResult && !cellModel.descendantsInSearchResults) {
             return YES;
-        } else {
-            return NO;
         }
     } else {
         return YES;
@@ -206,6 +205,7 @@ typedef NSIndexPath * (^ObjectEnumeratorBlock)(STACellModel *cellModel, NSUInteg
 
 - (BOOL)shouldCollapseAndRemoveCellModel:(STACellModel *)cellModel {
     if (self.tableModel.isSearching) {
+        // Only collapse cell models that are being shown and are not a search result
         if (!cellModel.isSearchResult && !cellModel.descendantsInSearchResults) {
             return YES;
         }
