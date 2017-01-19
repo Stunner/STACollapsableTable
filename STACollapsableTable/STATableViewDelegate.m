@@ -398,6 +398,7 @@ withAnimationCoordinator:(UIFocusAnimationCoordinator *)coordinator
 }
 
 - (void)searchBarCancelButtonClicked:(UISearchBar *)searchBar {
+    [(id)self.internalDelegate searchBarCancelButtonClicked:searchBar];
     if ([self.externalDelegate respondsToSelector:@selector(searchBarCancelButtonClicked:)]) {
         [self.externalDelegate searchBarCancelButtonClicked:searchBar];
     }
@@ -421,6 +422,10 @@ withAnimationCoordinator:(UIFocusAnimationCoordinator *)coordinator
 #pragma mark - UISearchResultsUpdating Delegate Method
 
 - (void)updateSearchResultsForSearchController:(UISearchController *)searchController {
+    // don't want to unnecessarily reload the table view when presenting/dismissing
+    if (searchController.isBeingPresented || searchController.isBeingDismissed) {
+        return;
+    }
     [(id)self.internalDelegate updateSearchResultsForSearchController:searchController];
     if ([self.externalDelegate respondsToSelector:@selector(updateSearchResultsForSearchController:)]) {
         [self.externalDelegate updateSearchResultsForSearchController:searchController];
