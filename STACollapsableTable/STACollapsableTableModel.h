@@ -28,6 +28,10 @@
                                  parent:(STACellModel *)parent
                              tableModel:(STACollapsableTableModel *)tableModel;
 
+- (BOOL)expandCellModel:(STACellModel *)cellModel
+              specifier:(STATableModelSpecifier *)specifier
+             tableModel:(STACollapsableTableModel *)tableModel;
+
 /**
  Use this method to provide a custom search operation object which should be run when executing the search (which happens immediately after this method returns).
  

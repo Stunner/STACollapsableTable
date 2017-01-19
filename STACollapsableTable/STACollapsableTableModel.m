@@ -302,10 +302,20 @@ typedef STACellModel *(^ObjectEnumeratorBlock)(STATableModelSpecifier *specifier
     }
     for (STATableModelSpecifier *object in contentsArray) {
         if ([object isKindOfClass:[STATableModelSpecifier class]]) {
-            STACellModel *parentModel = block(object, parent);
+            STACellModel *model = block(object, parent);
             // enumerate among descendants if table view is expanded
-            if (!self.options.initiallyCollapsed) {
-                [self enumerateObjects:object.children parent:parentModel block:block];
+//            if (!self.options.initiallyCollapsed) {
+//                [self enumerateObjects:object.children parent:parentModel block:block];
+//            }
+//            if (!model.isExpanded) {
+            BOOL expandCellModel = !self.options.initiallyCollapsed;
+            if (expandCellModel) {
+                if ([self.delegate respondsToSelector:@selector(expandCellModel:specifier:tableModel:)]) {
+                    expandCellModel = [self.delegate expandCellModel:model specifier:object tableModel:self];
+                }
+                if (expandCellModel) {
+                    [self enumerateObjects:object.children parent:model block:block];
+                }
             }
         } else {
             block(object, nil);

@@ -103,6 +103,13 @@
                                                 tableModel:tableModel];
 }
 
+- (BOOL)expandCellModel:(STACellModel *)cellModel
+              specifier:(STATableModelSpecifier *)specifier
+             tableModel:(STACollapsableTableModel *)tableModel
+{
+    return cellModel.isExpanded;
+}
+
 - (UITableViewCell *)tableViewModel:(STACollapsableTableModel *)tableViewModel
                    cellForTableView:(UITableView *)tableView
                         atIndexPath:(NSIndexPath *)indexPath
