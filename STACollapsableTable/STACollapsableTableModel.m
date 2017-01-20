@@ -304,10 +304,6 @@ typedef STACellModel *(^ObjectEnumeratorBlock)(STATableModelSpecifier *specifier
         if ([object isKindOfClass:[STATableModelSpecifier class]]) {
             STACellModel *model = block(object, parent);
             // enumerate among descendants if table view is expanded
-//            if (!self.options.initiallyCollapsed) {
-//                [self enumerateObjects:object.children parent:parentModel block:block];
-//            }
-//            if (!model.isExpanded) {
             BOOL expandCellModel = !self.options.initiallyCollapsed;
             if (expandCellModel) {
                 if ([self.delegate respondsToSelector:@selector(expandCellModel:specifier:tableModel:)]) {
@@ -333,6 +329,15 @@ typedef STACellModel *(^ObjectEnumeratorBlock)(STATableModelSpecifier *specifier
     
     if (cellModel.isExpanded) return;
     
+    BOOL expandCellModel = YES;
+    cellModel.isExpanded = YES;
+    if ([self.delegate respondsToSelector:@selector(expandCellModel:specifier:tableModel:)]) {
+        expandCellModel = [self.delegate expandCellModel:cellModel specifier:cellModel.specifier tableModel:self];
+    }
+    if (!expandCellModel) {
+        return;
+    }
+    
     NSArray<NSDictionary *> *indexPathsToAdd = [cellModel indexPathsToAddForExpansionFromIndexPath:indexPath];
     NSMutableArray *addedIndexPaths = [NSMutableArray arrayWithCapacity:indexPathsToAdd.count];
     for (NSDictionary *dict in indexPathsToAdd) {
@@ -356,7 +361,6 @@ typedef STACellModel *(^ObjectEnumeratorBlock)(STATableModelSpecifier *specifier
     
     [CATransaction commit];
     
-    cellModel.isExpanded = YES;
     [self.expandedSectionsSet addObject:cellModel];
 }
 

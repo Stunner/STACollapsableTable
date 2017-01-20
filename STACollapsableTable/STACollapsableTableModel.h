@@ -20,14 +20,16 @@
 @optional
 
 /**
- Use this method to provide a custom model object to correspond to your custom table view cells.
+ Use this method to provide a custom STACellModel subclass object to correspond to your custom table view cells.
  
  @returns STACellModel instance that is to correspond to the passed in specifier and parent.
  */
 - (STACellModel *)cellModelForSpecifier:(STATableModelSpecifier *)specifier
                                  parent:(STACellModel *)parent
                              tableModel:(STACollapsableTableModel *)tableModel;
-
+/**
+ @returns Boolean value indicating whether cellModel should have its children displayed.
+ */
 - (BOOL)expandCellModel:(STACellModel *)cellModel
               specifier:(STATableModelSpecifier *)specifier
              tableModel:(STACollapsableTableModel *)tableModel;
