@@ -75,8 +75,8 @@
                                 [STATableModelSpecifier createWithTitle:@"Hundreds" children:hundreds userInfo:nil],
                                 [STATableModelSpecifier createWithTitle:@"Empty Category" children:@[] userInfo:nil]];
     STACollapsableTableModelOptions *options = [STACollapsableTableModelOptions new];
-    options.initiallyCollapsed = YES;
-    options.useTableSections = YES;
+    options.initiallyCollapsed = NO;
+    options.useTableSections = NO;
     self.tableModel = [[STACollapsableTableModel alloc] initWithContentsArray:sectionedArray
                                                                     tableView:self.tableView
                                                                       options:options
@@ -101,6 +101,13 @@
     return [[CustomCellModel alloc] initWithModelSpecifier:specifier
                                                     parent:parent
                                                 tableModel:tableModel];
+}
+
+- (BOOL)expandCellModel:(STACellModel *)cellModel
+              specifier:(STATableModelSpecifier *)specifier
+             tableModel:(STACollapsableTableModel *)tableModel
+{
+    return cellModel.isExpanded;
 }
 
 - (UITableViewCell *)tableViewModel:(STACollapsableTableModel *)tableViewModel
