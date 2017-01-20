@@ -76,7 +76,7 @@
                                 [STATableModelSpecifier createWithTitle:@"Empty Category" children:@[] userInfo:nil]];
     STACollapsableTableModelOptions *options = [STACollapsableTableModelOptions new];
     options.initiallyCollapsed = NO;
-    options.useTableSections = NO;
+    options.useTableSections = YES;
     self.tableModel = [[STACollapsableTableModel alloc] initWithContentsArray:sectionedArray
                                                                     tableView:self.tableView
                                                                       options:options

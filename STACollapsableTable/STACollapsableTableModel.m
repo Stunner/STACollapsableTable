@@ -391,6 +391,8 @@ typedef STACellModel *(^ObjectEnumeratorBlock)(STATableModelSpecifier *specifier
         if (!self.isSearching) {
             return;
         }
+    } else {
+        self.stopSearching = NO;
     }
     [self updateAppearanceOfCellsToCollapsed];
     [self performSearchWithQuery:searchText];
