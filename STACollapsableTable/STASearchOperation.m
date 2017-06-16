@@ -8,6 +8,7 @@
 
 #import "STASearchOperation.h"
 #import "STACellModel.h"
+#import "NSArray+STAAdditions.h"
 
 @interface STASearchOperation ()
 
@@ -26,12 +27,14 @@
 
 - (void)main {
     NSPredicate *filterPredicate = [NSPredicate predicateWithBlock:^BOOL(STACellModel *object, NSDictionary *bindings) {
+//        Outer, for categories, so want them to show up even if search string is empty string
         if (self.searchString.length < 1 ||
-            [object.title rangeOfString:self.searchString options:NSCaseInsensitiveSearch].location != NSNotFound)
+            [object.title rangeOfString:self.searchString options:NSCaseInsensitiveSearch].location != NSNotFound ||
+            [[object.tags allObjects] arrayContainsText:self.searchString options:NSCaseInsensitiveSearch].count > 0)
         {
             object.isSearchResult = YES;
             return YES;
-        }
+        } 
         object.isSearchResult = NO;
         return NO;
     }];

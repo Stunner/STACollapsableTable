@@ -50,6 +50,10 @@
 @property (nonatomic, assign, readonly) NSUInteger depth;
 
 @property (nonatomic, weak, readonly) STACollapsableTableModel *tableModel;
+/**
+ Set of string tags that are related to cellModel.
+ */
+@property (nonatomic, strong) NSSet<NSString *> *tags;
 
 
 - (instancetype)initWithModelSpecifier:(STATableModelSpecifier *)modelSpecifier

@@ -11,6 +11,7 @@
 #import "STACollapsableTableModel.h"
 #import "STACollapsableTableModel+Private.h"
 #import <ReactiveCocoa/ReactiveCocoa.h>
+#import "NSArray+STAAdditions.h"
 
 typedef NSIndexPath * (^ObjectEnumeratorBlock)(STACellModel *cellModel, NSUInteger row);
 
@@ -139,8 +140,10 @@ typedef NSIndexPath * (^ObjectEnumeratorBlock)(STACellModel *cellModel, NSUInteg
 - (NSArray *)filterContentsWithSearchString:(NSString *)searchString {
     
     NSPredicate *filterPredicate = [NSPredicate predicateWithBlock:^BOOL(STACellModel *object, NSDictionary *bindings) {
+//        Inner, for cellModels, so we check if there is a valid search string, and if it matches a name or tag
         if (searchString.length > 0 &&
-            [object.title rangeOfString:searchString options:NSCaseInsensitiveSearch].location != NSNotFound)
+            ([object.title rangeOfString:searchString options:NSCaseInsensitiveSearch].location != NSNotFound ||
+            [[object.tags allObjects] arrayContainsText:searchString options:NSCaseInsensitiveSearch].count > 0))
         {
             object.isSearchResult = YES;
             return YES;
