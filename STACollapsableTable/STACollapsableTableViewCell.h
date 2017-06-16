@@ -34,6 +34,7 @@
 + (instancetype)createFromModel:(STACellModel *)cellModel
                  reusableCellID:(NSString *)reusableCellID
                       className:(NSString *)className
+                      withStyle:(UITableViewCellStyle)style
                     inTableView:(UITableView *)tableView
                        userInfo:(NSDictionary *)userInfo;
 

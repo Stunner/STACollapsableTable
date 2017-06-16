@@ -17,6 +17,7 @@
     LeafNodeTableViewCell *cell = (LeafNodeTableViewCell *)[super createFromModel:cellModel
                                                                    reusableCellID:@"LeafNodeTableViewCellID"
                                                                         className:@"LeafNodeTableViewCell"
+                                                                        withStyle:UITableViewCellStyleSubtitle
                                                                       inTableView:tableView
                                                                          userInfo:userInfo];
     return cell;
@@ -25,6 +26,7 @@
 - (void)initConfigurationWithModel:(STACellModel *)cellModel userInfo:(NSDictionary *)userInfo {
     
     self.textLabel.text = cellModel.title;
+    self.detailTextLabel.text = [[cellModel.tags allObjects] componentsJoinedByString:@", "];
     
     // IMPORTANT: Notice how call to super is called after setting textLabel's text property, this is
     // important in order to ensure text darkens/fades appropriately to display relevance within search,

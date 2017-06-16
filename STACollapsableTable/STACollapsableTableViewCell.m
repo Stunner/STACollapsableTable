@@ -39,12 +39,13 @@
 + (instancetype)createFromModel:(STACellModel *)cellModel
                  reusableCellID:(NSString *)reusableCellID
                       className:(NSString *)className
+                      withStyle:(UITableViewCellStyle)style
                     inTableView:(UITableView *)tableView
                        userInfo:(NSDictionary *)userInfo
 {
     STACollapsableTableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:reusableCellID];
     if (nil == cell) {
-        cell = [(STACollapsableTableViewCell *)[NSClassFromString(className) alloc] initWithStyle:UITableViewCellStyleDefault
+        cell = [(STACollapsableTableViewCell *)[NSClassFromString(className) alloc] initWithStyle:style
                                                                                    reuseIdentifier:reusableCellID];
     }
     [cell initConfigurationWithModel:cellModel userInfo:userInfo];
