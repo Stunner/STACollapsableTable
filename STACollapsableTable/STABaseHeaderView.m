@@ -75,7 +75,12 @@
 
 - (void)headerTapped {
     
-    [UIView animateWithDuration:0.33 animations:^{
+    [self animateUpdateOfImageViewWithDuration:0.33];
+}
+
+- (void)animateUpdateOfImageViewWithDuration:(NSTimeInterval)duration {
+    
+    [UIView animateWithDuration:duration animations:^{
         [self updateImageView];
     } completion:^(BOOL finished) {
         if (finished) {

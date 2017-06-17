@@ -76,7 +76,9 @@ typedef NSIndexPath * (^ObjectEnumeratorBlock)(STACellModel *cellModel, NSUInteg
 
 - (NSUInteger)descendantsInSearchResults {
     
-    return self.descendantSearchResultSet.count;
+    @synchronized (self) {
+        return self.descendantSearchResultSet.count;
+    }
 }
 
 - (NSUInteger)displayedDescendantsCount {

@@ -22,6 +22,7 @@
                              userInfo:(NSDictionary *)userInfo;
 
 - (void)headerTapped;
+- (void)animateUpdateOfImageViewWithDuration:(NSTimeInterval)duration;
 - (void)updateImageView;
 - (void)isSearchResultStateChanged:(BOOL)isSearchResult;
 

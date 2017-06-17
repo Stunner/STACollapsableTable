@@ -186,7 +186,7 @@ typedef STACellModel *(^ObjectEnumeratorBlock)(STATableModelSpecifier *specifier
         [previousSearchOperation cancel];
         [self.processingOperationsDictionary removeObjectForKey:self.prevSearchString];
     }
-    [self.processingOperationsDictionary setObject:searchOperation forKey:searchQuery];
+    [self.processingOperationsDictionary setObject:searchOperation forKey:searchQuery ? searchQuery : [NSNull null]];
     
     @weakify(self);
     [RACObserve(searchOperation, isFinished) subscribeNext:^(NSNumber *isFinished) {
