@@ -142,17 +142,21 @@ typedef STACellModel *(^ObjectEnumeratorBlock)(STATableModelSpecifier *specifier
 
 - (void)updateAppearanceOfCellsToCollapsed {
     
-    for (STACellModel *cellModel in [self.expandedSectionsSet allObjects]) {
-        cellModel.isExpanded = NO;
-        [self.expandedSectionsSet removeObject:cellModel];
+    if (self.expandedSectionsSet.count > 0) {
+        for (STACellModel *cellModel in [self.expandedSectionsSet allObjects]) {
+            cellModel.isExpanded = NO;
+            [self.expandedSectionsSet removeObject:cellModel];
+        }
     }
 }
 
 - (void)updateAppearanceOfCellsToExpanded {
     
-    for (STACellModel *cellModel in [self.expandableCellModelsSet allObjects]) {
-        cellModel.isExpanded = YES;
-        [self.expandedSectionsSet addObject:cellModel];
+    if (self.expandedSectionsSet.count > 0) {
+        for (STACellModel *cellModel in [self.expandableCellModelsSet allObjects]) {
+            cellModel.isExpanded = YES;
+            [self.expandedSectionsSet addObject:cellModel];
+        }
     }
 }
 
