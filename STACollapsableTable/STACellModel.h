@@ -53,7 +53,7 @@
 /**
  Set of string tags that are related to cellModel.
  */
-@property (nonatomic, strong) NSSet<NSString *> *tags;
+@property (nonatomic, strong) NSArray<NSString *> *tags;
 
 
 - (instancetype)initWithModelSpecifier:(STATableModelSpecifier *)modelSpecifier

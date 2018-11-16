@@ -140,6 +140,8 @@ typedef STACellModel *(^ObjectEnumeratorBlock)(STATableModelSpecifier *specifier
     return [self.tableModel indexPathForObject:cellModel];
 }
 
+// Be sure not to call this method multiple times in quick succession as that causes a crash!
+// See: http://crashes.to/s/7953f823677
 - (void)updateAppearanceOfCellsToCollapsed {
     
     if (self.expandedSectionsSet.count > 0) {
@@ -389,16 +391,20 @@ typedef STACellModel *(^ObjectEnumeratorBlock)(STATableModelSpecifier *specifier
         self.stopSearching = YES;
         
         if (!self.userProvidedContentArray) {
-            // reset table model data
+            // Contains call to collapse cells, don't want to call that
+            // twice in rapid succession as that results in a crash.
             [self resetTableModelData];
         }
         if (!self.isSearching) {
             return;
         }
+        if (self.userProvidedContentArray) {
+            [self updateAppearanceOfCellsToCollapsed];
+        }
     } else {
         self.stopSearching = NO;
+        [self updateAppearanceOfCellsToCollapsed];
     }
-    [self updateAppearanceOfCellsToCollapsed];
     [self performSearchWithQuery:searchText];
 }
 
@@ -461,6 +467,8 @@ typedef STACellModel *(^ObjectEnumeratorBlock)(STATableModelSpecifier *specifier
 
 - (void)searchBarCancelButtonClicked:(UISearchBar *)searchBar {
     self.stopSearching = YES;
+    // setting isSearching to NO here prevents table view from updating correctly in
+    // sessions where multiple searches are performed
     [self resetTableModelData];
 }
 

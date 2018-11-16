@@ -64,7 +64,9 @@
       }] subscribeNext:^(NSNumber *statusChanged) {
           @strongify(self);
           if ([statusChanged boolValue]) {
-              [self isSearchResultStateChanged:cellModel.isSearchResult];
+              dispatch_async(dispatch_get_main_queue(), ^{
+                  [self isSearchResultStateChanged:cellModel.isSearchResult];
+              });
           }
       }];
     [self updateImageView];

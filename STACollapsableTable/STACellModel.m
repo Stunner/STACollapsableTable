@@ -55,7 +55,9 @@ typedef NSIndexPath * (^ObjectEnumeratorBlock)(STACellModel *cellModel, NSUInteg
           }] subscribeNext:^(NSNumber *statusChanged) {
               @strongify(self);
               if ([statusChanged boolValue]) {
-                  [self updateSelfBasedOnSearchStatusOfTableModel];
+                  dispatch_async(dispatch_get_main_queue(), ^{
+                      [self updateSelfBasedOnSearchStatusOfTableModel];
+                  });
               }
           }];
         
@@ -145,7 +147,7 @@ typedef NSIndexPath * (^ObjectEnumeratorBlock)(STACellModel *cellModel, NSUInteg
 //        Inner, for cellModels, so we check if there is a valid search string, and if it matches a name or tag
         if (searchString.length > 0 &&
             ([object.title rangeOfString:searchString options:NSCaseInsensitiveSearch].location != NSNotFound ||
-            [[object.tags allObjects] arrayContainsText:searchString options:NSCaseInsensitiveSearch].count > 0))
+            [object.tags arrayContainsText:searchString options:NSCaseInsensitiveSearch].count > 0))
         {
             object.isSearchResult = YES;
             return YES;
@@ -189,7 +191,9 @@ typedef NSIndexPath * (^ObjectEnumeratorBlock)(STACellModel *cellModel, NSUInteg
     if (isSearchResult) {
         [self.descendantSearchResultSet addObject:cellModel];
     } else {
-        [self.descendantSearchResultSet removeObject:cellModel];
+        if (cellModel) {
+            [self.descendantSearchResultSet removeObject:cellModel];
+        }
     }
     for (id parent in [self.parents allObjects]) {
         [parent descendant:self isSearchResult:isSearchResult];

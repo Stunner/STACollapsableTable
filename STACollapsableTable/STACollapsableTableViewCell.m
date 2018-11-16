@@ -77,7 +77,9 @@
       }] subscribeNext:^(NSNumber *statusChanged) {
           @strongify(self);
           if ([statusChanged boolValue]) {
-              [self isSearchResultStateChanged:cellModel.isSearchResult];
+              dispatch_async(dispatch_get_main_queue(), ^{
+                  [self isSearchResultStateChanged:cellModel.isSearchResult];
+              });
           }
       }];
     [[RACObserve(self.cellModel, isExpanded)
@@ -88,7 +90,9 @@
       }] subscribeNext:^(NSNumber *statusChanged) {
           @strongify(self);
           if ([statusChanged boolValue]) {
-              [self cellTapped];
+              dispatch_async(dispatch_get_main_queue(), ^{
+                  [self cellTapped];
+              });
           }
       }];
 }
