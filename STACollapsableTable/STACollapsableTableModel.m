@@ -29,7 +29,7 @@ typedef STACellModel *(^ObjectEnumeratorBlock)(STATableModelSpecifier *specifier
 @property (nonatomic, strong) STATableViewDelegate *tableViewDelegateArbiter;
 
 // Content
-@property (nonatomic, strong) NSMutableSet *expandedSectionsSet;
+@property (atomic, strong) NSMutableSet *expandedSectionsSet;
 @property (nonatomic, strong) NSMutableSet<STACellModel *> *expandableCellModelsSet;
 @property (nonatomic, strong, readwrite) NSArray<STACellModel *> *expandedContentsArray;
 @property (nonatomic, strong, readwrite) NSArray<STACellModel *> *collapsedContentsArray;
@@ -142,22 +142,27 @@ typedef STACellModel *(^ObjectEnumeratorBlock)(STATableModelSpecifier *specifier
 
 // Be sure not to call this method multiple times in quick succession as that causes a crash!
 // See: http://crashes.to/s/7953f823677
+// 11/15/18 Added synchronization to resolve this issue, this remains to be seen once deployed...
 - (void)updateAppearanceOfCellsToCollapsed {
     
-    if (self.expandedSectionsSet.count > 0) {
-        for (STACellModel *cellModel in [self.expandedSectionsSet allObjects]) {
-            cellModel.isExpanded = NO;
-            [self.expandedSectionsSet removeObject:cellModel];
+    @synchronized (self) {
+        if (self.expandedSectionsSet.count > 0) {
+            for (STACellModel *cellModel in [self.expandedSectionsSet allObjects]) {
+                cellModel.isExpanded = NO;
+                [self.expandedSectionsSet removeObject:cellModel];
+            }
         }
     }
 }
 
 - (void)updateAppearanceOfCellsToExpanded {
     
-    if (self.expandedSectionsSet.count > 0) {
-        for (STACellModel *cellModel in [self.expandableCellModelsSet allObjects]) {
-            cellModel.isExpanded = YES;
-            [self.expandedSectionsSet addObject:cellModel];
+    @synchronized (self) {
+        if (self.expandedSectionsSet.count > 0) {
+            for (STACellModel *cellModel in [self.expandableCellModelsSet allObjects]) {
+                cellModel.isExpanded = YES;
+                [self.expandedSectionsSet addObject:cellModel];
+            }
         }
     }
 }
@@ -279,11 +284,15 @@ typedef STACellModel *(^ObjectEnumeratorBlock)(STATableModelSpecifier *specifier
 }
 
 - (void)cellModelExpanded:(STACellModel *)cellModel {
-    [self.expandedSectionsSet addObject:cellModel];
+    @synchronized (self) {
+        [self.expandedSectionsSet addObject:cellModel];
+    }
 }
 
 - (void)cellModelCollapsed:(STACellModel *)cellModel {
-    [self.expandedSectionsSet removeObject:cellModel];
+    @synchronized (self) {
+        [self.expandedSectionsSet removeObject:cellModel];
+    }
 }
 
 - (void)parseContents:(NSArray<STATableModelSpecifier *> *)parsableContents {
@@ -335,55 +344,59 @@ typedef STACellModel *(^ObjectEnumeratorBlock)(STATableModelSpecifier *specifier
     
     if (cellModel.isExpanded) return;
     
-    BOOL expandCellModel = YES;
-    cellModel.isExpanded = YES;
-    if ([self.delegate respondsToSelector:@selector(expandCellModel:specifier:tableModel:)]) {
-        expandCellModel = [self.delegate expandCellModel:cellModel specifier:cellModel.specifier tableModel:self];
+    @synchronized (self) {
+        BOOL expandCellModel = YES;
+        cellModel.isExpanded = YES;
+        if ([self.delegate respondsToSelector:@selector(expandCellModel:specifier:tableModel:)]) {
+            expandCellModel = [self.delegate expandCellModel:cellModel specifier:cellModel.specifier tableModel:self];
+        }
+        if (!expandCellModel) {
+            return;
+        }
+        
+        NSArray<NSDictionary *> *indexPathsToAdd = [cellModel indexPathsToAddForExpansionFromIndexPath:indexPath];
+        NSMutableArray *addedIndexPaths = [NSMutableArray arrayWithCapacity:indexPathsToAdd.count];
+        for (NSDictionary *dict in indexPathsToAdd) {
+            NSUInteger index = [dict[@"index"] integerValue];
+            STACellModel *addedCellModel = dict[@"container"];
+            [self.tableModel insertObject:addedCellModel atRow:index inSection:indexPath.section];
+            NSIndexPath *newIndexPath = [NSIndexPath indexPathForRow:index inSection:indexPath.section];
+            [addedIndexPaths addObject:newIndexPath];
+        }
+        
+        [CATransaction begin];
+        
+        [CATransaction setCompletionBlock:^{
+            // animation has finished
+            [self scrollToExpandedIndexPath:indexPath];
+        }];
+        
+        [tableView beginUpdates];
+        [tableView insertRowsAtIndexPaths:addedIndexPaths withRowAnimation:UITableViewRowAnimationNone];
+        [tableView endUpdates];
+        
+        [CATransaction commit];
+        
+        [self.expandedSectionsSet addObject:cellModel];
     }
-    if (!expandCellModel) {
-        return;
-    }
-    
-    NSArray<NSDictionary *> *indexPathsToAdd = [cellModel indexPathsToAddForExpansionFromIndexPath:indexPath];
-    NSMutableArray *addedIndexPaths = [NSMutableArray arrayWithCapacity:indexPathsToAdd.count];
-    for (NSDictionary *dict in indexPathsToAdd) {
-        NSUInteger index = [dict[@"index"] integerValue];
-        STACellModel *addedCellModel = dict[@"container"];
-        [self.tableModel insertObject:addedCellModel atRow:index inSection:indexPath.section];
-        NSIndexPath *newIndexPath = [NSIndexPath indexPathForRow:index inSection:indexPath.section];
-        [addedIndexPaths addObject:newIndexPath];
-    }
-    
-    [CATransaction begin];
-    
-    [CATransaction setCompletionBlock:^{
-        // animation has finished
-        [self scrollToExpandedIndexPath:indexPath];
-    }];
-    
-    [tableView beginUpdates];
-    [tableView insertRowsAtIndexPaths:addedIndexPaths withRowAnimation:UITableViewRowAnimationNone];
-    [tableView endUpdates];
-    
-    [CATransaction commit];
-    
-    [self.expandedSectionsSet addObject:cellModel];
 }
 
 - (void)collapse:(STACellModel *)cellModel fromIndexPath:(NSIndexPath *)indexPath inTableView:(UITableView *)tableView animated:(BOOL)animated {
     
-    NSMutableArray *removableIndexPaths = [NSMutableArray arrayWithCapacity:10];
-    [removableIndexPaths addObjectsFromArray:[cellModel indexPathsToRemoveForCollapseFromIndexPath:indexPath]];
-    for (NSInteger i = removableIndexPaths.count - 1; i >= 0; i--) {
-        NSIndexPath *removedIndexPath = removableIndexPaths[i];
-        [self.tableModel removeObjectAtIndexPath:removedIndexPath];
+    @synchronized (self) {
+        NSMutableArray *removableIndexPaths = [NSMutableArray arrayWithCapacity:10];
+        [removableIndexPaths addObjectsFromArray:[cellModel indexPathsToRemoveForCollapseFromIndexPath:indexPath]];
+        for (NSInteger i = removableIndexPaths.count - 1; i >= 0; i--) {
+            NSIndexPath *removedIndexPath = removableIndexPaths[i];
+            [self.tableModel removeObjectAtIndexPath:removedIndexPath];
+        }
+        [tableView beginUpdates];
+        [tableView deleteRowsAtIndexPaths:removableIndexPaths withRowAnimation:UITableViewRowAnimationNone];
+        [tableView endUpdates];
+        
+        cellModel.isExpanded = NO;
+        [self.expandedSectionsSet removeObject:cellModel];
     }
-    [tableView beginUpdates];
-    [tableView deleteRowsAtIndexPaths:removableIndexPaths withRowAnimation:UITableViewRowAnimationNone];
-    [tableView endUpdates];
-    
-    cellModel.isExpanded = NO;
-    [self.expandedSectionsSet removeObject:cellModel];
 }
 
 - (void)updateSearchResultsForText:(NSString *)searchText {
