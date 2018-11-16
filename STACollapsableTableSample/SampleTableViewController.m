@@ -101,7 +101,7 @@
     CustomCellModel *cellModel = [[CustomCellModel alloc] initWithModelSpecifier:specifier
                                                                           parent:parent
                                                                       tableModel:tableModel];
-    cellModel.tags = [NSSet setWithArray:specifier.userInfo];
+    cellModel.tags = (NSArray *)specifier.userInfo;
     return cellModel;
 }
 
