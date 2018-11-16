@@ -145,7 +145,7 @@
 }
 
 - (NSInteger)tableView:(UITableView *)tableView indentationLevelForRowAtIndexPath:(NSIndexPath *)indexPath {
-    return [self.tableModel cellModelAtIndexPath:indexPath].depth * 2;
+    return [self.tableModel cellModelAtIndexPath:indexPath].depth * 3;
 }
 
 #pragma mark - UISearchResultsUpdating Delegate Method
